@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Device\DeviceModel.cs~RF126201ea.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Area\" />
+  </ItemGroup>
+
+</Project>

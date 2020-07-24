@@ -1,0 +1,15 @@
+=========================================================
+=========================================================
+=========================================================
+2020-05-25 17:26:54,343 [线程ID:4] ERROR 记录文件：HXCloud.Service.TypeDataDefineService - 消息：hx0001添加类型数据定义011241失败,失败原因:Missing type map configuration or unsupported mapping.
+
+Mapping types:
+TypeDataDefineAddViewModel -> TypeDataDefineModel
+HXCloud.ViewModel.TypeDataDefineAddViewModel -> HXCloud.Model.TypeDataDefineModel->   at lambda_method(Closure , TypeDataDefineAddViewModel , TypeDataDefineModel , ResolutionContext )
+   at lambda_method(Closure , Object , Object , ResolutionContext )
+   at HXCloud.Service.TypeDataDefineService.AddTypeDataDefine(TypeDataDefineAddViewModel req, String account) in D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.Service\Service\TypeDataDefineService.cs:line 66->
+=========================================================
+=========================================================
+=========================================================
+=========================================================
+=========================================================
