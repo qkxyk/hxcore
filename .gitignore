@@ -2,7 +2,7 @@
 .editorconfig
 Test
 HXCloud.API
-HXCloud.APIV2/appsettings.*
+HXCloud.APIV2/appsettings*
 HXCloud.APIV2/obj
 HXCloud.APIV2/obj/*
 HXCloud.APIV2/bin
