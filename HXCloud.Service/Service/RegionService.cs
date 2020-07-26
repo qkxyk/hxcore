@@ -33,30 +33,30 @@ namespace HXCloud.Service
             return true;
         }
 
-        public async Task<BaseResponse> AddRegionAsync(string account,string groupId,RegionAddDto req)
+        public async Task<BaseResponse> AddRegionAsync(string account, string groupId, RegionAddDto req)
         {
             //统一组织的,统一层级区域名称不能重复
             var data = await _rr.Find(a => a.GroupId == groupId && a.ParentId == req.ParentId && a.Name == req.Name).FirstOrDefaultAsync();
-            if (data!=null)
+            if (data != null)
             {
                 return new BaseResponse { Success = false, Message = "该区域下已存在相同的区域名称" };
             }
             try
             {
-                string regionId="101";
+                string regionId = "101";
                 //生成区域标示
-                if (req.ParentId!=null||req.ParentId.Trim()!="")     //有父区域标示
+                if (req.ParentId != null || req.ParentId.Trim() != "")     //有父区域标示
                 {
                     //获取同一个父标示下最后一个添加的区域
-                    data =await _rr.Find(a => a.GroupId == groupId && a.ParentId == req.ParentId).OrderByDescending(a => a.Id).FirstOrDefaultAsync();
-                    if (data==null)//该父区域下没有节点
+                    data = await _rr.Find(a => a.GroupId == groupId && a.ParentId == req.ParentId).OrderByDescending(a => a.Id).FirstOrDefaultAsync();
+                    if (data == null)//该父区域下没有节点
                     {
                         regionId = req.ParentId + "001";
                     }
                     else
                     {
                         //有删除的节点回收使用
-                        if (data.DeleteId==null||""==data.DeleteId)
+                        if (data.DeleteId == null || "" == data.DeleteId)
                         {
 
                         }
@@ -73,6 +73,7 @@ namespace HXCloud.Service
 
                 throw;
             }
+            return null;
         }
     }
 }

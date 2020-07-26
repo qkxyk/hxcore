@@ -32,6 +32,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 return Unauthorized("用户没有权限添加区域");
             }
+            return Ok();
 
         }
         [HttpPut]
@@ -45,6 +46,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 return Unauthorized("用户没有权限编辑区域");
             }
+            return Ok();
         }
         [HttpDelete("{Id}")]
         public async Task<ActionResult<BaseResponse>> RegionDelete(int Id)
@@ -57,12 +59,14 @@ namespace HXCloud.APIV2.Controllers
             {
                 return Unauthorized("用户没有权限删除区域");
             }
+            return Ok();
         }
         [HttpGet("{Id}")]
         public async Task<ActionResult<BaseResponse>> RegionGet(int Id)
         {
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            return Ok();
 
         }
         [HttpGet]
@@ -70,6 +74,7 @@ namespace HXCloud.APIV2.Controllers
         {
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            return Ok();
         }
     }
 }

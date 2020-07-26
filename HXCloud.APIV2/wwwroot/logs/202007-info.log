@@ -49,3 +49,13 @@
 2020-07-22 17:12:04,106 [线程ID:15] INFO  记录文件：HXCloud.Service.TypeAccessoryService - 消息：hx0001修改标示为2的类型配件数据成功
 2020-07-22 17:12:27,532 [线程ID:13] INFO  记录文件：HXCloud.Service.TypeAccessoryService - 消息：hx0001删除标示为2的类型配件成功
 2020-07-22 17:43:34,064 [线程ID:28] INFO  记录文件：HXCloud.Service.TypeAccessoryControlDataService - 消息：hx0001创建类型配件控制数据成功
+=========================================================
+2020-07-26 19:37:18,964 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-26 19:37:19,035 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-26 19:37:19,043 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-26 19:37:19,048 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: E:\hexu\hxcore\HXCloud.APIV2
+=========================================================
+2020-07-26 19:43:59,773 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-26 19:43:59,787 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-26 19:43:59,789 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-26 19:43:59,790 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: E:\hexu\hxcore\HXCloud.APIV2
