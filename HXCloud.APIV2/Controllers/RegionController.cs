@@ -32,8 +32,8 @@ namespace HXCloud.APIV2.Controllers
             {
                 return Unauthorized("用户没有权限添加区域");
             }
-            return Ok();
-
+            var rm = await _rs.AddRegionAsync(Account, GroupId, req);
+            return rm;
         }
         [HttpPut]
         public async Task<ActionResult<BaseResponse>> RegionUpdate(RegionUpdateDto req)
@@ -46,7 +46,8 @@ namespace HXCloud.APIV2.Controllers
             {
                 return Unauthorized("用户没有权限编辑区域");
             }
-            return Ok();
+            var rm = await _rs.UpdateRegionAsync(Account, GroupId, req);
+            return rm;
         }
         [HttpDelete("{Id}")]
         public async Task<ActionResult<BaseResponse>> RegionDelete(int Id)
