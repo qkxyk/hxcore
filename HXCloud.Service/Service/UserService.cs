@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using UserStatus = HXCloud.Model.UserStatus;
 
-namespace HXCloud.Service.Service
+namespace HXCloud.Service
 {
     public class UserService : IUserService
     {

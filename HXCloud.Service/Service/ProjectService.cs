@@ -78,7 +78,7 @@ namespace HXCloud.Service
             }
             return true;
         }
-        public async Task<BaseResponse> AddProjectAsync(ProjectAddDto req, string account)
+        public async Task<BaseResponse> AddProjectAsync(ProjectAddDto req, string account, string GroupId)
         {
             string pathId = null, PathName = null;
             //获取父项目
@@ -100,7 +100,7 @@ namespace HXCloud.Service
                     PathName = $"{parent.PathName}/{parent.Name}";
                 }
             }
-            var data = await _pr.Find(a => a.GroupId == req.GroupId && a.ParentId == req.ParentId && a.Name == req.Name).FirstOrDefaultAsync();
+            var data = await _pr.Find(a => a.GroupId == GroupId && a.ParentId == req.ParentId && a.Name == req.Name).FirstOrDefaultAsync();
             if (data != null)
             {
                 return new BaseResponse { Success = false, Message = "该项目下已存在相同名称的项目或者场站" };
@@ -111,6 +111,7 @@ namespace HXCloud.Service
                 entity.Create = account;
                 entity.PathId = pathId;
                 entity.PathName = PathName;
+                entity.GroupId = GroupId;
                 await _pr.AddAsync(entity);
                 _log.LogInformation($"{account}添加标示为{entity.Id}项目名称为{entity.Name}的项目成功");
                 return new BResponse<int> { Success = true, Message = "添加成功", Data = entity.Id };
@@ -118,7 +119,7 @@ namespace HXCloud.Service
             catch (Exception ex)
             {
                 _log.LogError($"{account}添加项目{req.Name}失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "添加失败" };
+                return new BaseResponse { Success = false, Message = "添加失败，请联系管理员" };
             }
         }
 
@@ -131,7 +132,7 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
             }
             //同一个项目下不能重名
-            var ret = await _pr.Find(a => a.ParentId == data.ParentId && a.Name == req.Name).FirstOrDefaultAsync();
+            var ret = await _pr.Find(a => a.ParentId == data.ParentId && a.Name == req.Name && a.Id != req.Id).FirstOrDefaultAsync();
             if (ret != null)
             {
                 return new BaseResponse { Success = false, Message = "已存在相同名称的项目获取场站" };
@@ -140,6 +141,7 @@ namespace HXCloud.Service
             {
                 var entity = _mapper.Map(req, data);
                 entity.Modify = account;
+                entity.ModifyTime = DateTime.Now;
                 await _pr.SaveAsync(entity);
                 _log.LogInformation($"{account}修改标示为{req.Id}的项目或者场站信息成功");
                 return new BaseResponse { Success = true, Message = "修改数据成功" };
@@ -147,7 +149,7 @@ namespace HXCloud.Service
             catch (Exception ex)
             {
                 _log.LogError($"{account}修改标示为{req.Id}的项目或者场站失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "修改数据失败" };
+                return new BaseResponse { Success = false, Message = "修改数据失败，请联系管理员" };
             }
         }
 

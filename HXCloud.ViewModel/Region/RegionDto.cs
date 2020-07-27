@@ -13,5 +13,10 @@ namespace HXCloud.ViewModel
         public string ParentId { get; set; }//父区域标示
         public string FullPath { get; set; }//区域的完整路径
         public string GroupId { get; set; }
+        public List<RegionDto> Child { get; set; }
+        public RegionDto()
+        {
+            Child = new List<RegionDto>();
+        }
     }
 }

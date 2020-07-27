@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using System.Linq.Dynamic.Core;
 using AutoMapper;
 
-namespace HXCloud.Service.Service
+namespace HXCloud.Service
 {
     public class GroupService : IGroupService
     {

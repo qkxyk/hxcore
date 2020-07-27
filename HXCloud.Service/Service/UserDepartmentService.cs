@@ -7,7 +7,7 @@ using HXCloud.Model;
 using HXCloud.Repository;
 using HXCloud.ViewModel;
 
-namespace HXCloud.Service.Service
+namespace HXCloud.Service
 {
     public class UserDepartmentService : IUserDepartmentService
     {

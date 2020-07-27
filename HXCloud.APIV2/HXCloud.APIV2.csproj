@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HXCloud.Common\HXCloud.Common.csproj" />
     <ProjectReference Include="..\HXCloud.Service\HXCloud.Service.csproj" />
     <ProjectReference Include="..\HXCloud.ViewModel\HXCloud.ViewModel.csproj" />
   </ItemGroup>

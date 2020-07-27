@@ -12,7 +12,7 @@ namespace HXCloud.ViewModel
         //public string PathName { get; set; }//完整的项目名称路径
         //public string PathId { get; set; }//完整的项目编号
         public string RegionId { get; set; }//项目区域编号
-        public string AreaId { get; set; }//项目地域编号
+        //public string AreaId { get; set; }//项目地域编号
         public string Position { get; set; }//项目位置（经纬度）
         //public int? ParentId { get; set; }//父项目编号
         //public string GroupId { get; set; }//组织编号

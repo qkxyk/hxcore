@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HXCloud.Service;
-using HXCloud.Service.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +13,7 @@ using Newtonsoft.Json;
 
 namespace HXCloud.APIV2.Controllers
 {
-    [Route("api/Group/{GroupId}/[controller]")]
+    [Route("api/{GroupId}/[controller]")]
     [ApiController]
     [Authorize]
     public class ProjectController : ControllerBase
@@ -42,10 +41,10 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="Id">项目或者场站标识</param>
         /// <returns></returns>
         [HttpGet("{Id}")]
-        public async Task<ActionResult<BaseResponse>> GetProject(int Id)
+        public async Task<ActionResult<BaseResponse>> GetProject(string GroupId, int Id)
         {
             //本组织管理员有权限
-            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
@@ -96,17 +95,6 @@ namespace HXCloud.APIV2.Controllers
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
 
-            string user = User.Identity.Name;
-            if (string.IsNullOrWhiteSpace(user))
-            {
-                return Unauthorized("用户凭证缺失");
-            }
-            //UserMessage um = JsonConvert.DeserializeObject<UserMessage>(user);
-            var bRet = await _gs.IsExist(opt => opt.Id == req.GroupId);
-            if (!bRet)
-            {
-                return new BaseResponse { Success = false, Message = "输入的组织编号不存在" };
-            }
             if (req.ProjectType == 1 && !req.ParentId.HasValue)
             {
                 return new BaseResponse { Success = false, Message = "场站必须添加在项目下" };
@@ -114,41 +102,34 @@ namespace HXCloud.APIV2.Controllers
             //是否管理员
             if (isAdmin)
             {
-                if (GroupId != req.GroupId && Code != _config["Group"])
+                if (GroupId != GId && Code != _config["Group"])
                 {
                     return new BaseResponse { Success = false, Message = "用户没有权限添加此项目" };
                 }
             }
             else
             {
-                if (req.ParentId == null)
+                if (req.ParentId.HasValue && req.ParentId.Value != 0)
                 {
                     return new BaseResponse { Success = false, Message = "用户没有权限添加顶级项目" };
                 }
                 else//非顶级项目
                 {
-                    string fullPath, groupId;
-                    bRet = _ps.IsExist(req.ParentId.Value, out fullPath, out groupId);
-                    if (!bRet)
-                    {
-                        return new BaseResponse { Success = false, Message = "父项目不存在" };
-                    }
-                    if (groupId != req.GroupId)
-                    {
-                        return new BaseResponse { Success = false, Message = "组织编号和项目非同一个组织" };
-                    }
+                    string fullPath;
+                    fullPath = await _ps.GetPathId(req.ParentId.Value);
+
                     if (fullPath == null)
                     {
-                        fullPath = req.ParentId.Value.ToString();
+                        return new BaseResponse { Success = false, Message = "输入的父项目不存在" };
                     }
-                    bRet = await _rp.IsAuth(Roles, fullPath, 3);
+                    var bRet = await _rp.IsAuth(Roles, fullPath, 3);
                     if (!bRet)
                     {
                         return new BaseResponse { Success = false, Message = "用户没有权限添加此项目或者场站" };
                     }
                 }
             }
-            var ret = await _ps.AddProjectAsync(req, Account);
+            var ret = await _ps.AddProjectAsync(req, Account, GroupId);
             return ret;
         }
 

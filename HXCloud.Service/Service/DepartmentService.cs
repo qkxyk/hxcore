@@ -11,7 +11,7 @@ using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace HXCloud.Service.Service
+namespace HXCloud.Service
 {
     public class DepartmentService : IDepartmentService
     {

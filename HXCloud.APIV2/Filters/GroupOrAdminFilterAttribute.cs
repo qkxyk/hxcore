@@ -8,12 +8,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace HXCloud.APIV2.Filters
 {
-    //同组织管理员或者超级管理员
-    public class AdminActionFilterAttribute : Attribute, IAsyncActionFilter
+    //同组织人员或者超级管理员有权限
+    public class GroupOrAdminFilterAttribute : Attribute, IAsyncActionFilter
     {
         private readonly IConfiguration _config;
 
-        public AdminActionFilterAttribute(IConfiguration config)
+        public GroupOrAdminFilterAttribute(IConfiguration config)
         {
             this._config = config;
         }
@@ -26,7 +26,7 @@ namespace HXCloud.APIV2.Filters
             var Code = u.Claims.FirstOrDefault(a => a.Type == "Code").Value;
 
             var GId = context.ActionArguments.Single(a => a.Key == "GroupId").Value.ToString();
-            if (isAdmin && (GId == GroupId || Code == _config["Group"]))
+            if (GroupId == GId || (isAdmin && Code == _config["Group"]))
             {
                 await next();
             }

@@ -13,7 +13,7 @@ namespace HXCloud.Service
         {
             CreateMap<RegionAddDto, RegionModel>().ForMember(dest => dest.GroupId, opt => opt.Ignore());
             CreateMap<RegionUpdateDto, RegionModel>().ForMember(dest => dest.GroupId, opt => opt.Ignore());
-            CreateMap<RegionModel, RegionDto>();
+            CreateMap<RegionModel, RegionDto>().ForMember(dest => dest.Child, opt => opt.Ignore());
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using HXCloud.Model;
+using System.Linq.Expressions;
+using System.Linq;
 
 namespace HXCloud.Repository
 {
@@ -31,6 +33,11 @@ namespace HXCloud.Repository
                 _db.Entry(parent).State = EntityState.Modified;
             }
             await _db.SaveChangesAsync();
+        }
+        public async Task<RegionModel> FindWithChildAsync(Expression<Func<RegionModel, bool>> predicate)
+        {
+            var data = await _db.Regions.Include(a => a.Child).Where(predicate).FirstOrDefaultAsync();
+            return data;
         }
     }
 }

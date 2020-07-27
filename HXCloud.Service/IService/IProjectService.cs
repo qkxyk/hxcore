@@ -10,7 +10,7 @@ namespace HXCloud.Service
     public interface IProjectService : IBaseService<ProjectModel>
     {
         Task<string> GetGroupIdAsync(int projectId);
-        Task<BaseResponse> AddProjectAsync(ProjectAddDto req, string account);
+        Task<BaseResponse> AddProjectAsync(ProjectAddDto req, string account, string GroupId);
         Task<BaseResponse> UpdateProjectAsync(ProjectUpdateDto req, string account);
         Task<BaseResponse> GetProject(int Id);
         Task<ProjectModel> GetProjectAsync(int Id);
