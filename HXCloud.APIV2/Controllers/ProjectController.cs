@@ -137,7 +137,7 @@ namespace HXCloud.APIV2.Controllers
         [HttpPut]
         public async Task<ActionResult<BaseResponse>> UpdateProjectInfo(string GroupId, ProjectUpdateDto req)
         {
-            string GId = User.Claims.FirstOrDefault(a => a.Type == "Group").Value;
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -245,7 +245,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "输入的组织编号不正确" };
             }
-            var rm = await _ps.GetMyProjectAsync(GroupId, Roles, isAdmin, req);
+            var rm = await _ps.GetMySiteAsync(GroupId, Roles, isAdmin, req);
             return rm;
         }
     }

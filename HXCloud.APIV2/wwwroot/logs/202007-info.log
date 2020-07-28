@@ -117,3 +117,36 @@
 2020-07-27 16:26:11,603 [线程ID:5] INFO  记录文件：HXCloud.Service.RegionService - 消息：hx0001修改标示为{ Id = 101002, GroupId = 057a556af24f494094a2586fbe9335a4 }的区域成功
 2020-07-27 16:26:19,320 [线程ID:4] INFO  记录文件：HXCloud.Service.RegionService - 消息：hx0001添加标示为{ Id = 101003, GroupId = 057a556af24f494094a2586fbe9335a4 }的区域成功
 2020-07-27 16:27:02,770 [线程ID:15] INFO  记录文件：HXCloud.Service.RegionService - 消息：hx0001删除标示为{ Id = 101003, GroupId = 057a556af24f494094a2586fbe9335a4 }的区域标示成功
+=========================================================
+2020-07-28 16:46:51,646 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-28 16:47:00,897 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-28 16:47:00,902 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-28 16:47:00,907 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-28 16:53:04,464 [线程ID:8] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001添加标示为1项目名称为合续智控的项目成功
+=========================================================
+2020-07-28 16:55:32,426 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-28 16:55:32,443 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-28 16:55:32,445 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-28 16:55:32,447 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-28 16:55:55,778 [线程ID:10] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001添加标示为2项目名称为合续智控场站的项目成功
+=========================================================
+2020-07-28 17:14:40,798 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-28 17:14:40,811 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-28 17:14:40,813 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-28 17:14:40,815 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-07-28 17:24:22,832 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-28 17:24:22,852 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-28 17:24:22,854 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-28 17:24:22,858 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-28 17:24:36,684 [线程ID:9] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001修改标示为1的项目或者场站信息成功
+2020-07-28 17:28:59,949 [线程ID:25] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001添加标示为3项目名称为合续智控桃花源的项目成功
+2020-07-28 17:30:02,271 [线程ID:24] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001添加标示为4项目名称为合续智控桃花源战场的项目成功
+2020-07-28 17:30:47,646 [线程ID:36] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001修改标示为4的项目或者场站信息成功
+=========================================================
+2020-07-28 17:35:37,967 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-28 17:35:37,981 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-28 17:35:37,984 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-28 17:35:37,986 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-28 17:38:14,463 [线程ID:19] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001删除标识为4的项目或者场站成功
+2020-07-28 17:44:30,278 [线程ID:17] INFO  记录文件：HXCloud.Service.ProjectImageService - 消息：hx0001添加图片成功，图片标示为1

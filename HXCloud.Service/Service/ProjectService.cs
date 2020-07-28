@@ -119,7 +119,7 @@ namespace HXCloud.Service
                 entity.GroupId = GroupId;
                 await _pr.AddAsync(entity);
                 _log.LogInformation($"{account}添加标示为{entity.Id}项目名称为{entity.Name}的项目成功");
-                return new BResponse<int> { Success = true, Message = "添加成功", Data = entity.Id };
+                return new HandleResponse<int> { Success = true, Message = "添加成功", Key = entity.Id };
             }
             catch (Exception ex)
             {
@@ -248,7 +248,7 @@ namespace HXCloud.Service
 
         }
 
-        public async Task<BaseResponse> GetMyProject(string GroupId, string roles, bool isAdmin, BasePageRequest req)
+        public async Task<BaseResponse> GetMyProjectAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
         {
             //获取用户所有的项目标识
             var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
@@ -279,7 +279,7 @@ namespace HXCloud.Service
             br.Data = dto;
             return br;
         }
-        public async Task<BaseResponse> GetMyProjectAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
+        public async Task<BaseResponse> GetMySiteAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
         {
             //获取用户所有的项目标识
             var sites = await GetMySitesIdAsync(GroupId, roles, isAdmin);

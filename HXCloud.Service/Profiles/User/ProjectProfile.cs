@@ -14,6 +14,10 @@ namespace HXCloud.Service
             CreateMap<ProjectAddDto, ProjectModel>().ForMember(dest => dest.ProjectType, opt =>
                opt.MapFrom(src => (ProjectType)src.ProjectType));
             CreateMap<ProjectModel, ProjectData>().ForMember(dest => dest.Child, opt => opt.Ignore());
+            CreateMap<ProjectUpdateDto, ProjectModel>();
+
+            CreateMap<ProjectImageAddDto, ProjectImageModel>();
+            CreateMap<ProjectImageModel, ProjectImageData>();
         }
     }
 }

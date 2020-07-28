@@ -45,13 +45,14 @@ namespace HXCloud.Service
             return data.project.GroupId;
         }
 
-        public async Task<BaseResponse> AddProjectImageAsync(ProjectImageAddDto req, string url, string account)
+        public async Task<BaseResponse> AddProjectImageAsync(ProjectImageAddDto req, string url, string account, int projectId)
         {
             try
             {
                 var entity = _mapper.Map<ProjectImageModel>(req);
                 entity.Create = account;
                 entity.url = url;
+                entity.ProjectId = projectId;
                 await _pi.AddAsync(entity);
                 _log.LogInformation($"{account}添加图片成功，图片标示为{entity.Id}");
                 return new BResponse<int> { Success = true, Message = "添加图片成功", Data = entity.Id };
@@ -59,7 +60,7 @@ namespace HXCloud.Service
             catch (Exception ex)
             {
                 _log.LogError($"{account}添加图片失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "添加图片失败" };
+                return new BaseResponse { Success = false, Message = "添加图片失败，请联系管理员" };
             }
         }
 
@@ -85,7 +86,7 @@ namespace HXCloud.Service
             catch (Exception ex)
             {
                 _log.LogError($"{account}删除Id为{Id}的图片失败，失败原因：{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "删除图片失败" };
+                return new BaseResponse { Success = false, Message = "删除图片失败，请联系管理员" };
             }
         }
 

@@ -108,7 +108,7 @@ namespace HXCloud.APIV2.Controllers
                 {
                     await req.file.CopyToAsync(stream);
                 }
-                var br = await _pis.AddProjectImageAsync(req, path, Account);
+                var br = await _pis.AddProjectImageAsync(req, path, Account, projectId);
                 if (!br.Success)
                 {
                     //删除已存在的logo
@@ -132,7 +132,7 @@ namespace HXCloud.APIV2.Controllers
         }
 
         [HttpDelete("{Id}")]
-        public async Task<ActionResult<BaseResponse>> DeleteProjectImage(string GroupId,int projectId,int Id)
+        public async Task<ActionResult<BaseResponse>> DeleteProjectImage(string GroupId, int projectId, int Id)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -169,7 +169,7 @@ namespace HXCloud.APIV2.Controllers
             return ret;
         }
         [HttpGet("{Id}")]
-        public async Task<ActionResult<BaseResponse>> GetImage(string GroupId,int projectId,int Id)
+        public async Task<ActionResult<BaseResponse>> GetImage(string GroupId, int projectId, int Id)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -206,7 +206,7 @@ namespace HXCloud.APIV2.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<BaseResponse>> GetProjectImage(string GroupId,int projectId)
+        public async Task<ActionResult<BaseResponse>> GetProjectImage(string GroupId, int projectId)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
