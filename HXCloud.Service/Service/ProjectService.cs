@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Linq.Dynamic.Core;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,12 +19,16 @@ namespace HXCloud.Service
         private readonly IProjectRepository _pr;
         private readonly ILogger<ProjectService> _log;
         private readonly IMapper _mapper;
+        private readonly IDeviceRepository _dr;
+        private readonly IRoleProjectRepository _rp;//获取用户分配的项目
 
-        public ProjectService(IProjectRepository pr, ILogger<ProjectService> log, IMapper mapper)
+        public ProjectService(IProjectRepository pr, ILogger<ProjectService> log, IMapper mapper, IDeviceRepository dr, IRoleProjectRepository rp)
         {
             this._pr = pr;
             this._log = log;
             this._mapper = mapper;
+            this._dr = dr;
+            this._rp = rp;
         }
 
         //检查输入的项目或者场站是否存在，并返回项目或者场站的路径以及所属的组织编号
@@ -203,6 +208,146 @@ namespace HXCloud.Service
                 return null;
             }
             return ret;
+        }
+
+        public async Task<BaseResponse> DeleteProjectAsync(string account, int Id)
+        {
+            var entity = await _pr.FindAsync(Id);
+            if (entity == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
+            }
+            if (entity.ProjectType == ProjectType.Project)
+            {
+                //是否有子项目或者有设备挂载
+                var child = await _pr.Find(a => a.ParentId == Id).CountAsync();
+                if (child > 0)
+                {
+                    return new BaseResponse { Success = false, Message = "该项目下有子项目或者场站，不能删除" };
+                }
+            }
+            else
+            {
+                var device = await _dr.Find(a => a.ProjectId == Id).CountAsync();
+                if (device > 0)
+                {
+                    return new BaseResponse { Success = false, Message = "该场站下挂在有设备,不能删除" };
+                }
+            }
+            try
+            {
+                await _pr.RemoveAsync(entity);
+                _log.LogInformation($"{account}删除标识为{Id}的项目或者场站成功");
+                return new BaseResponse { Success = true, Message = "删除数据成功" };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{account}删除标识为{Id}的项目或者场站失败，失败原因：{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "删除数据失败，请联系管理员" };
+            }
+
+        }
+
+        public async Task<BaseResponse> GetMyProject(string GroupId, string roles, bool isAdmin, BasePageRequest req)
+        {
+            //获取用户所有的项目标识
+            var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
+            var project = _pr.Find(a => a.GroupId == GroupId && pids.Contains(a.Id));
+            if (!string.IsNullOrWhiteSpace(req.Search))
+            {
+                project = project.Where(a => a.Name.Contains(req.Search));
+            }
+            int count = project.Count();
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "Id Asc";
+            }
+            else
+            {
+                var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            var list = await project.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var dto = _mapper.Map<List<ProjectData>>(list);
+            var br = new BasePageResponse<List<ProjectData>>();
+            br.Success = true;
+            br.Message = "获取数据成功";
+            br.PageSize = req.PageSize;
+            br.CurrentPage = req.PageNo;
+            br.Count = count;
+            br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            br.Data = dto;
+            return br;
+        }
+        public async Task<BaseResponse> GetMyProjectAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
+        {
+            //获取用户所有的项目标识
+            var sites = await GetMySitesIdAsync(GroupId, roles, isAdmin);
+            var project = _pr.Find(a => a.GroupId == GroupId && sites.Contains(a.Id));
+            if (!string.IsNullOrWhiteSpace(req.Search))
+            {
+                project = project.Where(a => a.Name.Contains(req.Search));
+            }
+            int count = project.Count();
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "Id Asc";
+            }
+            else
+            {
+                var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            var list = await project.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var dto = _mapper.Map<List<ProjectData>>(list);
+            var br = new BasePageResponse<List<ProjectData>>();
+            br.Success = true;
+            br.Message = "获取数据成功";
+            br.PageSize = req.PageSize;
+            br.CurrentPage = req.PageNo;
+            br.Count = count;
+            br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            br.Data = dto;
+            return br;
+        }
+
+        public async Task<List<int>> GetMyProjectIdSync(string GroupId, string roles, bool isAdmin)
+        {
+            List<int> pids = new List<int>();
+            if (isAdmin)
+            {
+                pids = await _pr.Find(a => a.GroupId == GroupId && a.Parent == null).Select(a => a.Id).ToListAsync();
+
+            }
+            else
+            {
+                //获取用户分配的项目
+                int[] rs = Array.ConvertAll<string, int>(roles.Split(','), src => int.Parse(src));
+                //包含有场站
+                pids = await _rp.Find(a => rs.Contains(a.RoleId) && (int)a.Operate >= 0).Select(a => a.ProjectId).ToListAsync();
+                var s = await _pr.Find(a => pids.Contains(a.Id) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToArrayAsync();
+                //移除场站
+                pids.RemoveAll(a => s.Contains(a));
+            }
+            var c = await GetChildId(pids);
+            pids.AddRange(c);
+            return pids;
+        }
+        public async Task<List<int>> GetChildId(List<int> id)
+        {
+            var p = await _pr.Find(a => id.Contains(a.ParentId.Value) && a.ProjectType == ProjectType.Project).Select(a => a.Id).ToListAsync();
+            if (p.Count > 0)
+            {
+                var c = await GetChildId(p);
+                p.AddRange(c);
+            }
+            return p;
+        }
+        public async Task<List<int>> GetMySitesIdAsync(string GroupId, string roles, bool isAdmin)
+        {
+            var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
+            var sites = await _pr.Find(a => pids.Contains(a.ParentId.Value) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
+            return sites;
         }
 
     }

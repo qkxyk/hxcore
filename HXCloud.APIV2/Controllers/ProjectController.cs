@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HXCloud.APIV2.Filters;
 using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
@@ -165,6 +166,86 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             var rm = await _ps.UpdateProjectAsync(req, Account);
+            return rm;
+        }
+
+        [HttpDelete("{Id}")]
+        public async Task<ActionResult<BaseResponse>> DeleteProject(string GroupId, int Id)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取项目路径
+            var pathId = await _ps.GetPathId(Id);
+            if (pathId == null)
+            {
+                return new NotFoundResult();
+            }
+            if (GroupId != GId)
+            {
+                if (!(isAdmin && Code == _config["Group"]))
+                {
+                    return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                }
+            }
+            else
+            {
+                if (!isAdmin)
+                {
+                    var bAccess = await _rp.IsAuth(Roles, pathId, 3);
+                    if (!bAccess)
+                    {
+                        return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                    }
+                }
+            }
+            var rm = await _ps.DeleteProjectAsync(Account, Id);
+            return rm;
+        }
+
+        /// <summary>
+        /// 获取组织的项目,组织的管理员有权限
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [TypeFilter(typeof(AdminActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> GetGroupProject(string GroupId)
+        {
+            var rm = await _ps.GetGroupProject(GroupId);
+            return rm;
+        }
+        [HttpGet("MyProject")]
+        public async Task<ActionResult<BaseResponse>> GetMyProject(string GroupId, [FromQuery] BasePageRequest req)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            if (GId != GroupId)
+            {
+                return new BaseResponse { Success = false, Message = "输入的组织编号不正确" };
+            }
+            var rm = await _ps.GetMyProjectAsync(GroupId, Roles, isAdmin, req);
+            return rm;
+
+        }
+        [HttpGet("MySite")]
+        public async Task<ActionResult<BaseResponse>> GetMySite(string GroupId, [FromQuery] BasePageRequest req)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            if (GId != GroupId)
+            {
+                return new BaseResponse { Success = false, Message = "输入的组织编号不正确" };
+            }
+            var rm = await _ps.GetMyProjectAsync(GroupId, Roles, isAdmin, req);
             return rm;
         }
     }

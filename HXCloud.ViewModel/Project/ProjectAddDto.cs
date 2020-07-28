@@ -8,6 +8,7 @@ namespace HXCloud.ViewModel
     public class ProjectAddDto
     {
         [Required(ErrorMessage = "项目或者场站名称不能为空")]
+        [StringLength(50, ErrorMessage = "项目或者场站名称长度在2到50个字符之间", MinimumLength = 2)]
         public string Name { get; set; }//项目或者场站名称
         [Range(0, 1, ErrorMessage = "只能输入0和1，0表示项目，1表示场站")]
         public int ProjectType { get; set; }//项目或者场站

@@ -32,7 +32,7 @@ namespace HXCloud.APIV2.Filters
             }
             else
             {
-                context.Result = new ContentResult { Content = "用户没有权限添加角色", ContentType = "text/plain", StatusCode = 401 };
+                context.Result = new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
             }
         }
     }

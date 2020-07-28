@@ -45,7 +45,7 @@ namespace HXCloud.Service
             return data.project.GroupId;
         }
 
-        public async Task<BaseResponse> AddProjectImageAsync(ProjectImageAddViewModel req, string url, string account)
+        public async Task<BaseResponse> AddProjectImageAsync(ProjectImageAddDto req, string url, string account)
         {
             try
             {
