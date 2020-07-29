@@ -20,8 +20,8 @@ namespace HXCloud.ViewModel
         [Required(ErrorMessage = "设备编号不能为空")]
         public string DeviceNo { get; set; }//设备编号
         public string Position { get; set; }//设备的位置坐标
-        [Required(ErrorMessage = "设备所属组织标示不能空")]
-        public string GroupId { get; set; }
+        //[Required(ErrorMessage = "设备所属组织标示不能空")]
+        //public string GroupId { get; set; }
         public Nullable<int> ProjectId { get; set; }
         [Required(ErrorMessage = "设备类型不能为空")]
         public int TypeId { get; set; }//设备类型

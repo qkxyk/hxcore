@@ -50,7 +50,7 @@ namespace HXCloud.APIV2.Filters
             if (!IsAdmin)        //非管理员验证权限
             {
                 //是否有设备的查看权限
-                bool bAuth = await _rps.IsAuth(Roles, device.ProjectId, 0);
+                bool bAuth = await _rps.IsAuth(Roles, device.PathId, 0);
                 if (!bAuth)
                 {
                     context.Result = new ContentResult { StatusCode = 401, Content = "用户没有权限查看设备的功能" };

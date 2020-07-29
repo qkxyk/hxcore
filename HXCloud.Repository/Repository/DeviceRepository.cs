@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HXCloud.Model;
@@ -12,6 +13,15 @@ namespace HXCloud.Repository
         {
             //ef core默认的事务处理
             _db.Devices.Add(entity);
+            _db.DeviceHardwareConfigs.AddRange(data);
+            await _db.SaveChangesAsync();
+        }
+        public async Task SaveAsync(DeviceModel entity, List<DeviceHardwareConfigModel> data)
+        {
+            //先删除现有的硬件配置数据
+            var dh = _db.DeviceHardwareConfigs.Where(a => a.DeviceSn == entity.DeviceSn).ToList();
+            _db.DeviceHardwareConfigs.RemoveRange(dh);
+            _db.Entry<DeviceModel>(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             _db.DeviceHardwareConfigs.AddRange(data);
             await _db.SaveChangesAsync();
         }

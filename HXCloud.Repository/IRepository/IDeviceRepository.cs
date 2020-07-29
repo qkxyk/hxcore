@@ -9,5 +9,6 @@ namespace HXCloud.Repository
     public interface IDeviceRepository : IBaseRepository<DeviceModel>
     {
         Task AddAsync(DeviceModel entity, List<DeviceHardwareConfigModel> data);
+        Task SaveAsync(DeviceModel entity, List<DeviceHardwareConfigModel> data);
     }
 }
