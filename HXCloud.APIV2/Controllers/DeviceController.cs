@@ -151,7 +151,7 @@ namespace HXCloud.APIV2.Controllers
             var rm = await _ds.UpdateDeviceAsync(Account, GroupId, req);
             return rm;
         }
-        [HttpPut("{Type}")]
+        [HttpPut("Type")]
         public async Task<ActionResult<BaseResponse>> UpdateDeviceType(string GroupId,  DeviceTypeUpdateDto req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -215,7 +215,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="GroupId"></param>
         /// <param name="DeviceSn"></param>
         /// <returns></returns>
-        [HttpPut("{Project}")]
+        [HttpPut("Project")]
         public async Task<ActionResult<BaseResponse>> RemoveDeviceProject(string GroupId, string DeviceSn)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -262,7 +262,7 @@ namespace HXCloud.APIV2.Controllers
             return rm;
         }
 
-        [HttpPut("{Migration}")]
+        [HttpPut("Migration")]
         public async Task<ActionResult<BaseResponse>> ChangeDeviceProject(string GroupId, string DeviceSn, int projectId)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -360,7 +360,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="projectId"></param>
         /// <param name="req"></param>
         /// <returns></returns>
-        [HttpGet("{Project}")]
+        [HttpGet("Project")]
         public async Task<ActionResult<BaseResponse>> GetProjectDevices(string GroupId, int projectId, [FromQuery]BasePageRequest req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -406,7 +406,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="GroupId"></param>
         /// <param name=""></param>
         /// <returns></returns>
-        [HttpGet("{MyDevice}")]
+        [HttpGet("MyDevice")]
         public async Task<ActionResult<BaseResponse>> GetMyDevice(string GroupId, [FromQuery]BasePageRequest req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;

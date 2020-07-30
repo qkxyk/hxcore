@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HXCloud.APIV2.Controllers
 {
-    [Route("api/device/{deviceSn}/[controller]")]
+    [Route("api/{GroupId}/{DeviceSn}/[controller]")]
     [ApiController]
     public class DeviceMigrationController : ControllerBase
     {
+        public DeviceMigrationController()
+        {
+
+        }
     }
 }

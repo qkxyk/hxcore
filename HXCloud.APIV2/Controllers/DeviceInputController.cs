@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HXCloud.APIV2.Controllers
 {
-    [Route("api/device/{deviceSn}/[controller]")]
+    [Route("api/{GroupId}/{DeviceSn}/[controller]")]
     [ApiController]
     [Authorize]
     public class DeviceInputController : ControllerBase
@@ -24,23 +24,23 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPost]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> AddDeviceInputData(string deviceSn, DeviceInputAddDto req)
+        public async Task<ActionResult<BaseResponse>> AddDeviceInputData(string GroupId,string DeviceSn, DeviceInputAddDto req)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var rm = await _dis.AddDeviceInputDataAsync(account, req, deviceSn);
+            var rm = await _dis.AddDeviceInputDataAsync(account, req, DeviceSn);
             return rm;
         }
         [HttpPut]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> UpdateDeviceInputData(string deviceSn, DeviceInputDataUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateDeviceInputData(string GroupId,string DeviceSn, DeviceInputDataUpdateDto req)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var rm = await _dis.UpdateDeviceInputDataAsync(account, req, deviceSn);
+            var rm = await _dis.UpdateDeviceInputDataAsync(account, req, DeviceSn);
             return rm;
         }
         [HttpDelete("{Id}")]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> DeleteDeviceInputData(string deviceSn, int Id)
+        public async Task<ActionResult<BaseResponse>> DeleteDeviceInputData(string GroupId,string DeviceSn, int Id)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var rm = await _dis.DeleteDeviceInputDataAsync(account, Id);
@@ -48,16 +48,16 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpGet("{Id}")]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceInputData(string deviceSn, int Id)
+        public async Task<ActionResult<BaseResponse>> GetDeviceInputData(string GroupId,string DeviceSn, int Id)
         {
             var rm = await _dis.GetDeviceInputDataAsync(Id);
             return rm;
         }
         [HttpGet]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceInputDatas(string deviceSn)
+        public async Task<ActionResult<BaseResponse>> GetDeviceInputDatas(string GroupId,string DeviceSn)
         {
-            var rm = await _dis.GetAllDeviceInputDataAsync(deviceSn);
+            var rm = await _dis.GetAllDeviceInputDataAsync(DeviceSn);
             return rm;
         }
     }

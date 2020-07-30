@@ -17,7 +17,7 @@ namespace HXCloud.APIV2.Controllers
     /// 一个设备对应一个流量卡
     /// </summary>
     [Authorize]
-    [Route("api/device/{deviceSn}/[controller]")]
+    [Route("api/{GroupId}/{DeviceSn}/[controller]")]
     [ApiController]
     public class DeviceCardController : ControllerBase
     {
@@ -37,24 +37,24 @@ namespace HXCloud.APIV2.Controllers
         [HttpPost]
         //[ServiceFilter(typeof(DeviceActionFilterAttribute))]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> AddDeviceCard(string devicesn, [FromBody]DeviceCardAddDto req)
+        public async Task<ActionResult<BaseResponse>> AddDeviceCard(string GroupId,string Devicesn, [FromBody]DeviceCardAddDto req)
         {
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             //添加流量卡
-            var rm = await _dcs.AddDeviceCardAsync(devicesn, req, account);
+            var rm = await _dcs.AddDeviceCardAsync(Devicesn, req, account);
             return rm;
         }
         [HttpPut]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> UpdateDeviceCard(string devicesn, [FromBody] DeviceCardUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateDeviceCard(string GroupId,string Devicesn, [FromBody] DeviceCardUpdateDto req)
         {
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var rm = await _dcs.UpdateDeviceCardAsync(account, req, devicesn);
+            var rm = await _dcs.UpdateDeviceCardAsync(account, req, Devicesn);
             return rm;
         }
         [HttpDelete("{CardNo}")]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> DeleteDeviceCard(string devicesn, string CardNo)
+        public async Task<ActionResult<BaseResponse>> DeleteDeviceCard(string GroupId,string Devicesn, string CardNo)
         {
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var rm = await _dcs.DeleteDeviceCardAsync(account, CardNo);
@@ -63,16 +63,16 @@ namespace HXCloud.APIV2.Controllers
 
         [HttpGet("{CardNo}")]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceCard(string deviceSn, string CardNo)
+        public async Task<ActionResult<BaseResponse>> GetDeviceCard(string GroupId,string DeviceSn, string CardNo)
         {
             var rm = await _dcs.GetDeviceCardAsync(CardNo);
             return rm;
         }
         [HttpGet]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceCards(string deviceSn)
+        public async Task<ActionResult<BaseResponse>> GetDeviceCards(string GroupId,string DeviceSn)
         {
-            var rm = await _dcs.GetDeviceCardsAsync(deviceSn);
+            var rm = await _dcs.GetDeviceCardsAsync(DeviceSn);
             return rm;
         }
     }

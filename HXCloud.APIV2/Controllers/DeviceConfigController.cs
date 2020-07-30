@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HXCloud.APIV2.Controllers
 {
-    [Route("api/device/{deviceSn}/[controller]")]
+    [Route("api/{GroupId}/{DeviceSn}/[controller]")]
     [ApiController]
     [Authorize]
     public class DeviceConfigController : ControllerBase
@@ -24,23 +24,23 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPost]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> AddDeviceConfig(string deviceSn, DeviceConfigAddDto req)
+        public async Task<ActionResult<BaseResponse>> AddDeviceConfig(string GroupId,string DeviceSn, DeviceConfigAddDto req)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var rm = await _dcs.AddDeviceConfigAsync(account, req, deviceSn);
+            var rm = await _dcs.AddDeviceConfigAsync(account, req, DeviceSn);
             return rm;
         }
         [HttpPut]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> UpdateDeviceConfig(string deviceSn, DeviceConfigUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateDeviceConfig(string GroupId,string DeviceSn, DeviceConfigUpdateDto req)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var rm = await _dcs.UpdateDeviceConfigAsync(account, req, deviceSn);
+            var rm = await _dcs.UpdateDeviceConfigAsync(account, req, DeviceSn);
             return rm;
         }
         [HttpDelete("{Id}")]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> DeleteDeviceConfig(string deviceSn, int Id)
+        public async Task<ActionResult<BaseResponse>> DeleteDeviceConfig(string GroupId,string DeviceSn, int Id)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var rm = await _dcs.DeleteDeviceConfigAsync(account, Id);
@@ -48,16 +48,16 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpGet("{Id}")]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceConfig(string deviceSn, int Id)
+        public async Task<ActionResult<BaseResponse>> GetDeviceConfig(string GroupId,string DeviceSn, int Id)
         {
             var rm = await _dcs.GetDeviceConfigAsync(Id);
             return rm;
         }
         [HttpGet]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceConfigs(string deviceSn)
+        public async Task<ActionResult<BaseResponse>> GetDeviceConfigs(string GroupId,string DeviceSn)
         {
-            var rm = await _dcs.GetDeviceConfigsAsync(deviceSn);
+            var rm = await _dcs.GetDeviceConfigsAsync(DeviceSn);
             return rm;
         }
     }
