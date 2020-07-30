@@ -150,3 +150,45 @@
 2020-07-28 17:35:37,986 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
 2020-07-28 17:38:14,463 [线程ID:19] INFO  记录文件：HXCloud.Service.ProjectService - 消息：hx0001删除标识为4的项目或者场站成功
 2020-07-28 17:44:30,278 [线程ID:17] INFO  记录文件：HXCloud.Service.ProjectImageService - 消息：hx0001添加图片成功，图片标示为1
+=========================================================
+=========================================================
+=========================================================
+2020-07-30 11:22:04,772 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 11:22:04,802 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 11:22:04,804 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 11:22:04,806 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-30 11:22:43,781 [线程ID:4] INFO  记录文件：HXCloud.Service.RegionService - 消息：hx0001添加标示为{ Id = 101001001, GroupId = 057a556af24f494094a2586fbe9335a4 }的区域成功
+=========================================================
+2020-07-30 16:19:12,127 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 16:19:12,144 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 16:19:12,146 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 16:19:12,149 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-07-30 16:50:29,697 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 16:50:29,711 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 16:50:29,713 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 16:50:29,716 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-07-30 16:53:40,644 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 16:53:40,660 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 16:53:40,662 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 16:53:40,665 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-30 16:53:47,136 [线程ID:4] INFO  记录文件：HXCloud.Service.DeviceService - 消息：hx0001删除类型标示为62450b2ff828460781cded0643392fb2的设备数据成功
+=========================================================
+2020-07-30 17:22:21,560 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 17:22:21,575 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 17:22:21,578 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 17:22:21,581 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-07-30 17:33:10,747 [线程ID:53] INFO  记录文件：HXCloud.Service.DeviceService - 消息：hx0001修改标识为62450b2ff828460781cded0643392fb2的设备成功
+2020-07-30 17:33:10,748 [线程ID:60] INFO  记录文件：HXCloud.Service.DeviceService - 消息：hx0001修改标识为62450b2ff828460781cded0643392fb2的设备成功
+2020-07-30 17:33:23,779 [线程ID:59] INFO  记录文件：HXCloud.Service.DeviceService - 消息：hx0001修改标识为62450b2ff828460781cded0643392fb2的设备成功
+=========================================================
+2020-07-30 17:40:57,264 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 17:40:57,282 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 17:40:57,285 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 17:40:57,287 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-07-30 17:42:56,216 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-07-30 17:42:56,234 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-07-30 17:42:56,236 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-07-30 17:42:56,238 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2

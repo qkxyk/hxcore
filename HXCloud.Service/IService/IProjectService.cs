@@ -18,9 +18,11 @@ namespace HXCloud.Service
         Task<BaseResponse> GetGroupProject(string GroupId);
         bool IsExist(int Id, out string pathId, out string groupId);
         Task<string> GetPathId(int Id);
+        Task<ProjectCheckDto> GetProjectCheckAsync(int Id);
         Task<BaseResponse> GetMyProjectAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req);
         Task<BaseResponse> GetMySiteAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req);
         Task<List<int>> GetMyProjectIdSync(string GroupId, string roles, bool isAdmin);
         Task<List<int>> GetMySitesIdAsync(string GroupId, string roles, bool isAdmin);
+        Task<List<int>> GetProjectSitesIdAsync(int projectId);
     }
 }

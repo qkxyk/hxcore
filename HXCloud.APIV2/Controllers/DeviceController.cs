@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HXCloud.APIV2.Filters;
 using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace HXCloud.APIV2.Controllers
 {
@@ -51,10 +47,14 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "输入的组织编号不存在，请确认" };
             }
-            bRet = await _ts.IsExist(opt => opt.Id == req.TypeId);
-            if (!bRet)
+            var type = await _ts.CheckTypeAsync(req.TypeId);
+            if (!type.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "输入的类型不存在，请确认" };
+            }
+            else if (type.Status == 0)
+            {
+                return new BaseResponse { Success = false, Message = "输入的类型不能添加设备，请确认" };
             }
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -64,16 +64,21 @@ namespace HXCloud.APIV2.Controllers
 
             if (req.ProjectId.HasValue && req.ProjectId.Value != 0)
             {
-                string pathId, groupId;
-                bRet = _ps.IsExist(req.ProjectId.Value, out pathId, out groupId);
-                if (!bRet || GroupId != groupId)
+                //string pathId, groupId;
+                var pc = await _ps.GetProjectCheckAsync(req.ProjectId.Value);
+                if (!pc.IsExist)
+                {
+                    return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
+                }
+                if (!pc.IsSite)
+                {
+                    return new BaseResponse { Success = false, Message = "设备只能添加在场站下面" };
+                }
+                if (GroupId != pc.GroupId)
                 {
                     return new BaseResponse { Success = false, Message = "输入的项目不存在或者项目与组织编号不匹配" };
                 }
-                if (pathId == null || "" == pathId)
-                {
-                    pathId = req.ProjectId.Value.ToString();
-                }
+
                 if (isAdmin)
                 {
                     if (GroupId != GId && Code != _config["Group"])
@@ -83,7 +88,7 @@ namespace HXCloud.APIV2.Controllers
                 }
                 else
                 {
-                    bRet = await _rp.IsAuth(Roles, pathId, 3);
+                    bRet = await _rp.IsAuth(Roles, pc.PathId, 3);
                     if (!bRet)
                     {
                         return new BaseResponse { Success = false, Message = "用户没有在该场站下添加设备的权限" };
@@ -147,7 +152,7 @@ namespace HXCloud.APIV2.Controllers
             return rm;
         }
         [HttpPut("{Type}")]
-        public async Task<ActionResult<BaseResponse>> UpdateDeviceType(string GroupId, string DeviceSn, int TypeId)
+        public async Task<ActionResult<BaseResponse>> UpdateDeviceType(string GroupId,  DeviceTypeUpdateDto req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -155,16 +160,20 @@ namespace HXCloud.APIV2.Controllers
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
             //验证设备是否存在
-            var dto = await _ds.IsExistCheck(a => a.DeviceSn == DeviceSn && a.GroupId == GroupId);
+            var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn && a.GroupId == GroupId);
             if (!dto.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "该组织下不存在该设备" };
             }
             //验证设备类型是否存在
-            var bType = await _ts.IsExist(a => a.Id == TypeId && a.GroupId == GroupId);
-            if (!bType)
+            var type = await _ts.CheckTypeAsync(req.TypeId);
+            if (!type.IsExist)
             {
-                return new BaseResponse { Success = false, Message = "该组织下不存在此类型" };
+                return new BaseResponse { Success = false, Message = "输入的类型不存在，请确认" };
+            }
+            else if (type.Status == 0)
+            {
+                return new BaseResponse { Success = false, Message = "输入的类型不能添加设备，请确认" };
             }
 
             //验证权限
@@ -196,7 +205,7 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             #endregion
-            var rm = await _ds.UpdateDeviceTypeAsync(Account, DeviceSn, TypeId);
+            var rm = await _ds.UpdateDeviceTypeAsync(Account, req.DeviceSn,req.TypeId);
             return rm;
         }
 
@@ -206,7 +215,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="GroupId"></param>
         /// <param name="DeviceSn"></param>
         /// <returns></returns>
-        [HttpDelete("{Project}")]
+        [HttpPut("{Project}")]
         public async Task<ActionResult<BaseResponse>> RemoveDeviceProject(string GroupId, string DeviceSn)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -242,14 +251,82 @@ namespace HXCloud.APIV2.Controllers
             }
             else
             {
-                if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
-                {
-                    return Unauthorized("用户没有权限操作无项目的设备");
-                }
+                //if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
+                //{
+                //    return Unauthorized("用户没有权限操作无项目的设备");
+                //}
+                return new BaseResponse { Success = false, Message = "该设备已在回收站中，请勿重复操作" };
             }
             #endregion
+            var rm = await _ds.ChangeDeviceProject(Account, DeviceSn, GroupId, null);
+            return rm;
         }
 
+        [HttpPut("{Migration}")]
+        public async Task<ActionResult<BaseResponse>> ChangeDeviceProject(string GroupId, string DeviceSn, int projectId)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            var dto = await _ds.IsExistCheck(a => a.DeviceSn == DeviceSn);
+            if (!dto.IsExist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的设备不存在" };
+            }
+            if (dto.ProjectId.HasValue && dto.ProjectId.Value != 0)
+            {
+                return new BaseResponse { Success = false, Message = "只能迁移回收站中的设备" };
+            }
+            var pc = await _ps.GetProjectCheckAsync(projectId);
+            if (!pc.IsExist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
+            }
+            if (!pc.IsSite)
+            {
+                return new BaseResponse { Success = false, Message = "设备只能添加在场站下面" };
+            }
+            //var p = await _ps.GetProjectAsync(projectId);
+            //if (p == null)
+            //{
+            //    return new BaseResponse { Success = false, Message = "输入的场站不存在" };
+            //}
+            ////只能迁移到场站
+            //if (p.ProjectType == 0)
+            //{
+            //    return new BaseResponse { Success = false, Message = "设备只能迁移到场站" };
+            //}
+            //只有超级管理员有权限跨组织迁移
+            if (pc.GroupId != GroupId)
+            {
+                if (isAdmin && Code == _config["Group"])
+                {
+                    GroupId = pc.GroupId;
+                }
+                else
+                {
+                    return Unauthorized("用户没有权限跨组织迁移设备");
+                }
+            }
+            else
+            {
+                if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
+                {
+                    return Unauthorized("用户没有权限迁移设备");
+                }
+            }
+            var rm = await _ds.ChangeDeviceProject(Account, DeviceSn, GroupId, projectId);
+            return rm;
+        }
+
+        /// <summary>
+        /// 彻底删除设备
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <param name="DeviceSn"></param>
+        /// <returns></returns>
         [HttpDelete]
         [TypeFilter(typeof(AdminActionFilterAttribute))]
         public async Task<ActionResult<BaseResponse>> DeleteDevice(string GroupId, string DeviceSn)
@@ -268,7 +345,84 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "只能删除回收站的设备" };
             }
+            if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
+            {
+                return Unauthorized("用户没有权限删除设备");
+            }
+            throw new NotImplementedException();
+            //var rm = await _ds.
+        }
 
+        /// <summary>
+        /// 获取项目或者场站下的设备
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <param name="projectId"></param>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpGet("{Project}")]
+        public async Task<ActionResult<BaseResponse>> GetProjectDevices(string GroupId, int projectId, [FromQuery]BasePageRequest req)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            var p = await _ps.GetProjectAsync(projectId);
+            if (p == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的场站不存在" };
+            }
+            bool isSite = false;
+            if (p.ProjectType == Model.ProjectType.Site)
+            {
+                isSite = true;
+            }
+            //验证权限
+            if (GroupId != GId)
+            {
+                if (!(isAdmin && Code == _config["Group"]))
+                {
+                    return Unauthorized("用户没有权限");
+                }
+            }
+            else
+            {
+                if (!isAdmin)
+                {
+                    var bAccess = await _rp.IsAuth(Roles, p.PathId, 0);
+                    if (!bAccess)
+                    {
+                        return Unauthorized("用户没有权限查看");
+                    }
+                }
+            }
+            var rm = await _ds.GetProjectDeviceAsync(GroupId, projectId, isSite, req);
+            return rm;
+        }
+        /// <summary>
+        /// 获取我的设备
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <param name=""></param>
+        /// <returns></returns>
+        [HttpGet("{MyDevice}")]
+        public async Task<ActionResult<BaseResponse>> GetMyDevice(string GroupId, [FromQuery]BasePageRequest req)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            if (GroupId != GId)
+            {
+                if (!(isAdmin && Code == _config["Group"]))//超级管理员可以查看任何组织的全部设备
+                {
+                    return Unauthorized("输入的组织编号不正确");
+                }
+            }
+            var rm = await _ds.GetMyDevice(GroupId, Roles, isAdmin, req);
+            return rm;
         }
     }
 }

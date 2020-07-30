@@ -62,18 +62,23 @@ namespace HXCloud.Service
         /// <param name="GroupId">类型所属的组织编号</param>
         /// <param name="status">类型是否能是叶子节点</param>
         /// <returns>类型是否存在</returns>
-        public bool IsExist(int Id, out string GroupId, out int status)
+        public async Task<TypeCheckDto> CheckTypeAsync(int Id)
         {
+            TypeCheckDto dto = new TypeCheckDto();
             var data = _tr.Find(Id);
             if (data == null)
             {
-                GroupId = null;
-                status = 0;
-                return false;
+                dto.GroupId = null;
+                dto.Status = 0;
+                dto.IsExist = false;
             }
-            GroupId = data.GroupId;
-            status = (int)data.Status;
-            return true;
+            else
+            {
+                dto.GroupId = data.GroupId;
+                dto.Status = (int)data.Status;
+                dto.IsExist = true;
+            }
+            return dto;
         }
         public bool IsExist(Expression<Func<TypeModel, bool>> predicate, out string GroupId)
         {

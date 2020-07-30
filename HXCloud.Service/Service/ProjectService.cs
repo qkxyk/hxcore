@@ -48,6 +48,31 @@ namespace HXCloud.Service
                 return true;
             }
         }
+        public async Task<ProjectCheckDto> GetProjectCheckAsync(int Id)
+        {
+            var p = new ProjectCheckDto();
+            var data = await _pr.FindAsync(Id);
+            if (data == null)
+            {
+                p.IsExist = false;
+            }
+            else
+            {
+                p.IsExist = true;
+                p.GroupId = data.GroupId;
+                if (data.PathId == null | "" == data.PathId)
+                {
+                    p.IsSite = false;
+                    p.PathId = Id.ToString();
+                }
+                else
+                {
+                    p.IsSite = data.ProjectType == ProjectType.Site ? true : false;
+                    p.PathId = data.PathId;
+                }
+            }
+            return p;
+        }
         public async Task<string> GetPathId(int Id)
         {
             var data = await _pr.FindAsync(Id);
@@ -332,6 +357,15 @@ namespace HXCloud.Service
             var c = await GetChildId(pids);
             pids.AddRange(c);
             return pids;
+        }
+        //获取项目下的所有场站编号
+        public async Task<List<int>> GetProjectSitesIdAsync(int project)
+        {
+            List<int> p = new List<int> { project };
+            var pIds = await GetChildId(p);
+            pIds.Add(project);
+            var sites = await _pr.Find(a => pIds.Contains(a.ParentId.Value) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
+            return sites;
         }
         public async Task<List<int>> GetChildId(List<int> id)
         {

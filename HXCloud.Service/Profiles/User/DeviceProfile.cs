@@ -12,6 +12,9 @@ namespace HXCloud.Service
         public DeviceProfile()
         {
             //设备
+            CreateMap<DeviceAddDto, DeviceModel>();
+            CreateMap<DeviceUpdateViewModel, DeviceModel>();
+            CreateMap<DeviceModel, DeviceDataDto>();
 
             //设备流量卡
             CreateMap<DeviceCardAddDto, DeviceCardModel>();

@@ -14,7 +14,7 @@ namespace HXCloud.Service
         Task<BaseResponse> DeleteTypeAsync(int Id, string account);
         Task<BaseResponse> GetGroupTypeAsync(string GroupId);
         Task<BaseResponse> GetTypeAsync(int Id);
-        bool IsExist(int Id, out string GroupId, out int status);
+        Task<TypeCheckDto> CheckTypeAsync(int Id);
         bool IsExist(int Id, out string GroupId);
         bool IsExist(Expression<Func<TypeModel, bool>> predicate, out string GroupId);
     }
