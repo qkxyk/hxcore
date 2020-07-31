@@ -34,7 +34,7 @@ namespace HXCloud.APIV2.Filters
             //1、验证是否同组织管理员，2、验证角色权限，3、对比设备上的场站和项目
             //获取设备信息
             //var t = context.ActionArguments.SingleOrDefault(a => a.Key == "devicesn").Value;
-            var typeParameter = context.ActionArguments.Single(a => a.Key == "devicesn");
+            var typeParameter = context.ActionArguments.Single(a => a.Key == "DeviceSn");
             var device = await _ds.IsExistCheck(a => a.DeviceSn == typeParameter.Value.ToString());
             if (!device.IsExist)
             {

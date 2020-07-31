@@ -213,7 +213,7 @@ namespace HXCloud.Service
             string OrderExpression = "";
             if (string.IsNullOrEmpty(req.OrderBy))
             {
-                OrderExpression = "Id Asc";
+                OrderExpression = "DeviceSn Asc";
             }
             else
             {
@@ -241,7 +241,7 @@ namespace HXCloud.Service
             string OrderExpression = "";
             if (string.IsNullOrEmpty(req.OrderBy))
             {
-                OrderExpression = "Id Asc";
+                OrderExpression = "DeviceSn Asc";
             }
             else
             {

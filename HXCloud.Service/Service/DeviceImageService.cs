@@ -10,6 +10,7 @@ using HXCloud.Repository;
 using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace HXCloud.Service
 {
@@ -114,7 +115,7 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "输入的图片不存在" };
             }
             var dto = _mapper.Map<DeviceImageDto>(data);
-            return new BResponse<DeviceImageDto> { Success = true, Message = "获取数据成功" };
+            return new BResponse<DeviceImageDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
         public async Task<BaseResponse> GetAllDeviceImageAsync(string deviceSn)
         {
