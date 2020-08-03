@@ -219,6 +219,23 @@ namespace HXCloud.Service
             }
             return new BResponse<RegionDto> { Success = true, Message = "获取区域数据成功", Data = dto };
         }
+        //获取区域，递归出子区域
+        public async Task<BaseResponse> GetRegionWithChildAsync(string Id, string GroupId)
+        {
+            List<RegionDto> list = new List<RegionDto>();
+            var data = await _rr.FindWithChildAsync(a => a.Id == Id && a.GroupId == GroupId);
+            if (data == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的区域标示不存在" };
+            }
+            var dto = _mapper.Map<RegionDto>(data);
+            if (data.Child.Count > 0)
+            {
+                await GetChild(dto, Id, GroupId);
+            }
+            list.Add(dto);
+            return new BResponse<List<RegionDto>> { Success = true, Message = "获取区域数据成功", Data = list };
+        }
 
         public async Task GetChild(RegionDto td, string Id, string GroupId)
         {

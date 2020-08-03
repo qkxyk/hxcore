@@ -276,7 +276,8 @@ namespace HXCloud.Service
         public async Task<BaseResponse> GetMyProjectAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
         {
             //获取用户所有的项目标识
-            var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
+            //var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
+            var pids = await GetMyTopProjectIdAsync(GroupId, roles, isAdmin);
             var project = _pr.Find(a => a.GroupId == GroupId && pids.Contains(a.Id));
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
@@ -293,7 +294,14 @@ namespace HXCloud.Service
                 var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var list = await project.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
-            var dto = _mapper.Map<List<ProjectData>>(list);
+            var dtos = new List<ProjectData>();
+            foreach (var item in list)
+            {
+                var dto = _mapper.Map<ProjectData>(item);
+                await GetChild(dto, item.Id);
+                dtos.Add(dto);
+            }
+            //var dto = _mapper.Map<List<ProjectData>>(list);
             var br = new BasePageResponse<List<ProjectData>>();
             br.Success = true;
             br.Message = "获取数据成功";
@@ -301,7 +309,7 @@ namespace HXCloud.Service
             br.CurrentPage = req.PageNo;
             br.Count = count;
             br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
-            br.Data = dto;
+            br.Data = dtos;
             return br;
         }
         public async Task<BaseResponse> GetMySiteAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
@@ -334,6 +342,30 @@ namespace HXCloud.Service
             br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
             br.Data = dto;
             return br;
+        }
+
+        //获取我的全部顶级项目
+        public async Task<List<int>> GetMyTopProjectIdAsync(string GroupId, string roles, bool isAdmin)
+        {
+            List<int> pids = new List<int>();
+            if (isAdmin)
+            {
+                pids = await _pr.Find(a => a.GroupId == GroupId && a.Parent == null).Select(a => a.Id).ToListAsync();
+
+            }
+            else
+            {
+                //获取用户分配的项目
+                int[] rs = Array.ConvertAll<string, int>(roles.Split(','), src => int.Parse(src));
+                //包含有场站
+                pids = await _rp.Find(a => rs.Contains(a.RoleId) && (int)a.Operate >= 0).Select(a => a.ProjectId).ToListAsync();
+                var s = await _pr.Find(a => pids.Contains(a.Id) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToArrayAsync();
+                //移除场站
+                pids.RemoveAll(a => s.Contains(a));
+            }
+            //var c = await GetChildId(pids);
+            //pids.AddRange(c);
+            return pids;
         }
 
         public async Task<List<int>> GetMyProjectIdSync(string GroupId, string roles, bool isAdmin)

@@ -90,7 +90,14 @@ namespace HXCloud.APIV2.Controllers
             //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var rm = await _rs.GetRegionAsync(Id, GroupId);
             return rm;
-
+        }
+        //返回数据数组形式
+        [HttpGet("Child/{Id}")]
+        [TypeFilter(typeof(GroupOrAdminFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> RegionGetWithChild(string GroupId, string Id)
+        {
+            var rm = await _rs.GetRegionWithChildAsync(Id, GroupId);
+            return rm;
         }
         [HttpGet]
         [TypeFilter(typeof(GroupOrAdminFilterAttribute))]

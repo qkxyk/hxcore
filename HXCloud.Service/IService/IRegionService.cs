@@ -13,6 +13,7 @@ namespace HXCloud.Service
         Task<BaseResponse> UpdateRegionAsync(string account, string GroupId, RegionUpdateDto req);
         Task<BaseResponse> DeleteRegionAsync(string account, string Id, string GroupId);
         Task<BaseResponse> GetRegionAsync(string Id, string GroupId);
+        Task<BaseResponse> GetRegionWithChildAsync(string Id, string GroupId);
         Task<BaseResponse> GetGroupRegionAsync(string GroupId);
     }
 }

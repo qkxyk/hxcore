@@ -17,6 +17,7 @@ namespace HXCloud.ViewModel
         public int? ParentId { get; set; }//父项目编号
         public List<ProjectData> Child { get; set; }//子项目集合
         public string GroupId { get; set; }//组织编号
+        public string Image { get; set; }//获取项目或者场站的图片
         public ProjectData()
         {
             Child = new List<ProjectData>();
