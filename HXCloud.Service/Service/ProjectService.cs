@@ -186,12 +186,16 @@ namespace HXCloud.Service
         //获取单个项目（会递归获取项目下的所有项目或者场站）
         public async Task<BaseResponse> GetProject(int Id)
         {
-            var data = await _pr.FindAsync(a => a.Id == Id);
+            var data = await _pr.FindWithImageAndChildAsync(a => a.Id == Id).FirstOrDefaultAsync();
             if (data == null)
             {
                 return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
             }
             var dto = _mapper.Map<ProjectData>(data);
+            //if (data.Images.Count > 0)
+            //{
+            //    dto.Image = data.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
+            //}
             //dto.Child = new List<ProjectData>();
             if (data.Child.Count > 0)
             {
@@ -201,10 +205,14 @@ namespace HXCloud.Service
         }
         public async Task GetChild(ProjectData td, int Id)
         {
-            var ret = await _pr.Find(a => a.ParentId == Id).ToListAsync();
+            var ret = await _pr.FindWithImageAndChildAsync(a => a.ParentId == Id).ToListAsync();
             foreach (var item in ret)
             {
                 var dto = _mapper.Map<ProjectData>(item);
+                //if (item.Images.Count > 0)
+                //{
+                //    dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
+                //}
                 td.Child.Add(dto);
                 await GetChild(dto, item.Id);
             }
@@ -215,10 +223,14 @@ namespace HXCloud.Service
         {
             List<ProjectData> list = new List<ProjectData>();
             //获取该组织下所有的顶级项目
-            var datas = await _pr.Find(a => a.Parent == null && a.GroupId == GroupId).ToListAsync();
+            var datas = await _pr.FindWithImageAndChildAsync(a => a.Parent == null && a.GroupId == GroupId).ToListAsync();
             foreach (var item in datas)
             {
                 var dto = _mapper.Map<ProjectData>(item);
+                //if (item.Images.Count > 0)
+                //{
+                //    dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
+                //}
                 await GetChild(dto, item.Id);
                 list.Add(dto);
             }
@@ -278,7 +290,8 @@ namespace HXCloud.Service
             //获取用户所有的项目标识
             //var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
             var pids = await GetMyTopProjectIdAsync(GroupId, roles, isAdmin);
-            var project = _pr.Find(a => a.GroupId == GroupId && pids.Contains(a.Id));
+            //var project = _pr.Find(a => a.GroupId == GroupId && pids.Contains(a.Id));
+            var project = _pr.FindWithImageAndChildAsync(a => a.GroupId == GroupId && pids.Contains(a.Id));
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 project = project.Where(a => a.Name.Contains(req.Search));
@@ -298,6 +311,11 @@ namespace HXCloud.Service
             foreach (var item in list)
             {
                 var dto = _mapper.Map<ProjectData>(item);
+                //if (item.Images.Count > 0)
+                //{
+                //    dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
+                //}
+                //dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
                 await GetChild(dto, item.Id);
                 dtos.Add(dto);
             }
@@ -316,7 +334,7 @@ namespace HXCloud.Service
         {
             //获取用户所有的项目标识
             var sites = await GetMySitesIdAsync(GroupId, roles, isAdmin);
-            var project = _pr.Find(a => a.GroupId == GroupId && sites.Contains(a.Id));
+            var project = _pr.FindWithImageAsync(a => a.GroupId == GroupId && sites.Contains(a.Id));
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 project = project.Where(a => a.Name.Contains(req.Search));
@@ -332,6 +350,7 @@ namespace HXCloud.Service
                 var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var list = await project.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+
             var dto = _mapper.Map<List<ProjectData>>(list);
             var br = new BasePageResponse<List<ProjectData>>();
             br.Success = true;
