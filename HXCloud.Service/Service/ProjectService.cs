@@ -21,14 +21,16 @@ namespace HXCloud.Service
         private readonly IMapper _mapper;
         private readonly IDeviceRepository _dr;
         private readonly IRoleProjectRepository _rp;//获取用户分配的项目
+        private readonly IRegionRepository _rr;
 
-        public ProjectService(IProjectRepository pr, ILogger<ProjectService> log, IMapper mapper, IDeviceRepository dr, IRoleProjectRepository rp)
+        public ProjectService(IProjectRepository pr, ILogger<ProjectService> log, IMapper mapper, IDeviceRepository dr, IRoleProjectRepository rp, IRegionRepository rr)
         {
             this._pr = pr;
             this._log = log;
             this._mapper = mapper;
             this._dr = dr;
             this._rp = rp;
+            this._rr = rr;
         }
 
         //检查输入的项目或者场站是否存在，并返回项目或者场站的路径以及所属的组织编号
@@ -183,8 +185,64 @@ namespace HXCloud.Service
             }
         }
 
+        //只获取项目
+        public async Task<BaseResponse> GetProjectByIdAsync(int Id)
+        {
+            var data = await _pr.FindWithImageAndChildAsync(a => a.Id == Id).FirstOrDefaultAsync();
+            if (data == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
+            }
+            var dto = _mapper.Map<ProjectDto>(data);
+            //获取项目下所有的场站
+            var sites = await GetProjectSitesIdAsync(Id);
+            //获取项目下设备的数量
+            var count = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).CountAsync();
+            dto.DeviceCount = count;
+            //获取项目的区域名称
+            if (data.RegionId != null && "" != data.RegionId)
+            {
+                var r = await _rr.FindAsync(data.RegionId, data.GroupId);
+                if (r != null)
+                {
+                    dto.RegionName = r.Name;
+                }
+            }
+            return new BResponse<ProjectDto> { Success = true, Message = "获取数据成功", Data = dto };
+        }
+        //根据项目标示获取项目下的子项目(不含嵌套数据)
+        public async Task<BaseResponse> GetChildProjectByIdAsync(int Id, ProjectPageRequest req)
+        {
+            var data = _pr.FindWithImageAndChildAsync(a => a.ParentId == Id);
+            if (req.ProjectType == 1)  //项目
+            {
+                data = data.Where(a => a.ProjectType == ProjectType.Project);
+            }
+            else if (req.ProjectType == 2)//场站
+            {
+                data = data.Where(a => a.ProjectType == ProjectType.Site);
+            }
+            if (!string.IsNullOrWhiteSpace(req.Search))
+            {
+                data = data.Where(a => a.Name.Contains(req.Search));
+            }
+            int count = data.Count();
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "Id Asc";
+            }
+            else
+            {
+                var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            var list = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            return null;
+
+        }
+
         //获取单个项目（会递归获取项目下的所有项目或者场站）
-        public async Task<BaseResponse> GetProject(int Id)
+        public async Task<BaseResponse> GetProjectWithChildAsync(int Id)
         {
             var data = await _pr.FindWithImageAndChildAsync(a => a.Id == Id).FirstOrDefaultAsync();
             if (data == null)

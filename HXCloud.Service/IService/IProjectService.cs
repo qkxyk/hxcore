@@ -13,7 +13,7 @@ namespace HXCloud.Service
         Task<BaseResponse> AddProjectAsync(ProjectAddDto req, string account, string GroupId);
         Task<BaseResponse> UpdateProjectAsync(ProjectUpdateDto req, string account);
         Task<BaseResponse> DeleteProjectAsync(string account, int Id);
-        Task<BaseResponse> GetProject(int Id);
+        Task<BaseResponse> GetProjectWithChildAsync(int Id);
         Task<ProjectModel> GetProjectAsync(int Id);
         Task<BaseResponse> GetGroupProject(string GroupId);
         bool IsExist(int Id, out string pathId, out string groupId);

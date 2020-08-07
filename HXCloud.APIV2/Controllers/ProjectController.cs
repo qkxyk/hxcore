@@ -83,7 +83,7 @@ namespace HXCloud.APIV2.Controllers
                     }
                 }
             }
-            var ret = await _ps.GetProject(Id);
+            var ret = await _ps.GetProjectWithChildAsync(Id);
             return ret;
         }
 
