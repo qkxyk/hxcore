@@ -36,57 +36,6 @@ namespace HXCloud.APIV2.Controllers
             this._gs = gs;
         }
 
-        /// <summary>
-        /// 根据标识获取项目或者场站信息,获取项目下所有的项目、场站信息
-        /// </summary>
-        /// <param name="Id">项目或者场站标识</param>
-        /// <returns></returns>
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<BaseResponse>> GetProject(string GroupId, int Id)
-        {
-            //本组织管理员有权限
-            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
-            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-
-
-            string pathId;
-            string groupId;
-            //检查数据的项目或者场站编号是否存在
-            bool bRet = _ps.IsExist(Id, out pathId, out groupId);
-            if (!bRet)
-            {
-                return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
-            }
-            //检查是否有权限(获取项目的路径，如果是顶级项目，则传入当前项目编号)
-            if (pathId == null)   //如果是顶级项目，则把当前Id赋值给项目路径
-            {
-                pathId = Id.ToString();
-            }
-            if (GroupId != groupId)
-            {
-                if (!(isAdmin && Code == _config["Group"]))//非超级管理员
-                {
-                    return new BaseResponse { Success = false, Message = "用户没有权限" };
-                }
-            }
-            else
-            {
-                if (!isAdmin) //非管理员
-                {
-                    bRet = await _rp.IsAuth(Roles, pathId, 0);
-                    if (!bRet)
-                    {
-                        return new BaseResponse { Success = false, Message = "用户没有权限" };
-                    }
-                }
-            }
-            var ret = await _ps.GetProjectWithChildAsync(Id);
-            return ret;
-        }
-
         [HttpPost]
         public async Task<ActionResult<BaseResponse>> Add(string GroupId, ProjectAddDto req)
         {
@@ -246,6 +195,146 @@ namespace HXCloud.APIV2.Controllers
                 return new BaseResponse { Success = false, Message = "输入的组织编号不正确" };
             }
             var rm = await _ps.GetMySiteAsync(GroupId, Roles, isAdmin, req);
+            return rm;
+        }
+
+        /// <summary>
+        /// 根据标识获取项目或者场站信息,获取项目下所有的项目、场站信息
+        /// </summary>
+        /// <param name="Id">项目或者场站标识</param>
+        /// <returns></returns>
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<BaseResponse>> GetProject(string GroupId, int Id)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+
+
+            string pathId;
+            string groupId;
+            //检查数据的项目或者场站编号是否存在
+            bool bRet = _ps.IsExist(Id, out pathId, out groupId);
+            if (!bRet)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
+            }
+            //检查是否有权限(获取项目的路径，如果是顶级项目，则传入当前项目编号)
+            if (pathId == null)   //如果是顶级项目，则把当前Id赋值给项目路径
+            {
+                pathId = Id.ToString();
+            }
+            if (GroupId != groupId)
+            {
+                if (!(isAdmin && Code == _config["Group"]))//非超级管理员
+                {
+                    return new BaseResponse { Success = false, Message = "用户没有权限" };
+                }
+            }
+            else
+            {
+                if (!isAdmin) //非管理员
+                {
+                    bRet = await _rp.IsAuth(Roles, pathId, 0);
+                    if (!bRet)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限" };
+                    }
+                }
+            }
+            var ret = await _ps.GetProjectWithChildAsync(Id);
+            return ret;
+        }
+
+        [HttpGet("Info/{Id}")]
+        public async Task<ActionResult<BaseResponse>> GetProjectByIdAsync(string GroupId, int Id)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+
+
+            string pathId;
+            string groupId;
+            //检查数据的项目或者场站编号是否存在
+            bool bRet = _ps.IsExist(Id, out pathId, out groupId);
+            if (!bRet)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
+            }
+            //检查是否有权限(获取项目的路径，如果是顶级项目，则传入当前项目编号)
+            if (pathId == null)   //如果是顶级项目，则把当前Id赋值给项目路径
+            {
+                pathId = Id.ToString();
+            }
+            if (GroupId != groupId)
+            {
+                if (!(isAdmin && Code == _config["Group"]))//非超级管理员
+                {
+                    return new BaseResponse { Success = false, Message = "用户没有权限" };
+                }
+            }
+            else
+            {
+                if (!isAdmin) //非管理员
+                {
+                    bRet = await _rp.IsAuth(Roles, pathId, 0);
+                    if (!bRet)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限" };
+                    }
+                }
+            }
+            var ret = await _ps.GetProjectByIdAsync(Id);
+            return ret;
+        }
+        [HttpGet("Child/{Id}")]
+        public async Task<ActionResult<BaseResponse>> GetProjectsByParentIdAsync(string GroupId, int Id, [FromQuery] ProjectPageRequest req)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+
+
+            string pathId;
+            string groupId;
+            //检查数据的项目或者场站编号是否存在
+            bool bRet = _ps.IsExist(Id, out pathId, out groupId);
+            if (!bRet)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
+            }
+            //检查是否有权限(获取项目的路径，如果是顶级项目，则传入当前项目编号)
+            if (pathId == null)   //如果是顶级项目，则把当前Id赋值给项目路径
+            {
+                pathId = Id.ToString();
+            }
+            if (GroupId != groupId)
+            {
+                if (!(isAdmin && Code == _config["Group"]))//非超级管理员
+                {
+                    return new BaseResponse { Success = false, Message = "用户没有权限" };
+                }
+            }
+            else
+            {
+                if (!isAdmin) //非管理员
+                {
+                    bRet = await _rp.IsAuth(Roles, pathId, 0);
+                    if (!bRet)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限" };
+                    }
+                }
+            }
+
+            var rm = await _ps.GetChildProjectByIdAsync(Id, req);
             return rm;
         }
     }

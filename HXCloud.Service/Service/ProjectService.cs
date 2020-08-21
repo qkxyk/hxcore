@@ -185,7 +185,7 @@ namespace HXCloud.Service
             }
         }
 
-        //只获取项目
+        //只获取项目,包含项目下设备数据
         public async Task<BaseResponse> GetProjectByIdAsync(int Id)
         {
             var data = await _pr.FindWithImageAndChildAsync(a => a.Id == Id).FirstOrDefaultAsync();
@@ -210,7 +210,7 @@ namespace HXCloud.Service
             }
             return new BResponse<ProjectDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
-        //根据项目标示获取项目下的子项目(不含嵌套数据)
+        //根据项目标示获取项目下的子项目(不含嵌套数据,不包含项目下设备的数量)
         public async Task<BaseResponse> GetChildProjectByIdAsync(int Id, ProjectPageRequest req)
         {
             var data = _pr.FindWithImageAndChildAsync(a => a.ParentId == Id);
@@ -237,8 +237,28 @@ namespace HXCloud.Service
                 var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var list = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
-            return null;
-
+            var dtos = _mapper.Map<List<ProjectsDto>>(list);
+            //获取项目的区域名称
+            foreach (var item in dtos)
+            {
+                if (item.RegionId != null && "" != item.RegionId)
+                {
+                    var r = await _rr.FindAsync(item.RegionId, item.GroupId);
+                    if (r != null)
+                    {
+                        item.RegionName = r.Name;
+                    }
+                }
+            }
+            var br = new BasePageResponse<List<ProjectsDto>>();
+            br.Success = true;
+            br.Message = "获取数据成功";
+            br.PageSize = req.PageSize;
+            br.CurrentPage = req.PageNo;
+            br.Count = count;
+            br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            br.Data = dtos;
+            return br;
         }
 
         //获取单个项目（会递归获取项目下的所有项目或者场站）

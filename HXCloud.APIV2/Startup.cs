@@ -70,7 +70,8 @@ namespace HXCloud.APIV2
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = true,
-                    ValidateLifetime = true,
+                    //ValidateLifetime = true,
+                    ValidateLifetime = false,
                     ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = config.Issuer,

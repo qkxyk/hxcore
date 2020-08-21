@@ -199,7 +199,7 @@ namespace HXCloud.Service
         //获取项目或者场站设备
         public async Task<BaseResponse> GetProjectDeviceAsync(string GroupId, int projectId, bool isSite, BasePageRequest req)
         {
-            var device = _dr.Find(a => a.GroupId == GroupId);
+            var device = _dr.FindWithOnlineAndImages(a => a.GroupId == GroupId);
             if (isSite)
             {
                 device = device.Where(a => a.ProjectId == projectId);
@@ -234,7 +234,7 @@ namespace HXCloud.Service
         }
         public async Task<BaseResponse> GetMyDevice(string GroupId, string roles, bool isAdmin, BasePageRequest req)
         {
-            var device = _dr.Find(a => a.GroupId == GroupId);
+            var device = _dr.FindWithOnlineAndImages(a => a.GroupId == GroupId);
             var sites = await _ps.GetMySitesIdAsync(GroupId, roles, isAdmin);
             device = device.Where(a => sites.Contains(a.ProjectId.Value));
             int count = device.Count();

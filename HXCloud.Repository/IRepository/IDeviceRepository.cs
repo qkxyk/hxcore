@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HXCloud.Model;
@@ -10,5 +12,6 @@ namespace HXCloud.Repository
     {
         Task AddAsync(DeviceModel entity, List<DeviceHardwareConfigModel> data);
         Task SaveAsync(DeviceModel entity, List<DeviceHardwareConfigModel> data);
+        IQueryable<DeviceModel> FindWithOnlineAndImages(Expression<Func<DeviceModel, bool>> predicate);
     }
 }

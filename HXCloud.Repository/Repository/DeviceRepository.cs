@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HXCloud.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace HXCloud.Repository
 {
@@ -24,6 +26,12 @@ namespace HXCloud.Repository
             _db.Entry<DeviceModel>(entity).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             _db.DeviceHardwareConfigs.AddRange(data);
             await _db.SaveChangesAsync();
+        }
+
+        public IQueryable<DeviceModel> FindWithOnlineAndImages(Expression<Func<DeviceModel, bool>> predicate)
+        {
+            var data = _db.Devices.Include(a => a.DeviceOnline).Include(a => a.DeviceImage).Where(predicate);
+            return data;
         }
     }
 }

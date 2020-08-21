@@ -18,6 +18,8 @@ namespace HXCloud.Model
         public virtual ICollection<ProjectModel> Projects { get; set; }
         public virtual ICollection<DeviceModel> Devices { get; set; }
         public virtual ICollection<RegionModel> Regions { get; set; }
+
+        public virtual ICollection<WarnTypeModel> WarnTypes { get; set; }
         /* 
 
            public virtual ICollection<MenuModel> Menus { get; set; }

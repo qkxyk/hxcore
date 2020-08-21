@@ -14,7 +14,8 @@ namespace HXCloud.Service
             //设备
             CreateMap<DeviceAddDto, DeviceModel>();
             CreateMap<DeviceUpdateViewModel, DeviceModel>();
-            CreateMap<DeviceModel, DeviceDataDto>();
+            CreateMap<DeviceModel, DeviceDataDto>().ForMember(dest => dest.OnLine, opt => opt.MapFrom(src => src.DeviceOnline == null ? false : src.DeviceOnline.State))
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.DeviceImage));
 
             //设备流量卡
             CreateMap<DeviceCardAddDto, DeviceCardModel>();

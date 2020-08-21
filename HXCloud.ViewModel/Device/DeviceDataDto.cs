@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+/* 附带设备的在线信息和设备图片
+ * 
+ * 
+ * 
+ * 
+ */
 namespace HXCloud.ViewModel
 {
     public class DeviceDataDto
@@ -24,5 +29,7 @@ namespace HXCloud.ViewModel
         public int TypeId { get; set; }//设备类型
         public string RegionId { get; set; }
         public string Address { get; set; }
+        public bool OnLine { get; set; }//设备是否在线
+        public List<DeviceImageDto> Images { get; set; }//返回给调用者设备图片
     }
 }
