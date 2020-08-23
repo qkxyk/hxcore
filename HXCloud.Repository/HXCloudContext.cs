@@ -82,15 +82,14 @@ namespace HXCloud.Repository
         public DbSet<DeviceOnlineModel> DeviceOnlines { get; set; }
         public DbSet<DeviceLogModel> DeviceLogs { get; set; }
 
+        public DbSet<WarnTypeModel> WarnTypes { get; set; }
+        public DbSet<WarnCodeModel> WarnCodes { get; set; }
+        public DbSet<WarnModel> Warns { get; set; }
+
         /*
       public DbSet<MenuModel> Menus { get; set; }
      
       public DbSet<RoleMenuModel> RoleMenus { get; set; }
-     
-
-
-
-
       */
         string groupid = new Guid("057a556af24f494094a2586fbe9335a4").ToString("N");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -137,6 +136,10 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new ProjectModelMap());
             modelBuilder.ApplyConfiguration(new ProjectImageModelMap());
             modelBuilder.ApplyConfiguration(new RoleProjectModelMap());
+
+            modelBuilder.ApplyConfiguration(new WarnTypeModelMap());
+            modelBuilder.ApplyConfiguration(new WarnCodeModelMap());
+            modelBuilder.ApplyConfiguration(new WarnModelMap());
             #region 初始化种子数据
             /*
             modelBuilder.Entity<GroupModel>().HasData(new GroupModel() { GroupCode = "hx", GroupName = "合续", Id = groupid, Create = "test" });

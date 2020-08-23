@@ -9,6 +9,8 @@
     <Compile Remove="Maps\RoleMenuModelMap.cs" />
     <Compile Remove="Migrations\20200617023736_modifysystemaccessory.cs" />
     <Compile Remove="Migrations\20200617023736_modifysystemaccessory.Designer.cs" />
+    <Compile Remove="Migrations\20200823092923_addwarn.cs" />
+    <Compile Remove="Migrations\20200823092923_addwarn.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

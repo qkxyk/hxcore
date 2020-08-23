@@ -63,6 +63,7 @@ namespace HXCloud.Model
         public ICollection<DeviceInputDataModel> DeviceInputData { get; set; }
         public ICollection<DeviceMigrationModel> DeviceMigration { get; set; }
         public ICollection<DeviceLogModel> DeviceLog { get; set; }
+        public ICollection<WarnModel> Warns { get; set; }
 
     }
 }

@@ -11,7 +11,9 @@ namespace HXCloud.Repository.Maps
     {
         public void Configure(EntityTypeBuilder<WarnModel> builder)
         {
-            throw new NotImplementedException();
+            builder.ToTable("Warn").HasKey(a => a.Id);
+            builder.HasOne(a => a.Device).WithMany(a => a.Warns).HasForeignKey(a => a.DeviceSn).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.WarnCode).WithMany(a => a.Warn).HasForeignKey(a => new { a.Code, a.WarnTypeId }).OnDelete(DeleteBehavior.ClientSetNull);//.OnDelete(DeleteBehavior.Cascade);
         }
     }
 
