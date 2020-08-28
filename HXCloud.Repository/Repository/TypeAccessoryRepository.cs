@@ -16,5 +16,10 @@ namespace HXCloud.Repository
             var data = await _db.TypeAccessories.Include(a => a.Type).Where(predicate).FirstOrDefaultAsync();
             return data;
         }
+        public async Task<IEnumerable<TypeAccessoryModel>> FindWithControlData(int typeId)
+        {
+            var data = await _db.TypeAccessories.Include(a => a.TypeAccessoryControlDatas).ThenInclude(a => a.TypeDataDefine).Where(a => a.TypeId == typeId).ToListAsync();
+            return data;
+        }
     }
 }

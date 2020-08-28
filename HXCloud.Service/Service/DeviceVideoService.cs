@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,6 +11,7 @@ using HXCloud.Repository;
 using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace HXCloud.Service
 {
@@ -67,10 +70,10 @@ namespace HXCloud.Service
             try
             {
                 var entity = _mapper.Map(req, d);
-                entity.DeviceSn = deviceSn;
+                //entity.DeviceSn = deviceSn;
                 entity.Modify = account;
                 entity.ModifyTime = DateTime.Now;
-                await _dvr.AddAsync(entity);
+                await _dvr.SaveAsync(entity);
                 _log.LogInformation($"{account}修改标示为{entity.Id}的摄像头成功");
                 return new HandleResponse<int> { Success = true, Message = "修改数据成功", Key = entity.Id };
             }
@@ -117,5 +120,71 @@ namespace HXCloud.Service
             var dtos = _mapper.Map<List<DeviceVideoDto>>(data);
             return new BResponse<List<DeviceVideoDto>> { Success = true, Message = "获取设备摄像头数据成功", Data = dtos };
         }
+
+        public async Task<BaseResponse> GetVideoTokenAsync(string account, int Id)
+        {
+            BaseResponse rd = new BaseResponse();
+            HttpClient client = new HttpClient();
+            var retVideo = await _dvr.FindAsync(Id);
+            if (retVideo == null)
+            {
+                rd.Success = false;
+                rd.Message = "该视频设备不存在";
+                return rd;
+            }
+            if (string.IsNullOrWhiteSpace(retVideo.Appkey) || string.IsNullOrWhiteSpace(retVideo.Secret)
+                || string.IsNullOrWhiteSpace(retVideo.ApiUrl))
+            {
+                rd.Success = false;
+                rd.Message = "视频的appkey、secret或者对应的url为空";
+                return rd;
+            }
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>()
+            {
+                 {"appKey",retVideo.Appkey},
+                 {"appSecret",retVideo.Secret }
+           });
+            content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/x-www-form-urlencoded");
+            HttpResponseMessage res = await client.PostAsync(retVideo.ApiUrl, content);
+            if (res.IsSuccessStatusCode)
+            {
+                string ret = res.Content.ReadAsStringAsync().Result;
+                YSReturnMessage ysm = JsonConvert.DeserializeObject<YSReturnMessage>(ret);
+                if (ysm.Code == "200")
+                {
+                    YSReturnData ysrd = JsonConvert.DeserializeObject<YSReturnData>(ret);
+                    ysrd.Message = "获取AccessToken成功";
+                    //更新数据库中的token和过期时间
+                    retVideo.AccessToken = ysrd.Data.AccessToken;
+                    retVideo.ExpireTime = ysrd.Data.ExpireTime;
+                    retVideo.Modify = account;
+                    retVideo.ModifyTime = DateTime.Now;
+                    try
+                    {
+                        _dvr.Save(retVideo);
+                    }
+                    catch (Exception ex)
+                    {
+                        ysrd.Message = "获取AccessToken成功，更新数据库失败。" + ex.Message;
+                    }
+                    ysrd.Success = true;
+                    return ysrd;
+                }
+                else
+                {
+                    ysm.Success = false;
+                    ysm.Message = "获取AccessToken失败，请查看msg中的信息";
+                    return ysm;
+                }
+            }
+            else
+            {
+                rd.Success = false;
+                rd.Message = "获取AccessToken失败，请联系萤石客服寻求解决方案";
+                return rd;
+            }
+        }
+
+
     }
 }

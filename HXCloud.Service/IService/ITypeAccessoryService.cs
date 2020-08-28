@@ -16,5 +16,6 @@ namespace HXCloud.Service
         Task<BaseResponse> DeleteTypeAccessoryAsync(int Id, string account);
         Task<BaseResponse> GetAccessoryAsync(int Id);
         Task<BaseResponse> GetTypeAccessoryAsync(int typeId, BasePageRequest req);
+        Task<BaseResponse> GetTypeAccessoryAndControlDataAsync(int TypeId);
     }
 }

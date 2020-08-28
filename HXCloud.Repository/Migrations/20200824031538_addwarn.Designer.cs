@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HXCloud.Repository.Migrations
 {
     [DbContext(typeof(HXCloudContext))]
-    [Migration("20200823093309_addwarn")]
+    [Migration("20200824031538_addwarn")]
     partial class addwarn
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1888,9 +1888,6 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("WarnTypeId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
 
@@ -1908,7 +1905,10 @@ namespace HXCloud.Repository.Migrations
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Code", "WarnTypeId");
+                    b.Property<int>("WarnTypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Code");
 
                     b.HasIndex("WarnTypeId");
 
@@ -1946,14 +1946,11 @@ namespace HXCloud.Repository.Migrations
                     b.Property<bool>("State")
                         .HasColumnType("bit");
 
-                    b.Property<int>("WarnTypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("DeviceSn");
+                    b.HasIndex("Code");
 
-                    b.HasIndex("Code", "WarnTypeId");
+                    b.HasIndex("DeviceSn");
 
                     b.ToTable("Warn");
                 });
@@ -1976,9 +1973,6 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
 
-                    b.Property<string>("GroupId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Icon")
                         .HasColumnType("nvarchar(max)");
 
@@ -1992,8 +1986,6 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("GroupId");
 
                     b.ToTable("WarnType");
                 });
@@ -2377,21 +2369,14 @@ namespace HXCloud.Repository.Migrations
 
             modelBuilder.Entity("HXCloud.Model.WarnModel", b =>
                 {
+                    b.HasOne("HXCloud.Model.WarnCodeModel", "WarnCode")
+                        .WithMany("Warn")
+                        .HasForeignKey("Code")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("HXCloud.Model.DeviceModel", "Device")
                         .WithMany("Warns")
                         .HasForeignKey("DeviceSn")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("HXCloud.Model.WarnCodeModel", "WarnCode")
-                        .WithMany("Warn")
-                        .HasForeignKey("Code", "WarnTypeId");
-                });
-
-            modelBuilder.Entity("HXCloud.Model.WarnTypeModel", b =>
-                {
-                    b.HasOne("HXCloud.Model.GroupModel", "Group")
-                        .WithMany("WarnTypes")
-                        .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618

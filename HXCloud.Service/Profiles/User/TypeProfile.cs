@@ -26,7 +26,7 @@ namespace HXCloud.Service
             CreateMap<TypeUpdateFileModel, TypeUpdateFileData>();
             //类型数据定义
             CreateMap<TypeDataDefineAddViewModel, TypeDataDefineModel>();
-            CreateMap<TypeDataDefineUpdateViewModel,TypeDataDefineModel>();
+            CreateMap<TypeDataDefineUpdateViewModel, TypeDataDefineModel>();
             CreateMap<TypeDataDefineModel, TypeDataDefineData>();
             //类型模式
             CreateMap<TypeSchemaAddViewModel, TypeSchemaModel>().ForMember(dest => dest.SchemaType, opt => opt.MapFrom(src => (SchemaType)src.SchemaType));
@@ -47,6 +47,11 @@ namespace HXCloud.Service
             CreateMap<TypeAccessoryAddViewModel, TypeAccessoryModel>();
             CreateMap<TypeAccessoryUpdateViewModel, TypeAccessoryModel>();
             CreateMap<TypeAccessoryModel, TypeAccessoryData>();
+
+            CreateMap<TypeAccessoryModel, TypeAccessoryDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.TypeAccessoryControlDatas));
+            CreateMap<TypeAccessoryControlDataModel, AccessoryControlDto>().ForMember(dest => dest.DataKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(
+                dest => dest.DataType, opt => opt.MapFrom(src => src.TypeDataDefine.DataType)).ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(
+                dest => dest.Format, opt => opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.AutoControl, opt => opt.MapFrom(src => src.TypeDataDefine.AutoControl));
             //配件控制项
             CreateMap<TypeControlDataAddDto, TypeAccessoryControlDataModel>();
             CreateMap<TypeControlDataUpdateDto, TypeAccessoryControlDataModel>();

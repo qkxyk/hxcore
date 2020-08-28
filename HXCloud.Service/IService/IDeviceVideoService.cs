@@ -14,5 +14,6 @@ namespace HXCloud.Service
         Task<BaseResponse> DeleteDeviceVideoAsync(string account, int Id);
         Task<BaseResponse> GetDeviceVideoAsync(int Id);
         Task<BaseResponse> GetDeviceVideoesAsync(string deviceSn);
+        Task<BaseResponse> GetVideoTokenAsync(string account, int Id);
     }
 }

@@ -19,4 +19,24 @@ namespace HXCloud.ViewModel
         public long? ExpireTime { get; set; }//过期时间
         public string ApiUrl { get; set; }//视频获取token的地址
     }
+    #region 萤石数据定义
+    public class YSReturnMessage : BaseResponse
+    {
+        public string Code { get; set; }
+        public string Msg { get; set; }
+    }
+    public class YSData
+    {
+        public long ExpireTime { get; set; }
+        public string AccessToken { get; set; }
+    }
+    public class YSReturnData : YSReturnMessage
+    {
+        public YSData Data { get; set; }
+        public YSReturnData()
+        {
+            // Data = new YSData();
+        }
+    }
+    #endregion
 }

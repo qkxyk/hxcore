@@ -155,5 +155,13 @@ namespace HXCloud.APIV2.Controllers
             var rm = await _ta.GetTypeAccessoryAsync(typeId, req);
             return rm;
         }
+
+        [HttpGet("All")]
+        [TypeFilter(typeof(TypeActionFilter))]
+        public async Task<ActionResult<BaseResponse>> GetTypeAccessoryWithControlData(int typeId)
+        {
+            var rm = await _ta.GetTypeAccessoryAndControlDataAsync(typeId);
+            return rm;
+        }
     }
 }

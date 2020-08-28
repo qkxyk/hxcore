@@ -16,15 +16,15 @@ namespace HXCloud.APIV2.Controllers
     [Authorize]
     public class DeviceVideoController : ControllerBase
     {
-        private readonly DeviceVideoService _dvs;
+        private readonly IDeviceVideoService _dvs;
 
-        public DeviceVideoController(DeviceVideoService dvs)
+        public DeviceVideoController(IDeviceVideoService dvs)
         {
             this._dvs = dvs;
         }
         [HttpPost]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> AddDeviceVideo(string GroupId,string DeviceSn, DeviceVideoAddDto req)
+        public async Task<ActionResult<BaseResponse>> AddDeviceVideo(string GroupId, string DeviceSn, DeviceVideoAddDto req)
         {
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var rm = await _dvs.AddDeviceVideoAsync(account, req, DeviceSn);
@@ -58,6 +58,14 @@ namespace HXCloud.APIV2.Controllers
         public async Task<ActionResult<BaseResponse>> GetDeviceVideos(string GroupId, string DeviceSn)
         {
             var rm = await _dvs.GetDeviceVideoesAsync(DeviceSn);
+            return rm;
+        }
+        [HttpPut("Refresh/{Id}")]
+        [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> RefreshVideoToken(string GroupId, string DeviceSn, int Id)
+        {
+            string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var rm = await _dvs.GetVideoTokenAsync(account, Id);
             return rm;
         }
     }

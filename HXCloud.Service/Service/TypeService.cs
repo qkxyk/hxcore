@@ -255,5 +255,6 @@ namespace HXCloud.Service
             }
             return ret.GroupId;
         }
+
     }
 }

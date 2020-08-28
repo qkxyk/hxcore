@@ -14,7 +14,7 @@ namespace HXCloud.Model
 
         public virtual ICollection<WarnCodeModel> WarnCode { get; set; }
 
-        public string GroupId { get; set; }
-        public virtual GroupModel Group { get; set; }
+        //public string GroupId { get; set; }
+        //public virtual GroupModel Group { get; set; }
     }
 }

@@ -165,5 +165,14 @@ namespace HXCloud.Service
                 Data = dtos
             };
         }
+
+
+        public async Task<BaseResponse> GetTypeAccessoryAndControlDataAsync(int TypeId)
+        {
+            var data =await _tar.FindWithControlData(TypeId);
+            var dtos = _mapper.Map<List<TypeAccessoryDto>>(data);
+            return new BResponse<List<TypeAccessoryDto>> { Success = true, Message = "获取数据成功", Data = dtos };
+
+        }
     }
 }

@@ -7,8 +7,9 @@ using HXCloud.Model;
 
 namespace HXCloud.Repository
 {
-    public interface ITypeAccessoryRepository:IBaseRepository<TypeAccessoryModel>
+    public interface ITypeAccessoryRepository : IBaseRepository<TypeAccessoryModel>
     {
         Task<TypeAccessoryModel> FindWithType(Expression<Func<TypeAccessoryModel, bool>> predicate);
+        Task<IEnumerable<TypeAccessoryModel>> FindWithControlData(int typeId);
     }
 }

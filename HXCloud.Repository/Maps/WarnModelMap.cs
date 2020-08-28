@@ -13,7 +13,7 @@ namespace HXCloud.Repository.Maps
         {
             builder.ToTable("Warn").HasKey(a => a.Id);
             builder.HasOne(a => a.Device).WithMany(a => a.Warns).HasForeignKey(a => a.DeviceSn).OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(a => a.WarnCode).WithMany(a => a.Warn).HasForeignKey(a => new { a.Code, a.WarnTypeId }).OnDelete(DeleteBehavior.ClientSetNull);//.OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.WarnCode).WithMany(a => a.Warn).HasForeignKey(a => a.Code).OnDelete(DeleteBehavior.Cascade);
         }
     }
 
@@ -22,7 +22,7 @@ namespace HXCloud.Repository.Maps
         public override void Configure(EntityTypeBuilder<WarnTypeModel> builder)
         {
             builder.ToTable("WarnType").HasKey(a => a.Id);
-            builder.HasOne(a => a.Group).WithMany(a => a.WarnTypes).HasForeignKey(a => a.GroupId).OnDelete(DeleteBehavior.Cascade);
+            //builder.HasOne(a => a.Group).WithMany(a => a.WarnTypes).HasForeignKey(a => a.GroupId).OnDelete(DeleteBehavior.Cascade);
             base.Configure(builder);
         }
     }
@@ -30,7 +30,7 @@ namespace HXCloud.Repository.Maps
     {
         public override void Configure(EntityTypeBuilder<WarnCodeModel> builder)
         {
-            builder.ToTable("WarnCode").HasKey(a => new { a.Code, a.WarnTypeId });
+            builder.ToTable("WarnCode").HasKey(a => a.Code);
             builder.HasOne(a => a.WarnType).WithMany(a => a.WarnCode).HasForeignKey(a => a.WarnTypeId).OnDelete(DeleteBehavior.Cascade);
             base.Configure(builder);
         }
