@@ -6,8 +6,8 @@ namespace HXCloud.ViewModel
 {
     public class DeviceWarnPageRequest : BasePageRequest
     {
-        public DateTime BeginTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime BeginTime { get; set; } = DateTime.Now.AddYears(-1);
+        public DateTime EndTime { get; set; } = DateTime.Now;
         //public string DeviceSn { get; set; }
         //public string Code { get; set; }
 

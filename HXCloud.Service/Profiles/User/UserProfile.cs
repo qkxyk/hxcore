@@ -21,6 +21,7 @@ namespace HXCloud.Service
             CreateMap<UserModel, UserInfoDto>().ForMember(dest => dest.GroupId, opt => opt.MapFrom(src => src.Group.Id)).ForMember(dest => dest.GroupName,
                 opt => opt.MapFrom(src => src.Group.GroupName)).ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Group.GroupCode))
                 .ForMember(dest => dest.Logo, opt => opt.MapFrom(src => src.Group.Logo));
+            CreateMap<UserAddViewModel, UserModel>();
         }
     }
 }

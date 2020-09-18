@@ -19,5 +19,6 @@ namespace HXCloud.ViewModel
         public string GroupName { get; set; }
         public string Code { get; set; }
         public string Logo { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

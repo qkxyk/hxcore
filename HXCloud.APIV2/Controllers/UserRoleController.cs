@@ -118,9 +118,10 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             //用户自己和用户所在组管理员和超级管理员可以查看
-            var ret = await _userRole.GetUserRole(UserId);
+            var ret = await _userRole.GetUserRole(Id);
             return ret;
         }
+
 
     }
 }

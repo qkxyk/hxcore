@@ -21,5 +21,6 @@ namespace HXCloud.ViewModel
         #endregion
         [Range(1, 2, ErrorMessage = "模式只能1或者2")]
         public int Model { get; set; }//是否可读可写
+        public string Category { get; set; }
     }
 }

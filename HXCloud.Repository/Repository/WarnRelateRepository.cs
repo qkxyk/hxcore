@@ -30,9 +30,9 @@ namespace HXCloud.Repository
     public class WarnRepository : BaseRepository<WarnModel>, IWarnRepository
     {
 
-        public IQueryable<WarnModel> FindWithCodeAndType(Expression<Func<WarnModel,bool>> predicate)
+        public IQueryable<WarnModel> FindWithCodeAndType(Expression<Func<WarnModel, bool>> predicate)
         {
-            var data = _db.Warns.Include(a => a.WarnCode).ThenInclude(a => a.WarnType).Where(predicate);
+            var data = _db.Warns.Include(a => a.Device).Include(a => a.WarnCode).ThenInclude(a => a.WarnType).Where(predicate);
             return data;
         }
     }

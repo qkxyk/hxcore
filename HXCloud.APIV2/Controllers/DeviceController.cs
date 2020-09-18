@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HXCloud.APIV2.Filters;
@@ -152,7 +153,7 @@ namespace HXCloud.APIV2.Controllers
             return rm;
         }
         [HttpPut("Type")]
-        public async Task<ActionResult<BaseResponse>> UpdateDeviceType(string GroupId,  DeviceTypeUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateDeviceType(string GroupId, DeviceTypeUpdateDto req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -205,7 +206,7 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             #endregion
-            var rm = await _ds.UpdateDeviceTypeAsync(Account, req.DeviceSn,req.TypeId);
+            var rm = await _ds.UpdateDeviceTypeAsync(Account, req.DeviceSn, req.TypeId);
             return rm;
         }
 
@@ -422,6 +423,86 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             var rm = await _ds.GetMyDevice(GroupId, Roles, isAdmin, req);
+            return rm;
+        }
+
+        [HttpGet("CheckDeviceControl/{DeviceSn}")]
+        public async Task<ActionResult<BaseResponse>> CheckDeviceControl(string GroupId, string DeviceSn)
+        {
+            //获取用户登录信息
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //1、验证是否同组织管理员，2、验证角色权限，3、对比设备上的场站和项目
+            var device = await _ds.IsExistCheck(a => a.DeviceSn == DeviceSn);
+            if (!device.IsExist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的设备编号不存在" };
+            }
+            //用户所在的组和超级管理员可以查看
+            if (GroupId != device.GroupId || (IsAdmin && Code != _config["Group"]))
+            {
+                return new BaseResponse { Success = false, Message = "用户没有权限" };
+            }
+            if (!IsAdmin)        //非管理员验证权限
+            {
+                //是否有设备的编辑权限
+                bool bAuth = await _rp.IsAuth(Roles, device.PathId, 1);
+                if (!bAuth)
+                {
+                    return new BaseResponse { Success = false, Message = "用户没有权限" };
+                }
+            }
+            return new BaseResponse { Success = true, Message = "用户可以控制该设备" };
+        }
+
+        /// <summary>
+        /// 获取所有设备，不分页
+        /// </summary>
+        /// <param name="GroupId">组织标示</param>
+        /// <param name="projectId">项目或者场站标示</param>
+        /// <returns></returns>
+        [HttpGet("AllDevice")]
+        public async Task<ActionResult<BaseResponse>> GetAllDevice(string GroupId, [FromQuery] int projectId)
+        {
+
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            List<int> sites;
+            if (projectId == 0)   //获取所有设备
+            {
+                sites = await _ps.GetMySitesIdAsync(GroupId, Roles, isAdmin);//获取所有有权限的场站标示列表
+            }
+            else //获取项目设备
+            {
+                var p = await _ps.GetProjectCheckAsync(projectId);
+                if (!p.IsExist)
+                {
+                    return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
+                }
+                if (!isAdmin)
+                {
+                    bool isAuth = await _rp.IsAuth(Roles, p.PathId, 0);
+                    if (!isAuth)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限访问该项目或者场站" };
+                    }
+                }
+                if (p.IsSite)
+                {
+                    sites = new List<int> { projectId };
+                }
+                else
+                {
+                    sites = await _ps.GetProjectSitesIdAsync(projectId);
+                }
+            }
+            var rm = await _ds.GetAllDeviceAsync(sites);
             return rm;
         }
     }

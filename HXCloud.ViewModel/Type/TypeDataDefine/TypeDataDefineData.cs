@@ -22,5 +22,6 @@ namespace HXCloud.ViewModel
         public int Model { get; set; }//数据定义默认是可写（后加入字段为兼容默认为是可以写）
 
         public int TypeId { get; set; }
+        public string Category { get; set; }
     }
 }

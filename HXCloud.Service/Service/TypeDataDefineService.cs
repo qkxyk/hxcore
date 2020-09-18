@@ -11,6 +11,7 @@ using HXCloud.Repository;
 using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace HXCloud.Service
 {
@@ -21,14 +22,16 @@ namespace HXCloud.Service
         private readonly ITypeDataDefineRepository _td;
         private readonly IDataDefineLibraryRepository _ddl;
         private readonly ITypeRepository _tr;
+        private readonly ICategoryRepository _cr;
 
-        public TypeDataDefineService(ILogger<TypeDataDefineService> log, IMapper mapper, ITypeDataDefineRepository td, IDataDefineLibraryRepository ddl, ITypeRepository tr)
+        public TypeDataDefineService(ILogger<TypeDataDefineService> log, IMapper mapper, ITypeDataDefineRepository td, IDataDefineLibraryRepository ddl, ITypeRepository tr, ICategoryRepository cr)
         {
             this._log = log;
             this._mapper = mapper;
             this._td = td;
             this._ddl = ddl;
             this._tr = tr;
+            this._cr = cr;
         }
         public async Task<bool> IsExist(Expression<Func<TypeDataDefineModel, bool>> predicate)
         {
@@ -81,6 +84,7 @@ namespace HXCloud.Service
                 entity.DefaultValue = dataDefine.DefaultValue;
                 entity.Format = dataDefine.Format;
                 entity.Model = (DataDefineModel)dataDefine.Model;
+                entity.Category = dataDefine.Category;
                 await _td.AddAsync(entity);
                 _log.LogInformation($"{account}添加类型数据定义{entity.DataKey}成功");
                 return new HandleResponse<int> { Success = true, Message = "添加数据成功", Key = entity.Id };
@@ -105,6 +109,7 @@ namespace HXCloud.Service
                 var entity = _mapper.Map(req, ret);
                 entity.Modify = account;
                 entity.ModifyTime = DateTime.Now;
+
                 await _td.SaveAsync(entity);
                 _log.LogInformation($"{account}修改数据定义{req.Id}成功");
                 return new BaseResponse { Success = true, Message = "修改数据成功" };
@@ -144,6 +149,29 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "输入的数据定义不存在" };
             }
             var dto = _mapper.Map<TypeDataDefineData>(data);
+            #region 替换categroy
+            if (dto.Category != null && dto.Category.Length > 0)
+            {
+                var cr = await _cr.Find(a => true).ToListAsync();
+                var cid = dto.Category.Split(',');
+                string cname = "";
+                for (int i = 0; i < cid.Length; i++)
+                {
+                    if (cid[i].Trim() != "")
+                    {
+                        if (cname == "")
+                        {
+                            cname += cr.FirstOrDefault(a => a.Id.ToString() == cid[i]).Name;
+                        }
+                        else
+                        {
+                            cname += "," + cr.FirstOrDefault(a => a.Id.ToString() == cid[i]).Name;
+                        }
+                    }
+                }
+                dto.Category = cname;
+            }
+            #endregion
             return new BResponse<TypeDataDefineData> { Success = true, Message = "获取数据成功", Data = dto };
         }
 
@@ -154,6 +182,25 @@ namespace HXCloud.Service
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 data = data.Where(a => a.DataKey == req.Search || a.DataName == req.Search);
+            }
+            //单个标签查找，第一步先查找包含的id，第二步查找id包含的，如果是多个标签的或查找需要根据标签或
+            //Regex r = new Regex(@"(?=(,|\b)1\b)|(?=(,|\b)2\b)")
+            if (req.CategoryId != 0)
+            {
+                string txt = $@"(?=(,|\b){req.CategoryId}\b)";
+                Regex r = new Regex(@txt);
+                var Ids = _td.Find(a => a.TypeId == typeId).ToList().Where(a =>
+                {
+                    if (a.Category == null)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return r.Match(a.Category).Success == true;
+                    }
+                }).Select(a => a.Id).ToList();
+                data = data.Where(a => Ids.Contains(a.Id));
             }
             int count = data.Count();
             string OrderExpression = "";
@@ -166,8 +213,38 @@ namespace HXCloud.Service
             {
                 var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
+
             var entityList = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
             var dtos = _mapper.Map<List<TypeDataDefineData>>(entityList);
+            #region 替换category
+            var cr = await _cr.Find(a => true).ToListAsync();
+            if (cr.Count > 0)
+            {
+                foreach (var item in dtos)
+                {
+                    if (item.Category != null && item.Category.Length > 0)
+                    {
+                        var cid = item.Category.Split(',');
+                        string cname = "";
+                        for (int i = 0; i < cid.Length; i++)
+                        {
+                            if (cid[i].Trim() != "")
+                            {
+                                if (cname == "")
+                                {
+                                    cname += cr.FirstOrDefault(a => a.Id.ToString() == cid[i]).Name;
+                                }
+                                else
+                                {
+                                    cname += "," + cr.FirstOrDefault(a => a.Id.ToString() == cid[i]).Name;
+                                }
+                            }
+                        }
+                        item.Category = cname;
+                    }//end if
+                }
+            }
+            #endregion
             var ret = new BasePageResponse<List<TypeDataDefineData>>
             {
                 Success = true,

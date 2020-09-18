@@ -12,7 +12,7 @@ namespace HXCloud.Service
         Task<BaseResponse> AddAppVersionAsync(string account, string path, AppVersionAddDto req);
         Task<BaseResponse> UpdateAppVersionAsync(string account, AppVersionUpdateDto req);
         Task<BaseResponse> DeleteAppVersionAsync(string account, int Id, string path);
-        Task<BaseResponse> GetAppVersionAsync(int Id);
-        Task<BaseResponse> GetPageAppVersionAsync( BasePageRequest req);
+        Task<BaseResponse> GetAppVersionAsync();
+        Task<BaseResponse> GetPageAppVersionAsync(BasePageRequest req);
     }
 }

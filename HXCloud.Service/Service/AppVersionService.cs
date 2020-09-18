@@ -48,6 +48,7 @@ namespace HXCloud.Service
             {
                 var entity = _mapper.Map<AppVersionModel>(req);
                 entity.Create = account;
+                entity.Address = path;
                 await _avr.AddAsync(entity);
                 _log.LogInformation($"{account}添加标示为{entity.Id}升级文件成功");
                 return new HandleResponse<int> { Success = true, Message = "添加文件成功", Key = entity.Id };
@@ -113,12 +114,12 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "删除文件失败，请联系管理员" };
             }
         }
-        public async Task<BaseResponse> GetAppVersionAsync(int Id)
+        public async Task<BaseResponse> GetAppVersionAsync()
         {
-            var ret = await _avr.FindAsync(Id);
+            var ret = await _avr.Find(a=>true).OrderByDescending(a=>a.CreateTime).FirstOrDefaultAsync();
             if (ret == null)
             {
-                return new BaseResponse { Success = false, Message = "输入的升级文件标示不存在" };
+                return new BaseResponse { Success = false, Message = "没有升级文件" };
             }
             var dto = _mapper.Map<AppVersionDto>(ret);
             var rm = new BResponse<AppVersionDto> { Success = true, Message = "获取数据成功", Data = dto };

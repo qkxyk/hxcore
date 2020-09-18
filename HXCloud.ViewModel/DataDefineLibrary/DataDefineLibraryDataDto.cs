@@ -16,5 +16,6 @@ namespace HXCloud.ViewModel
         public string Format { get; set; }
         #endregion
         public int Model { get; set; }//是否可读可写
+        public string Category { get; set; }
     }
 }

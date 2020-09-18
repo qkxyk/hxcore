@@ -12,7 +12,7 @@ namespace HXCloud.Service
     public interface IUserService : IBaseService<UserModel>
     {
         string GetUserName();
-        Task<BaseResponse> GetUserInfoAsync(int Id);
+        Task<BaseResponse> GetUserInfoAsync(int Id, bool IsAdmin);
         Task<BaseResponse> UserLoginAsync(LoginViewModel req);
         Task<BaseResponse> UserLoginJwtAsync(LoginViewModel req);
         //bool IsExist(Expression<Func<UserModel, bool>> predicate);
@@ -28,5 +28,6 @@ namespace HXCloud.Service
         Task<BaseResponse> DeleteUserAsync(int Id, string account);
         Task<BaseResponse> UpdateUserPasswordAsync(UserPasswordViewModel req, int Id);
         Task<BaseResponse> ResetPassword(UserResetPasswordViewModel req, string account);
+        Task<BaseResponse> AddUserAsync(string Account, string GroupId, UserAddViewModel req);
     }
 }

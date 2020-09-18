@@ -20,5 +20,6 @@ namespace HXCloud.ViewModel
         #endregion
         [Range(1, 2, ErrorMessage = "模式只能1或者2")]
         public int Model { get; set; }//是否可读可写，1表示可读，2表示可读可写
+        public string Category { get; set; }//数据定义类型标签，便于查找,可选择多个，以逗号分割
     }
 }

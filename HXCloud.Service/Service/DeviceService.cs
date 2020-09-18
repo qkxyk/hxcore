@@ -237,6 +237,10 @@ namespace HXCloud.Service
             var device = _dr.FindWithOnlineAndImages(a => a.GroupId == GroupId);
             var sites = await _ps.GetMySitesIdAsync(GroupId, roles, isAdmin);
             device = device.Where(a => sites.Contains(a.ProjectId.Value));
+            if (req.Search!=null&&req.Search.Trim()!="")
+            {
+                device = device.Where(a => a.DeviceName.Contains(req.Search));
+            }
             int count = device.Count();
             string OrderExpression = "";
             if (string.IsNullOrEmpty(req.OrderBy))
@@ -258,6 +262,48 @@ namespace HXCloud.Service
             br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
             br.Data = dto;
             return br;
+        }
+
+        /// <summary>
+        /// 获取项目或者场站下的设备编号
+        /// </summary>
+        /// <param name="projectId">项目或者场站编号</param>
+        /// <param name="isSite">是否是场站</param>
+        /// <returns>返回设备序列号列表</returns>
+        public async Task<List<string>> GetProjectDeviceSnAsync(int projectId, bool isSite)
+        {
+            List<string> devices;
+            if (isSite)
+            {
+                devices = await _dr.Find(a => a.ProjectId == projectId).Select(a => a.DeviceSn).ToListAsync();
+            }
+            else
+            {
+                //获取项目下的场站列表
+                var sites = await _ps.GetProjectSitesIdAsync(projectId);
+                devices = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).Select(a => a.DeviceSn).ToListAsync();
+            }
+            return devices;
+        }
+        /// <summary>
+        /// 获取我的设备编号
+        /// </summary>
+        /// <param name="GroupId">组织编号</param>
+        /// <param name="roles">我的角色</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <returns>返回我的设备编号列表</returns>
+        public async Task<List<string>> GetMyDeviceSnAsync(string GroupId, string roles, bool isAdmin)
+        {
+            var sites = await _ps.GetMySitesIdAsync(GroupId, roles, isAdmin);
+            var devices = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).Select(a => a.DeviceSn).ToListAsync();
+            return devices;
+        }
+
+        public async Task<BaseResponse> GetAllDeviceAsync(List<int> Sites)
+        {
+            var device =await _dr.FindWithOnlineAndImages(a => Sites.Contains(a.ProjectId.Value)).ToListAsync();
+            var dtos = _mapper.Map<List<DeviceDataDto>>(device);
+            return new BResponse<List<DeviceDataDto>> { Success = true, Message = "获取数据成功", Data = dtos };
         }
     }
 }

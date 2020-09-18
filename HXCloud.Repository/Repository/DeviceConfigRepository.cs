@@ -5,7 +5,7 @@ using HXCloud.Model;
 
 namespace HXCloud.Repository
 {
-    public class DeviceConfigRepository:BaseRepository<DeviceCardModel>,IDeviceCardRepository
+    public class DeviceConfigRepository : BaseRepository<DeviceConfigModel>, IDeviceConfigRepository
     {
     }
 }

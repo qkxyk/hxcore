@@ -34,13 +34,13 @@ namespace HXCloud.Service
         }
         public async Task<BaseResponse> GetWarnById(int Id)
         {
-            var data = await _warn.FindAsync(Id);
+            var data = await _warn.FindWithCodeAndType(a => a.Id == Id).FirstOrDefaultAsync();
             if (data == null)
             {
                 return new BaseResponse { Success = false, Message = "输入的报警编号不存在" };
             }
             var dto = _mapper.Map<WarnDto>(data);
-            return new BResponse<WarnDto> { Success = false, Message = "获取数据成功", Data = dto };
+            return new BResponse<WarnDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
 
         /// <summary>
@@ -89,7 +89,15 @@ namespace HXCloud.Service
             }
             var ret = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
             var dtos = _mapper.Map<List<WarnDto>>(ret);
-            return new BResponse<List<WarnDto>> { Success = true, Message = "获取数据成功", Data = dtos };
+            var br = new BasePageResponse<List<WarnDto>>();
+            br.Success = true;
+            br.Message = "获取数据成功";
+            br.PageSize = req.PageSize;
+            br.CurrentPage = req.PageNo;
+            br.Count = count;
+            br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            br.Data = dtos;
+            return br;
         }
 
 
@@ -121,7 +129,15 @@ namespace HXCloud.Service
             }
             var ret = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
             var dtos = _mapper.Map<List<WarnDto>>(ret);
-            return new BResponse<List<WarnDto>> { Success = true, Message = "获取数据成功", Data = dtos };
+            var br = new BasePageResponse<List<WarnDto>>();
+            br.Success = true;
+            br.Message = "获取数据成功";
+            br.PageSize = req.PageSize;
+            br.CurrentPage = req.PageNo;
+            br.Count = count;
+            br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            br.Data = dtos;
+            return br;
         }
 
         /// <summary>
@@ -143,7 +159,26 @@ namespace HXCloud.Service
         }
         public async Task<BaseResponse> UpdateWarnInfo(string account, WarnUpdateDto req)
         {
-            throw new NotImplementedException();
+            var warn = await _warn.FindAsync(req.Id);
+            if (warn == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的数据编号不存在" };
+            }
+            try
+            {
+                warn.State = true;
+                warn.Modify = account;
+                warn.ModifyTime = DateTime.Now;
+                warn.Comments = req.Comments;
+                await _warn.SaveAsync(warn);
+                _log.LogInformation($"{account}处理了标识未{req.Id}的报警信息");
+                return new BaseResponse { Success = true, Message = "处理数据成功" };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{account}处理标识为{req.Id}的报警信息失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "处理数据失败，请联系管理员" };
+            }
         }
     }
 }

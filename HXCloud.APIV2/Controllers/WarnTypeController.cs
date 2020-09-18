@@ -40,7 +40,7 @@ namespace HXCloud.APIV2.Controllers
             return rm;
         }
         [TypeFilter(typeof(SuperAdminFilterAttribute))]
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         public async Task<ActionResult<BaseResponse>> DeleteWarnType(int Id)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;

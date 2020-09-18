@@ -13,6 +13,10 @@
     <Compile Remove="Migrations\20200823092923_addwarn.Designer.cs" />
     <Compile Remove="Migrations\20200823093309_addwarn.cs" />
     <Compile Remove="Migrations\20200823093309_addwarn.Designer.cs" />
+    <Compile Remove="Migrations\20200918073039_addTypeOverview.cs" />
+    <Compile Remove="Migrations\20200918073039_addTypeOverview.Designer.cs" />
+    <Compile Remove="Migrations\20200918073306_addTypeOverview.cs" />
+    <Compile Remove="Migrations\20200918073306_addTypeOverview.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

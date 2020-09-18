@@ -35,8 +35,9 @@ namespace HXCloud.APIV2.Controllers
             this._webHostEnvironment = webHostEnvironment;
         }
 
+        [RequestSizeLimit(100_000_000)] //最大100m左右
         [HttpPost]
-        public async Task<ActionResult<BaseResponse>> AddAppVersion(AppVersionAddDto req)
+        public async Task<ActionResult<BaseResponse>> AddAppVersion([FromForm]AppVersionAddDto req)
         {
             //超级管理员有权限
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -65,7 +66,7 @@ namespace HXCloud.APIV2.Controllers
             }
             //判断文件大小    
             long length = req.file.Length;
-            if (length > 1024 * 1024 * 30) //30M
+            if (length > 1024 * 1024 * 50) //50M
             {
                 return new BaseResponse { Success = false, Message = "上传的文件不能大于30M" };
             }
@@ -141,11 +142,11 @@ namespace HXCloud.APIV2.Controllers
             var ret = await _app.DeleteAppVersionAsync(Account, Id, webRootPath);
             return ret;
         }
-        [HttpGet("{Id}")]
-        public async Task<ActionResult<BaseResponse>> GetAppVersion(int Id)
+        [HttpGet("Latest")]
+        public async Task<ActionResult<BaseResponse>> GetAppVersion()
         {
             //所有合法用户都可以查看
-            var rm = await _app.GetAppVersionAsync(Id);
+            var rm = await _app.GetAppVersionAsync();
             return rm;
         }
         [HttpGet]

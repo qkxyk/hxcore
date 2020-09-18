@@ -5,7 +5,7 @@ using System.Text;
 namespace HXCloud.Model
 {
     //数据定义库，此库的数据只有主管理员有权限添加、编辑，类型数据定义仅支持在库中进行选择
-    public class DataDefineLibraryModel :BaseModel, IAggregateRoot
+    public class DataDefineLibraryModel : BaseModel, IAggregateRoot
     {
         public int Id { get; set; }
         public string DataKey { get; set; }//数据标示
@@ -18,5 +18,6 @@ namespace HXCloud.Model
         public string Format { get; set; }
         #endregion
         public int Model { get; set; }//是否可读可写
+        public string Category { get; set; }//数据定义标签，便于查找
     }
 }

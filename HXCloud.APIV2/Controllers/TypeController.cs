@@ -63,10 +63,27 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="SourceId">源类型标示</param>
         /// <param name="DestId">目标类型标示</param>
         /// <returns>把一个类型复制到另一个类型下</returns>
-        [HttpPost("{Copy}")]
-        public async Task<ActionResult<BaseResponse>> CopyTo(int SourceId, int DestId)
+        [HttpPost("/api/{GroupId}/[controller]/{Copy}")]
+        [TypeFilter(typeof(AdminActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> CopyTo(string GroupId,[FromBody]TypeCopyDto req)
         {
-            throw new NotImplementedException();
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //验证输入的groupid是否存在
+            var ex = await _gs.IsExist(a => a.Id == GroupId);
+            if (!ex)
+            {
+                return new BaseResponse { Success = false, Message = "输入的组织编号不存在" };
+            }
+            ////验证用户权限
+            //if (!(isAdmin && (GId == GroupId || Code == _config["Group"])))
+            //{
+            //    return Unauthorized("没有权限");
+            //}
+            var rm = await _ts.CopyTypeAsync(Account, req.SourceId, req.TargetId);
+            return rm;
         }
 
         [HttpPut("{Id}")]

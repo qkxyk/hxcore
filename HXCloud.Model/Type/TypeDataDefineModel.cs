@@ -26,6 +26,10 @@ namespace HXCloud.Model
 
         public ICollection<TypeAccessoryControlDataModel> TypeAccessoryControlDatas { get; set; }
         public ICollection<TypeSystemAccessoryControlDataModel> TypeSystemAccessoryControlDatas { get; set; }
+        public string Category { get; set; }//数据定义标签，便于查找
+
+        public virtual ICollection<TypeOverviewModel> TypeOverviews { get; set; }
+        public virtual ICollection<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
 
     }
     //设备是否可控制

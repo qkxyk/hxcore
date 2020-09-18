@@ -18,5 +18,8 @@ namespace HXCloud.ViewModel
         public string DeviceNo { get; set; }//设备序列号
         public bool State { get; set; } = false;//报警状态
         public string Comments { get; set; }//报警处理意见
+        public string DeviceName { get; set; }
+        public string FullId { get; set; }
+        public string FullName { get; set; }
     }
 }

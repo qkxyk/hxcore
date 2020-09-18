@@ -20,9 +20,10 @@ namespace HXCloud.ViewModel
 
         public bool AutoControl { get; set; } = false;//自动模式下是否可以控制
         public string OutKey { get; set; }//Display更改为outkey 2018-11-26添加，用于满足设置值和显示值不同，显示设置的结果，此值不做验证。如plc设置为z001，设置后反馈为z002
-        [Range(1,2,ErrorMessage ="模式只能1或者2")]
+        [Range(1, 2, ErrorMessage = "模式只能1或者2")]
         public int Model { get; set; }//数据定义默认是可写（后加入字段为兼容默认为是可以写）
         //[Required(ErrorMessage = "类型标示不能为空")]
         //public int TypeId { get; set; }
+        public string Category { get; set; }
     }
 }

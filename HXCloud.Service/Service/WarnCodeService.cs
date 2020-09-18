@@ -43,7 +43,7 @@ namespace HXCloud.Service
                 var entity = _mapper.Map<WarnCodeModel>(req);
                 entity.WarnTypeId = warnTypeId;
                 entity.Create = account;
-                await _warnCode.SaveAsync(entity);
+                await _warnCode.AddAsync(entity);
                 _log.LogInformation($"{account}添加代码为{req.Code}的报警代码成功");
                 return new HandleResponse<string> { Success = true, Message = "添加数据成功", Key = req.Code };
             }

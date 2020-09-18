@@ -23,9 +23,9 @@ namespace HXCloud.Service
 
             CreateMap<GroupUpdateViewModel, GroupModel>().ForMember(d => d.Id, a => a.MapFrom(s => s.GroupId));
 
-            CreateMap<AppVersionAddDto, AppVersionModel>();
-            CreateMap<AppVersionUpdateDto, AppVersionModel>();
-            CreateMap<AppVersionModel, AppVersionDto>();
+            CreateMap<AppVersionAddDto, AppVersionModel>().ForMember(dest => dest.Descrption, opt => opt.MapFrom(src => src.Description));
+            CreateMap<AppVersionUpdateDto, AppVersionModel>().ForMember(dest => dest.Descrption, opt => opt.MapFrom(src => src.Description));
+            CreateMap<AppVersionModel, AppVersionDto>().ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Descrption));
         }
     }
 }

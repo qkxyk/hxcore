@@ -7,13 +7,23 @@ using HXCloud.ViewModel;
 
 namespace HXCloud.Service
 {
-    public class DataDefineLibraryProfile:Profile
+    public class DataDefineLibraryProfile : Profile
     {
         public DataDefineLibraryProfile()
         {
             CreateMap<DataDefineLibraryAddDto, DataDefineLibraryModel>();
-            CreateMap<DataDefineLibraryUpdateDto, DataDefineLibraryModel>().ForMember(dest=>dest.ModifyTime,opt=>opt.MapFrom(src=>DateTime.Now));
+            CreateMap<DataDefineLibraryUpdateDto, DataDefineLibraryModel>().ForMember(dest => dest.ModifyTime, opt => opt.MapFrom(src => DateTime.Now));
             CreateMap<DataDefineLibraryModel, DataDefineLibraryDataDto>();
         }
     }
+    public class CategoryProfile : Profile
+    {
+        public CategoryProfile()
+        {
+            CreateMap<CategoryAddDto, CategoryModel>();
+            CreateMap<CategoryUpdateDto, CategoryModel>();
+            CreateMap<CategoryModel, CategoryDto>();
+        }
+    }
+
 }

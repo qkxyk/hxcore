@@ -17,5 +17,6 @@ namespace HXCloud.Service
         Task<TypeCheckDto> CheckTypeAsync(int Id);
         bool IsExist(int Id, out string GroupId);
         bool IsExist(Expression<Func<TypeModel, bool>> predicate, out string GroupId);
+        Task<BaseResponse> CopyTypeAsync(string Account, int sourceId, int targetId);
     }
 }

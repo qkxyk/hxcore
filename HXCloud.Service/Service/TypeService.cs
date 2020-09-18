@@ -256,5 +256,45 @@ namespace HXCloud.Service
             return ret.GroupId;
         }
 
+        public async Task<BaseResponse> CopyTypeAsync(string Account, int sourceId, int targetId)
+        {
+            //验证源类型是否存在，是否为叶子节点
+            var source = await _tr.FindAsync(sourceId);
+            if (source == null || source.Status == TypeStatus.Root)
+            {
+                return new BaseResponse { Success = false, Message = "源类型不存在或者不是叶子节点，不能拷贝" };
+            }
+            var target = await _tr.FindAsync(targetId);
+            if (target == null | target.Status == TypeStatus.Leaf)
+            {
+                return new BaseResponse { Success = false, Message = "目标类型不存在或者不是目录节点，不能拷贝" };
+            }
+            TypeModel t = new TypeModel
+            {
+                Create = Account,
+                ICON = source.ICON,
+                Description = source.Description,
+                Status = source.Status,
+                TypeName= source.TypeName,
+                GroupId = target.GroupId
+            };
+            //var t = source;
+            //t.Id = 0;
+            t.Create = Account;
+            t.ParentId = targetId;
+            t.PathId = $"{target.PathId}/{targetId}";
+            t.PathName = $"{target.PathName}/{target.TypeName}";
+            try
+            {
+                await _tr.CopyTypeAsync(sourceId, t);
+                _log.LogInformation($"{Account}拷贝标示为{t.Id}类型成功");
+                return new HandleResponse<int> { Success = true, Message = "拷贝类型成功", Key = t.Id };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{Account}拷贝类型失败，源类型标示为{sourceId},目标类型标示为{targetId},失败原因：{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "拷贝类型失败，请联系管理员处理" };
+            }
+        }
     }
 }

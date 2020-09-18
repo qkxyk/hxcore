@@ -32,6 +32,9 @@ namespace HXCloud.Model
         public virtual ICollection<TypeHardwareConfigModel> TypeHardwareConfig { get; set; }
         public virtual ICollection<TypeAccessoryModel> TypeAccessories { get; set; }
         public virtual ICollection<TypeSystemModel> TypeSystems { get; set; }
+
+        public virtual ICollection<TypeOverviewModel> TypeOverviews { get; set; }
+        public virtual ICollection<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
     }
     public enum TypeStatus
     {

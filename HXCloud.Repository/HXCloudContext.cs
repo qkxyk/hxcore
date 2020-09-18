@@ -62,7 +62,8 @@ namespace HXCloud.Repository
         public DbSet<TypeSystemModel> TypeSystems { get; set; }
         public DbSet<TypeSystemAccessoryModel> TypeSystemAccessories { get; set; }
         public DbSet<TypeSystemAccessoryControlDataModel> TypeSystemAccessoryControlDatas { get; set; }
-
+        public DbSet<TypeOverviewModel> TypeOverviews { get; set; }
+        public DbSet<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
 
 
         public DbSet<ProjectModel> Projects { get; set; }
@@ -85,6 +86,10 @@ namespace HXCloud.Repository
         public DbSet<WarnTypeModel> WarnTypes { get; set; }
         public DbSet<WarnCodeModel> WarnCodes { get; set; }
         public DbSet<WarnModel> Warns { get; set; }
+
+        public DbSet<CategoryModel> Categories { get; set; }
+
+
 
         /*
       public DbSet<MenuModel> Menus { get; set; }
@@ -119,6 +124,8 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new TypeSystemModelMap());
             modelBuilder.ApplyConfiguration(new TypeSystemAccessoyModelMap());
             modelBuilder.ApplyConfiguration(new TypeSystemAccessoryControlDataModelMap());
+            modelBuilder.ApplyConfiguration(new TypeOverviewModelMap());
+            modelBuilder.ApplyConfiguration(new TypeDisplayIconModelMap());
 
             modelBuilder.ApplyConfiguration(new DeviceModelMap());
             modelBuilder.ApplyConfiguration(new DeviceCardModelMap());
@@ -140,6 +147,9 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new WarnTypeModelMap());
             modelBuilder.ApplyConfiguration(new WarnCodeModelMap());
             modelBuilder.ApplyConfiguration(new WarnModelMap());
+
+            modelBuilder.ApplyConfiguration(new CategoryModelMap());
+
             #region 初始化种子数据
             /*
             modelBuilder.Entity<GroupModel>().HasData(new GroupModel() { GroupCode = "hx", GroupName = "合续", Id = groupid, Create = "test" });

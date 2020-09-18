@@ -85,7 +85,7 @@ namespace HXCloud.APIV2.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<BaseResponse>> Get([FromQuery] BasePageRequest req)
+        public async Task<ActionResult<BaseResponse>> Get([FromQuery] DataDefineLibraryPageRequest req)
         {
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             if (!isAdmin)//管理员可以获取数据定义库数据

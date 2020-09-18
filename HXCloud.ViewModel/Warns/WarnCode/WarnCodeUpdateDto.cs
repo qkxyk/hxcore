@@ -8,10 +8,5 @@ namespace HXCloud.ViewModel
     public class WarnCodeUpdateDto
     {
         public string Description { get; set; }//报警描述
-        [Required(ErrorMessage = "编码不能为空")]
-        [StringLength(50, ErrorMessage = "编码长度在4到50个字符之间", MinimumLength = 4)]
-        public string Code { get; set; }//报警编码,报警、故障或者通知编码，唯一
-        [Required(ErrorMessage = "类型标识不能为空")]
-        public int WarnTypeId { get; set; }
     }
 }

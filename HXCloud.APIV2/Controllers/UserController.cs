@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using HXCloud.APIV2.Filters;
 using HXCloud.Common;
 using HXCloud.Service;
 using HXCloud.ViewModel;
@@ -46,7 +47,8 @@ namespace HXCloud.APIV2.Controllers
         public async Task<ActionResult<BaseResponse>> MyInfo()
         {
             var Id = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
-            var rm = await _us.GetUserInfoAsync(Id);
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var rm = await _us.GetUserInfoAsync(Id, isAdmin);
             return rm;
         }
 
@@ -359,6 +361,26 @@ namespace HXCloud.APIV2.Controllers
             }
             var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var rm = await _us.ResetPassword(req, Account);
+            return rm;
+        }
+
+        //[TypeFilter(typeof(AdminActionFilterAttribute))]
+        [HttpPost("AddUser")]
+        public async Task<ActionResult<BaseResponse>> AddUser([FromBody]UserAddViewModel req)
+        {
+            //该组织管理员有权限
+            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            if (req.Password != req.PasswordAgain)
+            {
+                return new BaseResponse { Success = false, Message = "两次输入的密码不一致" };
+            }
+            if (!isAdmin)
+            {
+                return new BaseResponse { Success = false, Message = "用户没有权限" };
+            }
+            var rm = await _us.AddUserAsync(Account,GroupId, req);
             return rm;
         }
     }

@@ -33,10 +33,10 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPut("{Code}")]
         [TypeFilter(typeof(SuperAdminFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> UpdateWarnCode(int warnTypeId, string Code, string Description)
+        public async Task<ActionResult<BaseResponse>> UpdateWarnCode(int warnTypeId, string Code, [FromBody] WarnCodeUpdateDto req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var rm = await _wcs.UpdateWarnCodeDescriptionAsync(Account, Code, Description);
+            var rm = await _wcs.UpdateWarnCodeDescriptionAsync(Account, Code, req.Description);
             return rm;
         }
         [TypeFilter(typeof(SuperAdminFilterAttribute))]

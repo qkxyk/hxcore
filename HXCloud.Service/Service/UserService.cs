@@ -39,10 +39,11 @@ namespace HXCloud.Service
             return "张三";
         }
 
-        public async Task<BaseResponse> GetUserInfoAsync(int Id)
+        public async Task<BaseResponse> GetUserInfoAsync(int Id, bool IsAdmin)
         {
             var User = await _user.FindWithGroup(a => a.Id == Id);
             var dto = _mapper.Map<UserInfoDto>(User);
+            dto.IsAdmin = IsAdmin;
             return new BResponse<UserInfoDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
 
@@ -419,6 +420,31 @@ namespace HXCloud.Service
             }
         }
 
+        public async Task<BaseResponse> AddUserAsync(string Account,string GroupId, UserAddViewModel req)
+        {
+            var user = await _user.Find(a => a.Account == req.Account).FirstOrDefaultAsync();
+            if (user != null)
+            {
+                return new BaseResponse { Success = false, Message = "已存在相同的账号" };
+            }
+            try
+            {
+                var um = _mapper.Map<UserModel>(req);
+                um.Salt = EncryptData.CreateRandom();
+                um.Password = EncryptData.EncryptPassword(req.Password, um.Salt);
+                um.Status = UserStatus.Valid;
+                um.Create = Account;
+                um.GroupId = GroupId;
+                await _user.AddAsync(um);
+                _log.LogInformation($"添加标示为{um.Id}的用户成功");
+                return new HandleResponse<int> { Success = true, Message = "添加用户成功", Key = um.Id };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"添加用户失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "添加用户失败，请联系管理员" };
+            }
+        }
 
     }
 }
