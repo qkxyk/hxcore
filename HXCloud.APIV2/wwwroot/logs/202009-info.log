@@ -286,3 +286,36 @@
 2020-09-17 14:59:50,734 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
 2020-09-17 14:59:50,737 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
 2020-09-17 14:59:50,740 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-09-21 15:28:57,072 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-09-21 15:28:57,101 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-09-21 15:28:57,104 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-09-21 15:28:57,106 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-09-21 15:29:30,022 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-09-21 15:29:30,045 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-09-21 15:29:30,048 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-09-21 15:29:30,050 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-09-21 16:05:48,079 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-09-21 16:05:48,095 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-09-21 16:05:48,098 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-09-21 16:05:48,100 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-09-21 16:06:06,750 [线程ID:5] INFO  记录文件：HXCloud.Service.TypeOverviewService - 消息：hx0001添加标示为0的类型总揽数据成功
+=========================================================
+2020-09-21 16:07:37,698 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-09-21 16:07:37,715 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-09-21 16:07:37,717 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-09-21 16:07:37,719 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-09-21 16:07:58,005 [线程ID:16] INFO  记录文件：HXCloud.Service.TypeOverviewService - 消息：hx0001添加标示为2的类型总揽数据成功
+2020-09-21 16:09:40,687 [线程ID:4] INFO  记录文件：HXCloud.Service.TypeOverviewService - 消息：hx0001修改标示为2的类型总揽数据成功
+2020-09-21 16:11:59,118 [线程ID:26] INFO  记录文件：HXCloud.Service.TypeOverviewService - 消息：hx0001删除标示为2的类型总揽数据成功
+2020-09-21 16:13:52,130 [线程ID:26] INFO  记录文件：HXCloud.Service.TypeDisplayIconService - 消息：hx0001添加标示的类型显示数据成功
+2020-09-21 16:14:10,924 [线程ID:26] INFO  记录文件：HXCloud.Service.TypeDisplayIconService - 消息：hx0001添加标示的类型显示数据成功
+2020-09-21 16:15:08,979 [线程ID:31] INFO  记录文件：HXCloud.Service.TypeDisplayIconService - 消息：hx0001修改标示为2的类型显示数据成功
+=========================================================
+2020-09-21 16:16:58,085 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-09-21 16:16:58,105 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-09-21 16:16:58,107 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-09-21 16:16:58,109 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-09-21 16:19:13,399 [线程ID:25] INFO  记录文件：HXCloud.Service.TypeDisplayIconService - 消息：hx0001删除标示为2的类型显示数据成功

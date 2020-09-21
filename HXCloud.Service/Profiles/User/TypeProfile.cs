@@ -76,6 +76,17 @@ namespace HXCloud.Service
             CreateMap<TypeHardwareConfigAddDto, TypeHardwareConfigModel>();
             CreateMap<TypeHardwareConfigUpdateDto, TypeHardwareConfigModel>();
             CreateMap<TypeHardwareConfigModel, TypeHardwareConfigDto>();
+            //类型总揽
+            CreateMap<TypeOverViewAddDto, TypeOverviewModel>();
+            CreateMap<TypeOverviewUpdateDto, TypeOverviewModel>();
+            CreateMap<TypeOverviewModel, TypeOverviewDto>().ForMember(dest => dest.DataDefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).
+            ForMember(dest => dest.DataType, opt => opt.MapFrom(src => src.TypeDataDefine.DataType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(
+                          src => src.TypeDataDefine.DefaultValue)).ForMember(dest => dest.Format, opt => opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(
+                dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit));
+            //类型显示图标
+            CreateMap<TypeDisplayIconAddDto, TypeDisplayIconModel>();
+            CreateMap<TypeDisplayIconUpdateDto, TypeDisplayIconModel>();
+            CreateMap<TypeDisplayIconModel, TypeDisplayIconDto>().ForMember(dest => dest.DataDefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey));
         }
     }
 }

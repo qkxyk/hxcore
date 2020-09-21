@@ -239,3 +239,23 @@ Cannot resolve parameter 'HXCloud.Repository.IDeviceConfigRepository dcr' of con
    at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
    at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
    at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+=========================================================
+2020-09-21 16:06:15,672 [线程ID:5] ERROR 记录文件：Microsoft.AspNetCore.Server.Kestrel - 消息：Connection id "0HM2U0KJ4S5PC", Request id "0HM2U0KJ4S5PC:00000001": An unhandled exception was thrown by the application.
+System.InvalidOperationException: There is already an open DataReader associated with this Command which must be closed first.
+   at Microsoft.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Rollback()
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose(Boolean disposing)
+   at Microsoft.Data.SqlClient.SqlInternalTransaction.Dispose()
+   at Microsoft.Data.SqlClient.SqlTransaction.Dispose(Boolean disposing)
+   at System.Data.Common.DbTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalTransaction.Dispose()
+   at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Dispose()
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.ServiceProviderEngineScope.Dispose()
+   at Microsoft.EntityFrameworkCore.DbContext.Dispose()
+   at HXCloud.Repository.BaseRepository`1.Dispose() in D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.Repository\Repository\BaseRepository.cs:line 33
+   at Autofac.Core.Disposer.DisposeAsync(Boolean disposing)
+   at Autofac.Core.Lifetime.LifetimeScope.DisposeAsync(Boolean disposing)
+   at Autofac.Extensions.DependencyInjection.AutofacServiceProvider.DisposeAsync()
+   at Autofac.Extensions.DependencyInjection.AutofacServiceScope.DisposeAsync()
+   at Microsoft.AspNetCore.Http.Features.RequestServicesFeature.<DisposeAsync>g__Awaited|9_0(RequestServicesFeature servicesFeature, ValueTask vt)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http.HttpProtocol.FireOnCompletedAwaited(Task currentTask, Stack`1 onCompleted)

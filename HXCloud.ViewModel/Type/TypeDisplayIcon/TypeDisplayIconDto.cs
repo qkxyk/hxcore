@@ -12,6 +12,7 @@ namespace HXCloud.ViewModel
         public int Id { get; set; }
         public string Name { get; set; }
         public int Sn { get; set; }  //显示顺序
+        public string Icon { get; set; }
         public string DataDefineKey { get; set; }//关联的数据定义Key，目前只需要key，后续需要再添加
     }
 }

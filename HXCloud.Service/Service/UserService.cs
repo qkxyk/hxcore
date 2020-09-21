@@ -76,6 +76,7 @@ namespace HXCloud.Service
             {
                 UserQuery = UserQuery.Where(a => a.UserName == req.Search || a.Account == req.Search);
             }
+            int count = UserQuery.Count();
             string OrderExpression = "";
             if (string.IsNullOrEmpty(req.OrderBy))
             {
@@ -88,10 +89,16 @@ namespace HXCloud.Service
             }
             var userList = await UserQuery.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
             var dto = _mapper.Map<List<UserData>>(userList);
-            var ret = new BResponse<List<UserData>>();
-            ret.Success = true;
-            ret.Message = "获取数据成功";
-            ret.Data = dto;
+            var ret = new BasePageResponse<List<UserData>>()
+            {
+                Count = count,
+                CurrentPage = req.PageNo,
+                PageSize = req.PageSize,
+                Success = true,
+                Message = "获取数据成功",
+                Data = dto,
+                TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize)
+            };
             return ret;
         }
 
@@ -420,7 +427,7 @@ namespace HXCloud.Service
             }
         }
 
-        public async Task<BaseResponse> AddUserAsync(string Account,string GroupId, UserAddViewModel req)
+        public async Task<BaseResponse> AddUserAsync(string Account, string GroupId, UserAddViewModel req)
         {
             var user = await _user.Find(a => a.Account == req.Account).FirstOrDefaultAsync();
             if (user != null)
