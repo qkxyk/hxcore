@@ -105,7 +105,7 @@ namespace HXCloud.Service
             {
                 predicate = a => a.WarnTypeId == req.warnTypeId;
             }
-            var wc = _warnCode.Find(predicate);
+            var wc = _warnCode.FindWithWarnType(predicate);
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 wc = wc.Where(a => a.Code.Contains(req.Search));

@@ -135,8 +135,8 @@ namespace HXCloud.APIV2.Controllers
                 issuer: _options.Value.Issuer,
                 audience: _options.Value.Audience,
                 claims: claims,
-                notBefore: now,
-                expires: expires,
+                //notBefore: now,
+                //expires: expires,
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Value.IssuerSigningKey)), SecurityAlgorithms.HmacSha256));
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
             #endregion

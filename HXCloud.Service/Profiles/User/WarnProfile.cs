@@ -20,7 +20,7 @@ namespace HXCloud.Service
             #region 报警代码
             CreateMap<WarnCodeAddDto, WarnCodeModel>();
             CreateMap<WarnCodeUpdateDto, WarnCodeModel>();
-            CreateMap<WarnCodeModel, WarnCodeDto>();
+            CreateMap<WarnCodeModel, WarnCodeDto>().ForMember(dest => dest.WarnTypeName, opt => opt.MapFrom(src => src.WarnType.TypeName));
             #endregion
             #region 报警数据
             CreateMap<WarnModel, WarnDto>().ForMember(dest => dest.WarnTypeId, opt => opt.MapFrom(src => src.WarnCode.WarnType.Id)).ForMember(

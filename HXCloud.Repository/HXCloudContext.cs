@@ -64,6 +64,9 @@ namespace HXCloud.Repository
         public DbSet<TypeSystemAccessoryControlDataModel> TypeSystemAccessoryControlDatas { get; set; }
         public DbSet<TypeOverviewModel> TypeOverviews { get; set; }
         public DbSet<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
+        public DbSet<TypeModuleModel> TypeModules { get; set; }
+        public DbSet<TypeModuleControlModel> TypeModuleControls { get; set; }
+        public DbSet<TypeModuleFeedbackModel> typeModuleFeedbacks { get; set; }
 
 
         public DbSet<ProjectModel> Projects { get; set; }
@@ -126,6 +129,9 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new TypeSystemAccessoryControlDataModelMap());
             modelBuilder.ApplyConfiguration(new TypeOverviewModelMap());
             modelBuilder.ApplyConfiguration(new TypeDisplayIconModelMap());
+            modelBuilder.ApplyConfiguration(new TypeModuleModelMap());
+            modelBuilder.ApplyConfiguration(new TypeModuleControlModelMap());
+            modelBuilder.ApplyConfiguration(new TypeModuleFeedbackModelMap());
 
             modelBuilder.ApplyConfiguration(new DeviceModelMap());
             modelBuilder.ApplyConfiguration(new DeviceCardModelMap());

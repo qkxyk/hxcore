@@ -217,14 +217,14 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="DeviceSn"></param>
         /// <returns></returns>
         [HttpPut("Project")]
-        public async Task<ActionResult<BaseResponse>> RemoveDeviceProject(string GroupId, string DeviceSn)
+        public async Task<ActionResult<BaseResponse>> RemoveDeviceProject(string GroupId, [FromBody]DeviceDeleteDto req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-            var dto = await _ds.IsExistCheck(a => a.DeviceSn == DeviceSn);
+            var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn);
             if (!dto.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "输入的设备不存在" };
@@ -259,7 +259,7 @@ namespace HXCloud.APIV2.Controllers
                 return new BaseResponse { Success = false, Message = "该设备已在回收站中，请勿重复操作" };
             }
             #endregion
-            var rm = await _ds.ChangeDeviceProject(Account, DeviceSn, GroupId, null);
+            var rm = await _ds.ChangeDeviceProject(Account, req.DeviceSn, GroupId, null);
             return rm;
         }
 
@@ -399,6 +399,30 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             var rm = await _ds.GetProjectDeviceAsync(GroupId, projectId, isSite, req);
+            return rm;
+        }
+
+        [HttpGet("NoProject")]
+        public async Task<ActionResult<BaseResponse>> GetNoProjectDevice(string GroupId, [FromQuery]BasePageRequest req)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //验证权限,只有管理员才能查看无项目的设备
+            if (!isAdmin)
+            {
+                return Unauthorized("只有管理员才有权限查看无项目的设备");
+            }
+            else
+            {
+                if (GroupId != GId && Code != _config["Group"])
+                {
+                    return Unauthorized("用户没有权限查看其他组织的设备");
+                }
+            }
+            var rm = await _ds.GetNoProjectDeviceAsync(GroupId, req);
             return rm;
         }
         /// <summary>

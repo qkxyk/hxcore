@@ -25,7 +25,11 @@ namespace HXCloud.Repository
 
     public class WarnCodeRepository : BaseRepository<WarnCodeModel>, IWarnCodeRepository
     {
-
+        public IQueryable<WarnCodeModel> FindWithWarnType(Expression<Func<WarnCodeModel, bool>> predicate)
+        {
+            var data = _db.WarnCodes.Include(a => a.WarnType).AsNoTracking().Where(predicate);
+            return data;
+        }
     }
     public class WarnRepository : BaseRepository<WarnModel>, IWarnRepository
     {

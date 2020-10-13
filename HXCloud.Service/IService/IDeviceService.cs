@@ -30,5 +30,12 @@ namespace HXCloud.Service
         /// <param name="Sites">场站列表</param>
         /// <returns>返回所有设备</returns>
         Task<BaseResponse> GetAllDeviceAsync(List<int> Sites);
+        /// <summary>
+        /// 获取无项目的设备
+        /// </summary>
+        /// <param name="GroupId">组织编号</param>
+        /// <param name="req">分页参数</param>
+        /// <returns>返回无项目设备列表</returns>
+        Task<BaseResponse> GetNoProjectDeviceAsync(string GroupId, BasePageRequest req);
     }
 }

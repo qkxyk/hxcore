@@ -1567,6 +1567,133 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("Type");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeModuleControlModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ControlName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("DataDefineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DataValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Formula")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sn")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DataDefineId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("TypeModuleControl");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleFeedbackModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("DataDefineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModuleControlId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sn")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DataDefineId");
+
+                    b.HasIndex("ModuleControlId");
+
+                    b.ToTable("TypeModuleFeedback");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModuleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ModuleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Sn")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("TypeModule");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeOverviewModel", b =>
                 {
                     b.Property<int>("Id")
@@ -2390,6 +2517,43 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.TypeModel", "Parent")
                         .WithMany("Child")
                         .HasForeignKey("ParentId");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleControlModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
+                        .WithMany("TypeModuleControls")
+                        .HasForeignKey("DataDefineId")
+                        .IsRequired();
+
+                    b.HasOne("HXCloud.Model.TypeModuleModel", "TypeModule")
+                        .WithMany("ModuleControls")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleFeedbackModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
+                        .WithMany("TypeModuleFeedbacks")
+                        .HasForeignKey("DataDefineId")
+                        .IsRequired();
+
+                    b.HasOne("HXCloud.Model.TypeModuleControlModel", "TypeModuleControl")
+                        .WithMany("TypeModuleFeedbacks")
+                        .HasForeignKey("ModuleControlId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeModel", "Type")
+                        .WithMany("TypeModules")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeOverviewModel", b =>

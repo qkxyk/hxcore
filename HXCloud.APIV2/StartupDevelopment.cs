@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Text;
 using Autofac;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -70,7 +72,8 @@ namespace HXCloud.APIV2
                 opt.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateAudience = true,
-                    ValidateLifetime = true,
+                    //ValidateLifetime = true,
+                    ValidateLifetime=false,
                     ValidateIssuer = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = config.Issuer,
@@ -95,6 +98,11 @@ namespace HXCloud.APIV2
                 opt.MultipartBodyLengthLimit = /*300_000_000; //*/int.MaxValue;
                 opt.MultipartHeadersLengthLimit = int.MaxValue;
             });
+            services.AddSwaggerGen(s =>
+            {
+                s.SwaggerDoc("V2.0", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "HX api V2", Version = "V2.0 " });
+                s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "HXCloud.APIV2.xml"));
+            });
         }
         #region 添加sql日志输出控制台
         public static readonly ILoggerFactory MyLoggerFactory
@@ -115,6 +123,13 @@ namespace HXCloud.APIV2
             {
                 app.UseDeveloperExceptionPage();
             }
+            if (env.IsProduction())
+            {
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
+            }
             //中间件顺序 ExceptionHandler、HSTS、HttpsRedirection、Static Files、Routing 、CORS、Authentication、Authorization、Custom Middlewares、Endpoint
             loggerFactory.AddLog4Net();
             app.UseStaticFiles();
@@ -123,6 +138,11 @@ namespace HXCloud.APIV2
             app.UseAuthorization();
             //自定义中间件
             //app.UseTokenCheck();
+            app.UseSwagger();
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/V2.0/swagger.json", "HX Cloud Api(V2.0)");
+            });
 
             app.UseEndpoints(endpoints =>
             {

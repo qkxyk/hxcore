@@ -31,6 +31,9 @@ namespace HXCloud.Model
         public virtual ICollection<TypeOverviewModel> TypeOverviews { get; set; }
         public virtual ICollection<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
 
+        public virtual ICollection<TypeModuleControlModel> TypeModuleControls { get; set; }
+        public virtual ICollection<TypeModuleFeedbackModel> TypeModuleFeedbacks { get; set; }
+
     }
     //设备是否可控制
     public enum DataDefineModel

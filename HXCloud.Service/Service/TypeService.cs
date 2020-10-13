@@ -275,7 +275,7 @@ namespace HXCloud.Service
                 ICON = source.ICON,
                 Description = source.Description,
                 Status = source.Status,
-                TypeName= source.TypeName,
+                TypeName = source.TypeName,
                 GroupId = target.GroupId
             };
             //var t = source;
@@ -284,6 +284,7 @@ namespace HXCloud.Service
             t.ParentId = targetId;
             t.PathId = $"{target.PathId}/{targetId}";
             t.PathName = $"{target.PathName}/{target.TypeName}";
+            //t.Status = source.Status;
             try
             {
                 await _tr.CopyTypeAsync(sourceId, t);

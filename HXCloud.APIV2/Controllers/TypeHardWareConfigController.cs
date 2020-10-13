@@ -140,7 +140,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpGet]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> GetTypeHardwareConfig(int typeId, BasePageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetTypeHardwareConfig(int typeId, [FromQuery]BasePageRequest req)
         {
             //string user = User.Identity.Name;
             //if (string.IsNullOrWhiteSpace(user))

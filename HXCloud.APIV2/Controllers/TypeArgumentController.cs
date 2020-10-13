@@ -32,7 +32,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPost]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> AddAsync(int typeId, TypeArgumentAddViewModel req)
+        public async Task<ActionResult<BaseResponse>> AddAsync(int typeId, [FromBody]TypeArgumentAddViewModel req)
         {
             //string user = User.Identity.Name;
             //if (string.IsNullOrWhiteSpace(user))
@@ -66,7 +66,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPut]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> TypeArgumentUpdate(int typeId, TypeArgumentUpdateViewModel req)
+        public async Task<ActionResult<BaseResponse>> TypeArgumentUpdate(int typeId, [FromBody] TypeArgumentUpdateViewModel req)
         {
             //string user = User.Identity.Name;
             //if (string.IsNullOrWhiteSpace(user))
@@ -138,7 +138,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpGet]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> GetTypeArgument(int typeId, BasePageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetTypeArgument(int typeId, [FromQuery] BasePageRequest req)
         {
             //string user = User.Identity.Name;
             //if (string.IsNullOrWhiteSpace(user))

@@ -1,0 +1,178 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HXCloud.APIV2</name>
+    </assembly>
+    <members>
+        <member name="P:HXCloud.APIV2.AuthManage.PolicyRequirement.UserPermissions">
+            <summary>
+            用户权限集合
+            </summary>
+        </member>
+        <member name="P:HXCloud.APIV2.AuthManage.PolicyRequirement.DeniedAction">
+            <summary>
+            无权限action
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.AuthManage.PolicyRequirement.#ctor">
+            <summary>
+            构造
+            </summary>
+        </member>
+        <member name="T:HXCloud.APIV2.AuthManage.UserPermission">
+            <summary>
+            用户权限承载实体
+            </summary>
+        </member>
+        <member name="P:HXCloud.APIV2.AuthManage.UserPermission.UserName">
+            <summary>
+            用户名
+            </summary>
+        </member>
+        <member name="P:HXCloud.APIV2.AuthManage.UserPermission.Url">
+            <summary>
+            请求Url
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.AppVersionController.#ctor(HXCloud.Service.IAppVersionService,Microsoft.Extensions.Logging.ILogger{HXCloud.APIV2.Controllers.AppVersionController},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            移动端更新包，上传更新包、编辑更新包、获取最新的更新包，获取分页的更新包
+            </summary>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.DeviceCardController">
+            <summary>
+            一个设备对应一个流量卡
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.RemoveDeviceProject(System.String,HXCloud.ViewModel.DeviceDeleteDto)">
+            <summary>
+            把设备放入回收站
+            </summary>
+            <param name="GroupId"></param>
+            <param name="DeviceSn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.DeleteDevice(System.String,System.String)">
+            <summary>
+            彻底删除设备
+            </summary>
+            <param name="GroupId"></param>
+            <param name="DeviceSn"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.GetProjectDevices(System.String,System.Int32,HXCloud.ViewModel.BasePageRequest)">
+            <summary>
+            获取项目或者场站下的设备
+            </summary>
+            <param name="GroupId"></param>
+            <param name="projectId"></param>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.GetMyDevice(System.String,HXCloud.ViewModel.BasePageRequest)">
+            <summary>
+            获取我的设备
+            </summary>
+            <param name="GroupId"></param>
+            <param name=""></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.GetAllDevice(System.String,System.Int32)">
+            <summary>
+            获取所有设备，不分页
+            </summary>
+            <param name="GroupId">组织标示</param>
+            <param name="projectId">项目或者场站标示</param>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.DeviceHisDataController">
+            <summary>
+            增加一个获取一天历史数据的接口，根据日期
+            </summary>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.GroupController">
+            <summary>
+            组织要实现的功能：1.新增组织、2.组织修改、3.组织logo上传、4.获取本组织信息、5.获取组织列表（分页）
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.GroupController.GetPageGroup(HXCloud.ViewModel.GroupPageListRequest)">
+            <summary>
+            所有用户都有权限查看
+            </summary>
+            <param name="req"></param>
+            <returns>只返回组织的标示、名称、logo</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.GroupController.Update(HXCloud.ViewModel.GroupUpdateViewModel)">
+            <summary>
+            修改组织信息，不允许修改组织代码
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.ProjectController.GetGroupProject(System.String)">
+            <summary>
+            获取组织的项目,组织的管理员有权限
+            </summary>
+            <param name="GroupId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.ProjectController.GetProject(System.String,System.Int32)">
+            <summary>
+            根据标识获取项目或者场站信息,获取项目下所有的项目、场站信息
+            </summary>
+            <param name="Id">项目或者场站标识</param>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.RoleController">
+            <summary>
+            1.添加角色、2.修改角色信息、3.获取单个角色信息、4.获取组织角色信息、5.删除角色信息
+            </summary>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.TypeController">
+            <summary>
+            类型支持添加、编辑类型名称、删除类型、根据类型标示获取类型信息（附带类型子类型）、根据组织标示回去类型、导入合续类型(暂未开发2020-4-13)
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeController.CopyTo(System.String,HXCloud.ViewModel.TypeCopyDto)">
+            <summary>
+            类型复制，把一个叶子节点类型复制到另一个非叶子节点下
+            只支持源类型类型为叶子节点的类型，目标类型为非叶子节点的类型
+            </summary>
+            <param name="SourceId">源类型标示</param>
+            <param name="DestId">目标类型标示</param>
+            <returns>把一个类型复制到另一个类型下</returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.TypeSchemaController">
+             <summary>
+             考虑类型模式数据量不大，不提供分页功能
+            模式类型分为自动模式和自定义模式，自定义模式和硬件匹配，设置为4中自定义模式，目前自动模式下有嵌套子模式，自定义模式没有嵌套，
+             </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeSchemaController.Get(System.Int32,System.Int32)">
+            <summary>
+            serviceFilter+startup中使用依赖注入
+            </summary>
+            <param name="typeId"></param>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.UserController.Get(HXCloud.ViewModel.UserPageRequestViewModel)">
+            <summary>
+            获取组织所有的用户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.UserController.Password(HXCloud.ViewModel.UserPasswordViewModel)">
+            <summary>
+            用户修改密码
+            </summary>
+            <param name="req">密码信息</param>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.UserRoleController">
+            <summary>
+            1、获取用户角色.2、更新用户角色.3、删除用户单个角色
+            </summary>
+        </member>
+    </members>
+</doc>

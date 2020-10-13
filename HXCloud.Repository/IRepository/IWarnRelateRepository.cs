@@ -16,7 +16,7 @@ namespace HXCloud.Repository
 
     public interface IWarnCodeRepository : IBaseRepository<WarnCodeModel>
     {
-
+        IQueryable<WarnCodeModel> FindWithWarnType(Expression<Func<WarnCodeModel, bool>> predicate);
     }
     public interface IWarnRepository : IBaseRepository<WarnModel>
     {

@@ -196,6 +196,37 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = $"{message}失败，请联系管理员" };
             }
         }
+        /// <summary>
+        /// 获取无项目的设备
+        /// </summary>
+        /// <param name="GroupId">组织编号</param>
+        /// <param name="req">分页参数</param>
+        /// <returns>返回无项目设备列表</returns>
+        public async Task<BaseResponse> GetNoProjectDeviceAsync(string GroupId, BasePageRequest req)
+        {
+            var device = _dr.FindWithOnlineAndImages(a => a.GroupId == GroupId && a.ProjectId == null);
+            int count = device.Count();
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "DeviceSn Asc";
+            }
+            else
+            {
+                var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            var list = await device.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var dto = _mapper.Map<List<DeviceDataDto>>(list);
+            var br = new BasePageResponse<List<DeviceDataDto>>();
+            br.Success = true;
+            br.Message = "获取数据成功";
+            br.PageSize = req.PageSize;
+            br.CurrentPage = req.PageNo;
+            br.Count = count;
+            br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            br.Data = dto;
+            return br;
+        }
         //获取项目或者场站设备
         public async Task<BaseResponse> GetProjectDeviceAsync(string GroupId, int projectId, bool isSite, BasePageRequest req)
         {
@@ -237,7 +268,7 @@ namespace HXCloud.Service
             var device = _dr.FindWithOnlineAndImages(a => a.GroupId == GroupId);
             var sites = await _ps.GetMySitesIdAsync(GroupId, roles, isAdmin);
             device = device.Where(a => sites.Contains(a.ProjectId.Value));
-            if (req.Search!=null&&req.Search.Trim()!="")
+            if (req.Search != null && req.Search.Trim() != "")
             {
                 device = device.Where(a => a.DeviceName.Contains(req.Search));
             }
@@ -301,7 +332,7 @@ namespace HXCloud.Service
 
         public async Task<BaseResponse> GetAllDeviceAsync(List<int> Sites)
         {
-            var device =await _dr.FindWithOnlineAndImages(a => Sites.Contains(a.ProjectId.Value)).ToListAsync();
+            var device = await _dr.FindWithOnlineAndImages(a => Sites.Contains(a.ProjectId.Value)).ToListAsync();
             var dtos = _mapper.Map<List<DeviceDataDto>>(device);
             return new BResponse<List<DeviceDataDto>> { Success = true, Message = "获取数据成功", Data = dtos };
         }

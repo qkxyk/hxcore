@@ -87,6 +87,24 @@ namespace HXCloud.Service
             CreateMap<TypeDisplayIconAddDto, TypeDisplayIconModel>();
             CreateMap<TypeDisplayIconUpdateDto, TypeDisplayIconModel>();
             CreateMap<TypeDisplayIconModel, TypeDisplayIconDto>().ForMember(dest => dest.DataDefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey));
+            //类型模块
+            CreateMap<TypeModuleAddDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
+            CreateMap<TypeModuleUpdateDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
+            CreateMap<TypeModuleModel, TypeModuleDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls));
+
+            //类型控制项
+            CreateMap<TypeModuleControlAddDto, TypeModuleControlModel>();
+            CreateMap<TypeModuleControlUpdateDto, TypeModuleControlModel>();
+            CreateMap<TypeModuleControlModel, TypeModuleControlDto>().ForMember(dest => dest.Format, opt => opt.MapFrom(src => src.TypeDataDefine.Format))
+                .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.DataType, opt => opt.MapFrom(src => src.TypeDataDefine.DataType))
+                .ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue)).ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey))
+                .ForMember(dest=>dest.FeedBacks,opt=>opt.MapFrom(src=>src.TypeModuleFeedbacks));
+            //类型反馈数据
+            CreateMap<TypeModuleFeedbackAddDto, TypeModuleFeedbackModel>();
+            CreateMap<TypeModuleFeedbackUpdateDto, TypeModuleFeedbackModel>();
+            CreateMap<TypeModuleFeedbackModel, TypeModuleFeedbackDto>().ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.Format, opt =>
+                      opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.DataType, opt =>
+                      opt.MapFrom(src => src.TypeDataDefine.DataType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue));
         }
     }
 }
