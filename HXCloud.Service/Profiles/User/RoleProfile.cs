@@ -17,6 +17,7 @@ namespace HXCloud.Service
 
             CreateMap<RoleUpdateDto, RoleModel>().ForMember(d => d.RoleName, a => a.MapFrom(s => s.Name)).ForMember(
                 d => d.ModifyTime, a => a.MapFrom(s => DateTime.Now));
+            CreateMap<RoleProjectModel, RoleProjectDto>().ForMember(dest => dest.Operate, opt => opt.MapFrom(src => (int)src.Operate));
         }
     }
 }

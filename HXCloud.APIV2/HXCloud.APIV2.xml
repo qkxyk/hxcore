@@ -128,6 +128,32 @@
             1.添加角色、2.修改角色信息、3.获取单个角色信息、4.获取组织角色信息、5.删除角色信息
             </summary>
         </member>
+        <member name="T:HXCloud.APIV2.Controllers.RoleProjectController">
+            <summary>
+            角色分配项目权限
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RoleProjectController.#ctor(HXCloud.Service.IRoleService,HXCloud.Service.IProjectService,HXCloud.Service.IRoleProjectService,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            角色的项目权限
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RoleProjectController.AddOrUpdateAsync(System.String,HXCloud.ViewModel.RoleProjectAddDto)">
+            <summary>
+            添加或者修改角色项目
+            </summary>
+            <param name="GroupId">组织标示</param>
+            <param name="req">角色和项目信息</param>
+            <returns>返回是否成功</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RoleProjectController.GetRoleProjectAsync(System.String,System.Int32)">
+            <summary>
+            获取角色项目
+            </summary>
+            <param name="GroupId">组织标示</param>
+            <param name="roleId">角色标示</param>
+            <returns>返回角色的项目列表</returns>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.TypeController">
             <summary>
             类型支持添加、编辑类型名称、删除类型、根据类型标示获取类型信息（附带类型子类型）、根据组织标示回去类型、导入合续类型(暂未开发2020-4-13)
