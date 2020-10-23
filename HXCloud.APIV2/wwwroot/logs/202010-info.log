@@ -131,3 +131,92 @@
 2020-10-16 16:11:34,416 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
 2020-10-16 16:11:34,418 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
 2020-10-16 16:11:34,420 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-19 09:25:56,122 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-19 09:25:56,135 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-19 09:25:56,137 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-19 09:25:56,139 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-10-19 09:48:58,414 [线程ID:20] INFO  记录文件：HXCloud.Service.DeviceConfigService - 消息：hx0001删除标示为1的设备配置数据成功
+2020-10-19 09:51:58,383 [线程ID:25] INFO  记录文件：HXCloud.Service.DeviceConfigService - 消息：hx0001添加标示为2的设备配置数据成功
+2020-10-19 10:41:55,504 [线程ID:53] INFO  记录文件：HXCloud.Service.DeviceInputDataService - 消息：hx0001添加标示为1的设备输入数据成功
+2020-10-19 10:43:24,168 [线程ID:55] INFO  记录文件：HXCloud.Service.DeviceInputDataService - 消息：hx0001修改标示为1的设备输入数据成功
+2020-10-19 10:47:11,046 [线程ID:74] INFO  记录文件：HXCloud.Service.DeviceInputDataService - 消息：hx0001删除标示为1的设备输入数据成功
+=========================================================
+2020-10-19 15:38:33,359 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-19 15:38:33,390 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-19 15:38:33,392 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-19 15:38:33,394 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-20 17:26:16,937 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+=========================================================
+2020-10-20 17:29:12,735 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-20 17:29:12,752 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-20 17:29:12,755 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-20 17:29:12,758 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-10-20 17:30:36,439 [线程ID:2] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application is shutting down...
+=========================================================
+2020-10-20 17:32:21,601 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-20 17:32:21,616 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-20 17:32:21,619 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-20 17:32:21,621 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-20 17:33:43,458 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-20 17:33:43,477 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-20 17:33:43,479 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-20 17:33:43,481 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-20 17:34:25,854 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-20 17:34:25,869 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-20 17:34:25,871 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-20 17:34:25,873 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-20 17:40:12,063 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-20 17:40:12,080 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-20 17:40:12,083 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-20 17:40:12,086 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-20 17:44:39,904 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+=========================================================
+2020-10-20 17:45:58,359 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-20 17:45:58,376 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-20 17:45:58,379 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-20 17:45:58,383 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-21 10:13:46,121 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-21 10:14:43,687 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-21 10:14:43,691 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-21 10:14:43,694 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+=========================================================
+2020-10-21 10:24:27,669 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-21 10:24:27,685 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-21 10:24:27,691 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-21 10:24:27,695 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-10-21 10:25:22,853 [线程ID:4] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝源类型3到目标类型32的文件拷贝成功
+2020-10-21 10:28:31,014 [线程ID:5] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝源类型3到目标类型32的文件拷贝成功
+=========================================================
+2020-10-21 10:36:37,129 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-21 10:36:37,143 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-21 10:36:37,146 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-21 10:36:37,149 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-10-21 10:37:03,103 [线程ID:14] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝源类型3到目标类型32的文件拷贝成功
+2020-10-21 10:48:47,644 [线程ID:28] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝标示为1029类型成功
+2020-10-21 10:49:02,822 [线程ID:28] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝源类型3到目标类型1029的文件拷贝成功
+2020-10-21 10:54:59,705 [线程ID:37] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝标示为1030类型成功
+2020-10-21 10:55:43,920 [线程ID:42] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝源类型3到目标类型1030的文件拷贝成功
+=========================================================
+2020-10-21 11:06:30,305 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-21 11:06:30,319 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-21 11:06:30,322 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-21 11:06:30,325 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-10-21 11:07:13,239 [线程ID:2] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application is shutting down...
+=========================================================
+2020-10-21 11:07:56,442 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-21 11:07:56,456 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-21 11:07:56,459 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-21 11:07:56,461 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-10-21 11:08:14,829 [线程ID:5] INFO  记录文件：HXCloud.Service.TypeService - 消息：hx0001拷贝源类型3到目标类型1030的文件拷贝成功
+=========================================================
+2020-10-22 16:56:01,305 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://localhost:5000
+2020-10-22 16:56:01,326 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-10-22 16:56:01,346 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Development
+2020-10-22 16:56:01,349 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2

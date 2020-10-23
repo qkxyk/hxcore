@@ -161,11 +161,11 @@
         </member>
         <member name="M:HXCloud.APIV2.Controllers.TypeController.CopyTo(System.String,HXCloud.ViewModel.TypeCopyDto)">
             <summary>
-            类型复制，把一个叶子节点类型复制到另一个非叶子节点下
-            只支持源类型类型为叶子节点的类型，目标类型为非叶子节点的类型
+            类型复制（分两步，第一步复制类型基本数据，第二步使用第一步返回的类型标示复制类型更新文件和工艺图），把
+            一个叶子节点类型复制到另一个非叶子节点下.只支持源类型类型为叶子节点的类型，目标类型为非叶子节点的类型
             </summary>
-            <param name="SourceId">源类型标示</param>
-            <param name="DestId">目标类型标示</param>
+            <param name="GroupId">组织标示，从请求地址中获取</param>
+            <param name="req">包含源类型标示和目标类型标示</param>
             <returns>把一个类型复制到另一个类型下</returns>
         </member>
         <member name="T:HXCloud.APIV2.Controllers.TypeSchemaController">

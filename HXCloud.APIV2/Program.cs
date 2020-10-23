@@ -37,7 +37,7 @@ namespace HXCloud.APIV2
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            var assemblyName = typeof(StartupTest).GetTypeInfo().Assembly.FullName;
+            //var assemblyName = typeof(StartupTest).GetTypeInfo().Assembly.FullName;
             var bulider = Host.CreateDefaultBuilder(args);
             bulider.ConfigureLogging((context, loggingBuilder) =>
             {
@@ -46,7 +46,8 @@ namespace HXCloud.APIV2
             }).UseServiceProviderFactory(new AutofacServiceProviderFactory())
             .ConfigureWebHostDefaults(webBulider =>
             {
-                webBulider.UseStartup(assemblyName);
+                //webBulider.UseStartup(assemblyName);
+                webBulider.UseStartup<Startup>();
             });
             return bulider;
         }

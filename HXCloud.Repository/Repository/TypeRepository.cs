@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -20,6 +21,12 @@ namespace HXCloud.Repository
             var data = await _db.Types.Include(a => a.Child).Where(predicate).FirstOrDefaultAsync();
             return data;
         }
+        /// <summary>
+        /// 类型拷贝(类型拷贝分两步，第一步拷贝类型，第二步拷贝类型的更新文件和工艺图)
+        /// </summary>
+        /// <param name="sourceId">源类型标示</param>
+        /// <param name="target">目标类型</param>
+        /// <returns></returns>
         public async Task CopyTypeAsync(int sourceId, TypeModel target)
         {
             //获取配件和控制项
@@ -56,7 +63,7 @@ namespace HXCloud.Repository
                     await _db.TypeDataDefines.AddRangeAsync(dataDefineList);
 
                     #endregion
-                  
+
                     #region 处理类型模式
                     List<TypeSchemaModel> typeSchema = new List<TypeSchemaModel>();
                     var schema = await _db.TypeSchemas.Include(a => a.Child).Where(a => a.TypeId == sourceId && a.Parent == null).ToListAsync();
@@ -80,7 +87,7 @@ namespace HXCloud.Repository
                     }
                     await _db.TypeSchemas.AddRangeAsync(typeSchema);
                     #endregion
-                  
+
                     #region 处理类型配置
                     var typeConfig = await _db.TypeConfigs.Where(a => a.TypeId == sourceId).ToListAsync();
                     List<TypeConfigModel> typeConfigList = new List<TypeConfigModel>();
@@ -99,7 +106,7 @@ namespace HXCloud.Repository
                     }
                     await _db.TypeConfigs.AddRangeAsync(typeConfigList);
                     #endregion
-                  
+
                     #region 处理类型参数
                     var typeArgument = await _db.TypeArguments.Where(a => a.TypeId == sourceId).ToListAsync();
                     List<TypeArgumentModel> typeArgumentList = new List<TypeArgumentModel>();
@@ -150,7 +157,7 @@ namespace HXCloud.Repository
                     }
                     await _db.TypeStatisticsInfos.AddRangeAsync(typeStatisticsList);
                     #endregion
-                
+
                     #region 类型展示图标
                     List<TypeDisplayIconModel> typeDisplayIconList = new List<TypeDisplayIconModel>();
                     var icons = await _db.TypeDisplayIcons.Where(a => a.TypeId == sourceId).ToListAsync();
@@ -172,7 +179,7 @@ namespace HXCloud.Repository
                     }
                     await _db.TypeDisplayIcons.AddRangeAsync(typeDisplayIconList);
                     #endregion
-                  
+
                     #region 类型总揽
                     List<TypeOverviewModel> typeOverviewList = new List<TypeOverviewModel>();
                     var typeOverview = await _db.TypeOverviews.Where(a => a.TypeId == sourceId).ToListAsync();
@@ -193,7 +200,7 @@ namespace HXCloud.Repository
                     }
                     await _db.TypeOverviews.AddRangeAsync(typeOverviewList);
                     #endregion
-                   
+
                     #region 处理类型模块
                     List<TypeModuleModel> typeModuleList = new List<TypeModuleModel>();
                     var typeModules = await _db.TypeModules.Include(a => a.ModuleControls).ThenInclude(a => a.TypeModuleFeedbacks).Where(a => a.TypeId == sourceId).ToListAsync();
@@ -255,14 +262,81 @@ namespace HXCloud.Repository
                     await _db.TypeModules.AddRangeAsync(typeModuleList);
                     #endregion
 
+                    #region 类型plc数据
+                    List<TypeHardwareConfigModel> typeHardwareList = new List<TypeHardwareConfigModel>();
+                    var typeHardWares = await _db.TypeHardwareConfigs.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeHardwareList)
+                    {
+                        TypeHardwareConfigModel data = new TypeHardwareConfigModel()
+                        {
+                            Create = target.Create,
+                            CreateTime = target.CreateTime,
+                            Address = item.Address,
+                            BitOffSet = item.BitOffSet,
+                            CMD = item.CMD,
+                            Comm = item.Comm,
+                            Format = item.Format,
+                            Key = item.Key,
+                            KeyName = item.KeyName,
+                            KeyType = item.KeyType,
+                            Lens = item.Lens,
+                            Max = item.Max,
+                            Min = item.Min,
+                            ModbusSlave = item.ModbusSlave,
+                            No = item.No,
+                            PLCType = item.PLCType,
+                            Port = item.Port,
+                            RegAd = item.RegAd,
+                            ShowKey = item.ShowKey,
+                            Sn = item.Sn,
+                            Unit = item.Unit,
+                            Type = target
+                        };
+                        typeHardwareList.Add(data);
+                    }
+                    await _db.TypeHardwareConfigs.AddRangeAsync(typeHardwareList);
+                    #endregion
+                    /*
                     #region 处理类型更新文件
-                    //获取类型更新文件
-
+                    //获取类型更新文件,注：不做文件拷贝，复制后的文件路径指向原路径，可能会导致，原文件删除后找不到文件
+                    List<TypeUpdateFileModel> typeUpdateFileList = new List<TypeUpdateFileModel>();
+                    var typeUpdate = await _db.TypeUpdateFiles.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeUpdate)
+                    {
+                        var data = new TypeUpdateFileModel
+                        {
+                            Create = target.Create,
+                            CreateTime = target.CreateTime,
+                            Description = item.Description,
+                            Name = item.Name,
+                            Url = item.Url,
+                            Version = item.Version,
+                            Type = target
+                        };
+                        typeUpdateFileList.Add(data);
+                    }
+                    await _db.TypeUpdateFiles.AddRangeAsync(typeUpdateFileList);
                     #endregion
-                   
+
                     #region 处理类型工艺图片
+                    List<TypeImageModel> typeImageList = new List<TypeImageModel>();
+                    var typeImages = await _db.TypeImages.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeImages)
+                    {
+                        var data = new TypeImageModel
+                        {
+                            Create = target.Create,
+                            CreateTime = target.CreateTime,
+                            Description = item.Description,
+                            ImageName = item.ImageName,
+                            Rank = item.Rank,
+                            Url = item.Url,
+                            Type = target
+                        };
 
+                    }
                     #endregion
+    */
                     #region 处理类型配件
                     //target.TypeAccessories = new List<TypeAccessoryModel>();
                     //var dc = await _db.TypeAccessories.Include(a => a.TypeAccessoryControlDatas).Where(a => a.TypeId == sourceId).ToListAsync();
@@ -325,6 +399,135 @@ namespace HXCloud.Repository
                 if (item.Child != null && item.Child.Count > 0)
                 {
                     HandleSchema(item, Account, t, data);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 拷贝类型文件，包含类型更新文件，类型工艺图
+        /// </summary>
+        /// <param name="Account">操作人</param>
+        /// <param name="filePath">文件路径(绝对路径,只到末端的文件夹)</param>
+        ///<param name="imagePath">工艺图路径(绝对路径，只到末端的文件夹)</param>
+        /// <param name="sourceId">源类型标示</param>
+        /// <param name="targetId">目标类型标示</param>
+        /// <returns></returns>
+        public async Task CopyTypeFileAsync(string Account, string filePath, string imagePath, int sourceId, int targetId)
+        {
+            using (var trans = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    #region 类型更新文件
+                    List<TypeUpdateFileModel> typeUpdateFileList = new List<TypeUpdateFileModel>();
+                    var typeUpdate = await _db.TypeUpdateFiles.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeUpdate)
+                    {
+                        var data = new TypeUpdateFileModel
+                        {
+                            Create = Account,
+                            CreateTime = DateTime.Now,
+                            Description = item.Description,
+                            Name = item.Name,
+                            //Url = item.Url,
+                            Version = item.Version,
+                            TypeId = targetId
+                        };
+                        //int index = item.Url.LastIndexOf('/');
+                        //更改倒数第二个数据
+                        string[] strFiles = item.Url.Split('/');
+                        if (strFiles.Length < 2)
+                        {
+                            continue;
+                        }
+                        strFiles[strFiles.Length - 2] = targetId.ToString();
+                        data.Url = string.Join('/', strFiles);
+                        string fileName = strFiles[strFiles.Length - 1];
+                        //文件拷贝  
+                        //检查源文件是否存在，不存在则不拷贝
+                        string strSourceFile = Path.Combine(imagePath, sourceId.ToString(), fileName);
+                        string strTargetFile = Path.Combine(imagePath, targetId.ToString(), fileName);
+                        if (!File.Exists(strSourceFile))
+                        {
+                            continue;
+                        }
+                        //检测目录文件是否存在，存在跳过
+                        if (File.Exists(strTargetFile))
+                        {
+                            continue;
+                        }
+                        //文件拷贝                        
+                        File.Copy(strSourceFile, strTargetFile);
+                        typeUpdateFileList.Add(data);
+                    }
+                    await _db.TypeUpdateFiles.AddRangeAsync(typeUpdateFileList);
+                    #endregion
+                    #region 处理类型工艺图片
+                    List<TypeImageModel> typeImageList = new List<TypeImageModel>();
+                    var typeImages = await _db.TypeImages.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeImages)
+                    {
+                        var data = new TypeImageModel
+                        {
+                            Create = Account,
+                            CreateTime = DateTime.Now,
+                            Description = item.Description,
+                            ImageName = item.ImageName,
+                            Rank = item.Rank,
+                            //Url = item.Url,
+                            TypeId = targetId
+                        };
+                        //更改倒数第二个数据
+                        string[] strImages = item.Url.Split('/');
+                        if (strImages.Length < 2)
+                        {
+                            continue;
+                        }
+                        strImages[strImages.Length - 2] = targetId.ToString();
+                        data.Url = string.Join('/', strImages);
+                        string imageName = strImages[strImages.Length - 1];
+                        //检查源文件是否存在，不存在则不拷贝
+                        string strSourceImage = Path.Combine(imagePath, sourceId.ToString(), imageName);
+                        string strTargetImage = Path.Combine(imagePath, targetId.ToString(), imageName);
+                        if (!File.Exists(strSourceImage))
+                        {
+                            continue;
+                        }
+                        //检测目录文件是否存在，存在跳过
+                        if (File.Exists(strTargetImage))
+                        {
+                            continue;
+                        }
+                        //文件拷贝                        
+                        File.Copy(strSourceImage, strTargetImage);
+                        typeImageList.Add(data);
+                    }
+                    await _db.TypeImages.AddRangeAsync(typeImageList);
+                    #endregion
+                    await _db.SaveChangesAsync();
+                    await trans.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    //删除已存在的文件
+                    var files = Directory.GetFiles(filePath);
+                    for (int i = 0; i < files.Length; i++)
+                    {
+                        File.Delete(files[i]);
+                    }
+                    var images = Directory.GetFiles(imagePath);
+                    for (int j = 0; j < images.Length; j++)
+                    {
+                        File.Delete(images[j]);
+                    }
+                    //foreach (string fls in Directory.GetFiles(filePath))
+                    //{
+
+                    //    FileInfo flinfo = new FileInfo(fls);
+                    //    flinfo.Delete();
+                    //}
+                    throw ex;
                 }
             }
         }

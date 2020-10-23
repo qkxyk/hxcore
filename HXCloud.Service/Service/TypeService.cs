@@ -65,7 +65,32 @@ namespace HXCloud.Service
         public async Task<TypeCheckDto> CheckTypeAsync(int Id)
         {
             TypeCheckDto dto = new TypeCheckDto();
-            var data = _tr.Find(Id);
+            var data = await _tr.FindAsync(Id);
+            if (data == null)
+            {
+                dto.GroupId = null;
+                dto.Status = 0;
+                dto.IsExist = false;
+            }
+            else
+            {
+                dto.GroupId = data.GroupId;
+                dto.Status = (int)data.Status;
+                dto.IsExist = true;
+            }
+            return dto;
+        }
+        /// <summary>
+        /// 验证该类型下是否能添加相关的信息
+        /// </summary>
+        /// <param name="Id">类型标示</param>
+        /// <param name="GroupId">类型所属的组织编号</param>
+        /// <param name="status">类型是否能是叶子节点</param>
+        /// <returns>类型是否存在</returns>
+        public async Task<TypeCheckDto> CheckTypeAsync(Expression<Func<TypeModel, bool>> prediceate)
+        {
+            TypeCheckDto dto = new TypeCheckDto();
+            var data = await _tr.Find(prediceate).FirstOrDefaultAsync();
             if (data == null)
             {
                 dto.GroupId = null;
@@ -295,6 +320,30 @@ namespace HXCloud.Service
             {
                 _log.LogError($"{Account}拷贝类型失败，源类型标示为{sourceId},目标类型标示为{targetId},失败原因：{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
                 return new BaseResponse { Success = false, Message = "拷贝类型失败，请联系管理员处理" };
+            }
+        }
+
+        /// <summary>
+        /// 类型文件拷贝
+        /// </summary>
+        /// <param name="Account">操作人</param>
+        /// <param name="FilePath">类型文件路径,路径到Typefiles</param>
+        /// <param name="ImagePath">类型图片路径，路径到TypeImage</param>
+        /// <param name="SourceId">源类型</param>
+        /// <param name="TargetId">目标类型</param>
+        /// <returns>是否拷贝成功</returns>
+        public async Task<BaseResponse> CopyTypeFilesAsync(string Account, string FilePath, string ImagePath, int SourceId, int TargetId)
+        {
+            try
+            {
+                await _tr.CopyTypeFileAsync(Account, FilePath, ImagePath, SourceId, TargetId);
+                _log.LogInformation($"{Account}拷贝源类型{SourceId}到目标类型{TargetId}的文件拷贝成功");
+                return new BaseResponse { Success = true, Message = "拷贝数据成功" };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{Account}拷贝源类型{SourceId}到目标类型{TargetId}的文件拷贝失败，失败原因：{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "拷贝数据失败，请联系管理员" };
             }
         }
     }
