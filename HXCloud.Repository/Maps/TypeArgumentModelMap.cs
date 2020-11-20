@@ -13,6 +13,7 @@ namespace HXCloud.Repository.Maps
         {
             builder.ToTable("TypeArgument").HasKey(a => a.Id);
             builder.HasOne(a => a.Type).WithMany(a => a.TypeArguments).HasForeignKey(a => a.TypeId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.TypeDataDefine).WithMany(a => a.TypeArguments).HasForeignKey(a => a.DefineId).OnDelete(DeleteBehavior.ClientSetNull);
             base.Configure(builder);
         }
     }

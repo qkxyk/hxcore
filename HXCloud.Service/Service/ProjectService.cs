@@ -264,22 +264,28 @@ namespace HXCloud.Service
         //获取单个项目（会递归获取项目下的所有项目或者场站）
         public async Task<BaseResponse> GetProjectWithChildAsync(int Id)
         {
-            var data = await _pr.FindWithImageAndChildAsync(a => a.Id == Id).FirstOrDefaultAsync();
-            if (data == null)
-            {
-                return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
-            }
-            var dto = _mapper.Map<ProjectData>(data);
+            var data = await _pr.FindProjectsWithImageByParentAsync(a => a.Id == Id).ToListAsync();
+            //if (data == null)
+            //{
+            //    return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
+            //}
+            var dto = _mapper.Map<List<ProjectDto>>(data);
             //if (data.Images.Count > 0)
             //{
             //    dto.Image = data.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
             //}
             //dto.Child = new List<ProjectData>();
-            if (data.Child.Count > 0)
+            //if (data.Child.Count > 0)
+            //{
+            //    await GetChild(dto, Id);
+            //}
+            foreach (var item in dto)
             {
-                await GetChild(dto, Id);
+                var sites = await GetProjectSitesIdAsync(item.Id);
+                int num = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).CountAsync();
+                item.DeviceCount = num;
             }
-            return new BResponse<ProjectData> { Success = true, Message = "获取数据成功", Data = dto };
+            return new BResponse<List<ProjectDto>> { Success = true, Message = "获取数据成功", Data = dto };
         }
         public async Task GetChild(ProjectData td, int Id)
         {
@@ -385,34 +391,40 @@ namespace HXCloud.Service
                 var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var list = await project.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
-            var dtos = new List<ProjectData>();
-            foreach (var item in list)
+            var dto = _mapper.Map<List<ProjectDto>>(list);
+            foreach (var item in dto)
             {
-                var dto = _mapper.Map<ProjectData>(item);
-                //if (item.Images.Count > 0)
-                //{
-                //    dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
-                //}
-                //dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
-                await GetChild(dto, item.Id);
-                dtos.Add(dto);
+                var sites = await GetProjectSitesIdAsync(item.Id);
+                int num = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).CountAsync();
+                item.DeviceCount = num;
             }
+            //foreach (var item in list)
+            //{
+            //    var dto = _mapper.Map<ProjectDto>(item);
+            //    //if (item.Images.Count > 0)
+            //    //{
+            //    //    dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
+            //    //}
+            //    //dto.Image = item.Images.OrderByDescending(a => a.Rank).FirstOrDefault().url;
+            //    await GetChild(dto, item.Id);
+            //    dtos.Add(dto);
+            //}
             //var dto = _mapper.Map<List<ProjectData>>(list);
-            var br = new BasePageResponse<List<ProjectData>>();
+            var br = new BasePageResponse<List<ProjectDto>>();
             br.Success = true;
             br.Message = "获取数据成功";
             br.PageSize = req.PageSize;
             br.CurrentPage = req.PageNo;
             br.Count = count;
             br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
-            br.Data = dtos;
+            br.Data = dto;
             return br;
         }
         public async Task<BaseResponse> GetMySiteAsync(string GroupId, string roles, bool isAdmin, BasePageRequest req)
         {
             //获取用户所有的项目标识
             var sites = await GetMySitesIdAsync(GroupId, roles, isAdmin);
-            var project = _pr.FindWithImageAsync(a => a.GroupId == GroupId && sites.Contains(a.Id));
+            var project = _pr.FindWithImageAndDeviceAsync(a => a.GroupId == GroupId && sites.Contains(a.Id));
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 project = project.Where(a => a.Name.Contains(req.Search));
@@ -429,8 +441,8 @@ namespace HXCloud.Service
             }
             var list = await project.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
 
-            var dto = _mapper.Map<List<ProjectData>>(list);
-            var br = new BasePageResponse<List<ProjectData>>();
+            var dto = _mapper.Map<List<SiteDto>>(list);
+            var br = new BasePageResponse<List<SiteDto>>();
             br.Success = true;
             br.Message = "获取数据成功";
             br.PageSize = req.PageSize;

@@ -529,5 +529,70 @@ namespace HXCloud.APIV2.Controllers
             var rm = await _ds.GetAllDeviceAsync(sites);
             return rm;
         }
+        /// <summary>
+        /// 获取设备的总揽数据
+        /// </summary>
+        /// <param name="GroupId">组织编号</param>
+        /// <param name="ProjectId">项目或者场站标示</param>
+        /// <returns>返回设备的总揽数据</returns>
+        [HttpGet("OverView")]
+        public async Task<ActionResult<BaseResponse>> GetDeviceOverViewAsync(string GroupId, int? ProjectId)
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //判断是否是同一个组织，是否有权限
+            if (GId != GroupId)
+            {
+                //判断是否超级管理员
+                if (!(isAdmin && Code == _config["Group"]))
+                {
+                    return Unauthorized("用户没有权限查看其他组织的设备");
+                }
+            }
+            //判断对项目或者场站有权限
+            List<int> sites = new List<int>();
+            if (ProjectId.HasValue && ProjectId.Value != 0)
+            {
+                var project = await _ps.GetProjectCheckAsync(ProjectId.Value);
+                if (!project.IsExist)
+                {
+                    return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
+                }
+                var rp = await _rp.IsAuth(Roles, project.PathId, 0);
+                if (!rp)
+                {
+                    return new BaseResponse { Success = false, Message = "用户没有权限查看该项目的设备" };
+                }
+                if (project.IsSite)
+                {
+                    sites.Add(ProjectId.Value);
+                }
+                else
+                {
+                    sites = await _ps.GetProjectSitesIdAsync(ProjectId.Value);
+                }
+            }
+            else
+            {
+                //获取我的场站编号
+                sites = await _ps.GetMySitesIdAsync(GroupId, Roles, isAdmin);
+            }
+            //获取所有设备编号
+            var ret = await _ds.GetDeviceOverViewAsync(sites, GroupId);
+            return ret;
+        }
+        [HttpGet("Region")]
+        public async Task<ActionResult<BaseResponse>> GetRegionDeviceAsync()
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            throw new NotImplementedException();
+        }
     }
 }

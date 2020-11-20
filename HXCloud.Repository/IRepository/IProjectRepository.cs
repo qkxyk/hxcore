@@ -12,6 +12,7 @@ namespace HXCloud.Repository
     {
         IQueryable<ProjectModel> FindWithImageAndChildAsync(Expression<Func<ProjectModel, bool>> predicate);
         Task<ProjectModel> FindWithChildAsync(Expression<Func<ProjectModel, bool>> predicate);
-        IQueryable<ProjectModel> FindWithImageAsync(Expression<Func<ProjectModel, bool>> predicate);
+        IQueryable<ProjectModel> FindWithImageAndDeviceAsync(Expression<Func<ProjectModel, bool>> predicate);
+        IQueryable<ProjectModel> FindProjectsWithImageByParentAsync(Expression<Func<ProjectModel, bool>> predicate);
     }
 }

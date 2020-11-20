@@ -16,5 +16,12 @@ namespace HXCloud.Service
         Task<BaseResponse> GetArgumentAsync(int Id);
         Task<BaseResponse> GetTypeArgumentAsync(int typeId, BasePageRequest req);
         Task<BaseResponse> DeleteTypeArgumentAsync(int Id, string account);
+        /// <summary>
+        /// 根据类别查找类型配置参数
+        /// </summary>
+        /// <param name="TypeId">类型编号</param>
+        /// <param name="Category">类别名称</param>
+        /// <returns></returns>
+        Task<BaseResponse> GetTypeArgumentByCategory(int TypeId, string Category);
     }
 }

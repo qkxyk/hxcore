@@ -141,7 +141,7 @@ namespace HXCloud.APIV2.Controllers
                     System.IO.File.Delete(filePath);
                 }
                 _log.LogError($"{Account}上传类型更新文件失败,失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "上传类型更新文件失败" };
+                return new BaseResponse { Success = false, Message = "上传类型更新文件失败，请联系管理员处理" };
             }
         }
 

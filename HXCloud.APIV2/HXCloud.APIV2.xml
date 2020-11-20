@@ -85,10 +85,47 @@
             <param name="projectId">项目或者场站标示</param>
             <returns></returns>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.GetDeviceOverViewAsync(System.String,System.Nullable{System.Int32})">
+            <summary>
+            获取设备的总揽数据
+            </summary>
+            <param name="GroupId">组织编号</param>
+            <param name="ProjectId">项目或者场站标示</param>
+            <returns>返回设备的总揽数据</returns>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.DeviceHisDataController">
             <summary>
             增加一个获取一天历史数据的接口，根据日期
             </summary>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.DeviceLogController">
+            <summary>
+            设备操作日志，有设备控制权限的用户可以添加，合法用户可以获取，管理员可以删除
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceLogController.DeleteDeviceLogAsync(System.String,System.String,System.Int32)">
+            <summary>
+            删除设备操作日志，只有管理员有权限
+            </summary>
+            <param name="GroupId">组织编号</param>
+            <param name="DeviceSn">设备序列号</param>
+            <param name="Id">操作日志编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceLogController.GetDeviceLogAsync(System.String,System.String,HXCloud.ViewModel.DeviceLogPageRequest)">
+            <summary>
+            获取设备的操作日志,只有管理员能查看设备的操作日志
+            </summary>
+            <param name="GroupId">组织标示</param>
+            <param name="DeviceSn">设备序列号</param>
+            <param name="req">分页请求，默认为前一个月到当前时间的数据</param>
+            <returns>获取设备的操作日志</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceMigrationController.GetMigrations(System.String,System.String)">
+            <summary>
+            获取设备的迁移记录，只有管理员有权限查看设备的迁移记录
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:HXCloud.APIV2.Controllers.GroupController">
             <summary>

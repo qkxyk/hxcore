@@ -1,0 +1,8 @@
+=========================================================
+2020-11-11 09:33:04,197 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://[::]:5000
+=========================================================
+2020-11-11 09:33:49,149 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Now listening on: http://[::]:5000
+2020-11-11 09:33:49,162 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application started. Press Ctrl+C to shut down.
+2020-11-11 09:33:49,164 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Hosting environment: Production
+2020-11-11 09:33:49,210 [线程ID:1] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Content root path: D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2
+2020-11-11 09:33:51,560 [线程ID:2] INFO  记录文件：Microsoft.Hosting.Lifetime - 消息：Application is shutting down...

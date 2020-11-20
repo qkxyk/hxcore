@@ -281,6 +281,7 @@ namespace HXCloud.Service
             return ret.GroupId;
         }
 
+     
         public async Task<BaseResponse> CopyTypeAsync(string Account, int sourceId, int targetId)
         {
             //验证源类型是否存在，是否为叶子节点

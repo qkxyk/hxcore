@@ -21,6 +21,7 @@ namespace HXCloud.ViewModel
         public int DataDefineId { get; set; }//数据类型库标示
         public bool AutoControl { get; set; } = false;//自动模式下是否可以控制
         public string OutKey { get; set; }//Display更改为outkey 2018-11-26添加，用于满足设置值和显示值不同，显示设置的结果，此值不做验证。如plc设置为z001，设置后反馈为z002
-
+        //20201106新增ShowType，showType为平台使用的数据类型,datatype为设备使用的类型
+        public string ShowType { get; set; }//数据类型
     }
 }

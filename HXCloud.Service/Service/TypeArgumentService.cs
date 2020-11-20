@@ -21,7 +21,7 @@ namespace HXCloud.Service
         private readonly ITypeArgumentRepository _tar;
         private readonly ITypeRepository _tr;
 
-        public TypeArgumentService(ILogger<TypeArgumentService> log, IMapper mapper, ITypeArgumentRepository tar,ITypeRepository tr)
+        public TypeArgumentService(ILogger<TypeArgumentService> log, IMapper mapper, ITypeArgumentRepository tar, ITypeRepository tr)
         {
             this._log = log;
             this._mapper = mapper;
@@ -125,17 +125,17 @@ namespace HXCloud.Service
         }
         public async Task<BaseResponse> GetArgumentAsync(int Id)
         {
-            var data = await _tar.FindAsync(Id);
+            var data = await _tar.FindWithDataDefine(a => a.Id == Id);
             if (data == null)
             {
                 return new BaseResponse { Success = false, Message = "输入的类型配置数据不存在" };
             }
-            var dto = _mapper.Map<TypeArgumentData>(data);
-            return new BResponse<TypeArgumentData> { Success = true, Message = "获取数据成功", Data = dto };
+            var dto = _mapper.Map<TypeArgumentDto>(data);
+            return new BResponse<TypeArgumentDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
         public async Task<BaseResponse> GetTypeArgumentAsync(int typeId, BasePageRequest req)
         {
-            var query = _tar.Find(a => a.TypeId == typeId);
+            var query = _tar.FindWithDataDefines(a => a.TypeId == typeId);
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 query = query.Where(a => a.Name.Contains(req.Search));
@@ -151,8 +151,8 @@ namespace HXCloud.Service
                 OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var data = await query.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
-            var dtos = _mapper.Map<List<TypeArgumentData>>(data);
-            return new BasePageResponse<List<TypeArgumentData>>
+            var dtos = _mapper.Map<List<TypeArgumentDto>>(data);
+            return new BasePageResponse<List<TypeArgumentDto>>
             {
                 Success = true,
                 Message = "获取数据成功",
@@ -162,6 +162,17 @@ namespace HXCloud.Service
                 TotalPage = (int)Math.Ceiling((decimal)Count / req.PageSize),
                 Data = dtos
             };
+        }
+
+        public async Task<BaseResponse> GetTypeArgumentByCategory(int TypeId, string Category)
+        {
+            var data = await _tar.FindWithDataDefine(a => a.TypeId == TypeId && a.Category == Category);
+            if (data == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的类别不存在" };
+            }
+            var dto = _mapper.Map<TypeArgumentDto>(data);
+            return new BResponse<TypeArgumentDto> { Success = true, Message = "获取数据成", Data = dto };
         }
     }
 }

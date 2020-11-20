@@ -21,10 +21,15 @@ namespace HXCloud.Repository
             var data = _db.Projects.Include(a => a.Child).Include(a => a.Images).Where(predicate);//.FirstOrDefaultAsync();
             return data;
         }
-
-        public IQueryable<ProjectModel> FindWithImageAsync(Expression<Func<ProjectModel, bool>> predicate)
+        public IQueryable<ProjectModel> FindProjectsWithImageByParentAsync(Expression<Func<ProjectModel, bool>> predicate)
         {
-            var data = _db.Projects.Include(a => a.Images).Where(predicate);//.FirstOrDefaultAsync();
+            var data = _db.Projects.Include(a => a.Child).Include(a => a.Images).Where(predicate);//.FirstOrDefaultAsync();
+            return data;
+        }
+
+        public IQueryable<ProjectModel> FindWithImageAndDeviceAsync(Expression<Func<ProjectModel, bool>> predicate)
+        {
+            var data = _db.Projects.Include(a => a.Images).Include(a => a.Devices).Where(predicate);//.FirstOrDefaultAsync();
             return data;
         }
     }

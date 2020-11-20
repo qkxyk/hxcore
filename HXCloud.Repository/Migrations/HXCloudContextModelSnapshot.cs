@@ -15,16 +15,16 @@ namespace HXCloud.Repository.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.2")
+                .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "5.0.0");
 
             modelBuilder.Entity("HXCloud.Model.AppVersionModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -65,7 +65,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -94,7 +94,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
@@ -146,7 +146,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -242,7 +242,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -282,7 +282,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("Address")
                         .HasColumnType("int");
@@ -370,7 +370,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -415,7 +415,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -455,7 +455,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("COD_In")
                         .HasColumnType("nvarchar(max)");
@@ -546,7 +546,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Account")
                         .HasColumnType("nvarchar(max)");
@@ -601,7 +601,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Account")
                         .HasColumnType("nvarchar(max)");
@@ -793,7 +793,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("AccessToken")
                         .HasColumnType("nvarchar(max)");
@@ -890,7 +890,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -930,7 +930,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1033,7 +1033,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1101,7 +1101,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("AccessoryId")
                         .HasColumnType("int");
@@ -1155,7 +1155,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1192,7 +1192,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Category")
                         .HasColumnType("nvarchar(max)");
@@ -1217,15 +1217,12 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TypeDataDefineId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("TypeDataDefineId");
+                    b.HasIndex("DefineId");
 
                     b.HasIndex("TypeId");
 
@@ -1237,7 +1234,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1277,7 +1274,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<bool>("AutoControl")
                         .HasColumnType("bit");
@@ -1322,6 +1319,9 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("OutKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ShowType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("TypeId")
                         .HasColumnType("int");
 
@@ -1340,7 +1340,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1385,7 +1385,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("Address")
                         .HasColumnType("int");
@@ -1473,7 +1473,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1518,7 +1518,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1572,7 +1572,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("ControlName")
                         .HasColumnType("nvarchar(max)");
@@ -1620,7 +1620,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1659,7 +1659,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1699,7 +1699,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1741,7 +1741,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1789,7 +1789,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1856,7 +1856,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<int>("AccessoryId")
                         .HasColumnType("int");
@@ -1910,7 +1910,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1947,7 +1947,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1984,7 +1984,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -1996,6 +1996,9 @@ namespace HXCloud.Repository.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
 
                     b.Property<string>("Modify")
                         .HasColumnType("nvarchar(max)");
@@ -2050,12 +2053,12 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Account")
                         .IsRequired()
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
@@ -2167,7 +2170,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(450)");
@@ -2207,7 +2210,7 @@ namespace HXCloud.Repository.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .UseIdentityColumn();
 
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
@@ -2247,6 +2250,10 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.DepartmentModel", "Parent")
                         .WithMany("Child")
                         .HasForeignKey("ParentId");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceCardModel", b =>
@@ -2255,6 +2262,8 @@ namespace HXCloud.Repository.Migrations
                         .WithOne("DeviceCard")
                         .HasForeignKey("HXCloud.Model.DeviceCardModel", "DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceConfigModel", b =>
@@ -2263,6 +2272,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceConfig")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceHardwareConfigModel", b =>
@@ -2271,6 +2282,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceHardwareConfig")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceHisDataModel", b =>
@@ -2283,6 +2296,10 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.GroupModel", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId");
+
+                    b.Navigation("Device");
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceImageModel", b =>
@@ -2291,6 +2308,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceImage")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceInputDataModel", b =>
@@ -2299,6 +2318,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceInputData")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceLogModel", b =>
@@ -2307,6 +2328,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceLog")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceMigrationModel", b =>
@@ -2315,6 +2338,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceMigration")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceModel", b =>
@@ -2333,6 +2358,12 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceOnlineModel", b =>
@@ -2346,6 +2377,10 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.GroupModel", "Group")
                         .WithMany()
                         .HasForeignKey("GroupId");
+
+                    b.Navigation("Device");
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceStatisticsDataModel", b =>
@@ -2354,6 +2389,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("StatisticsData")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DeviceVideoModel", b =>
@@ -2362,6 +2399,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("DeviceVideo")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
                 });
 
             modelBuilder.Entity("HXCloud.Model.ProjectImageModel", b =>
@@ -2371,6 +2410,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("project");
                 });
 
             modelBuilder.Entity("HXCloud.Model.ProjectModel", b =>
@@ -2383,6 +2424,10 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.ProjectModel", "Parent")
                         .WithMany("Child")
                         .HasForeignKey("ParentId");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RegionModel", b =>
@@ -2396,6 +2441,10 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.RegionModel", "Parent")
                         .WithMany("Child")
                         .HasForeignKey("ParentId", "GroupId");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RoleModel", b =>
@@ -2404,6 +2453,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("Roles")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RoleProjectModel", b =>
@@ -2418,6 +2469,10 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("RoleProjects")
                         .HasForeignKey("RoleId")
                         .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeAccessoryControlDataModel", b =>
@@ -2433,6 +2488,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("DataDefineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("TypeAccessory");
+
+                    b.Navigation("TypeDataDefine");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeAccessoryModel", b =>
@@ -2442,19 +2501,26 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeArgumentModel", b =>
                 {
                     b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
-                        .WithMany()
-                        .HasForeignKey("TypeDataDefineId");
+                        .WithMany("TypeArguments")
+                        .HasForeignKey("DefineId")
+                        .IsRequired();
 
                     b.HasOne("HXCloud.Model.TypeModel", "Type")
                         .WithMany("TypeArguments")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
+
+                    b.Navigation("TypeDataDefine");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeConfigModel", b =>
@@ -2464,6 +2530,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeDataDefineModel", b =>
@@ -2473,6 +2541,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeDisplayIconModel", b =>
@@ -2487,6 +2557,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
+
+                    b.Navigation("TypeDataDefine");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeHardwareConfigModel", b =>
@@ -2496,6 +2570,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeImageModel", b =>
@@ -2505,6 +2581,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeModel", b =>
@@ -2517,6 +2595,10 @@ namespace HXCloud.Repository.Migrations
                     b.HasOne("HXCloud.Model.TypeModel", "Parent")
                         .WithMany("Child")
                         .HasForeignKey("ParentId");
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Parent");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeModuleControlModel", b =>
@@ -2531,6 +2613,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("ModuleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("TypeDataDefine");
+
+                    b.Navigation("TypeModule");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeModuleFeedbackModel", b =>
@@ -2545,6 +2631,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("ModuleControlId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("TypeDataDefine");
+
+                    b.Navigation("TypeModuleControl");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeModuleModel", b =>
@@ -2554,6 +2644,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeOverviewModel", b =>
@@ -2568,6 +2660,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
+
+                    b.Navigation("TypeDataDefine");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeSchemaModel", b =>
@@ -2581,6 +2677,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Parent");
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeStatisticsInfoModel", b =>
@@ -2590,6 +2690,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryControlDataModel", b =>
@@ -2605,6 +2707,10 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("DataDefineId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("SystemAccessory");
+
+                    b.Navigation("TypeDataDefine");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryModel", b =>
@@ -2614,6 +2720,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("SystemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("TypeSystem");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeSystemModel", b =>
@@ -2623,6 +2731,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeUpdateFileModel", b =>
@@ -2632,6 +2742,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Type");
                 });
 
             modelBuilder.Entity("HXCloud.Model.UserDepartmentModel", b =>
@@ -2646,6 +2758,10 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("UserDepartments")
                         .HasForeignKey("UserId")
                         .IsRequired();
+
+                    b.Navigation("Department");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HXCloud.Model.UserModel", b =>
@@ -2654,6 +2770,8 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("Users")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Group");
                 });
 
             modelBuilder.Entity("HXCloud.Model.UserRoleModel", b =>
@@ -2668,6 +2786,10 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("HXCloud.Model.WarnCodeModel", b =>
@@ -2677,6 +2799,8 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("WarnTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("WarnType");
                 });
 
             modelBuilder.Entity("HXCloud.Model.WarnModel", b =>
@@ -2690,6 +2814,181 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("Warns")
                         .HasForeignKey("DeviceSn")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Device");
+
+                    b.Navigation("WarnCode");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.DepartmentModel", b =>
+                {
+                    b.Navigation("Child");
+
+                    b.Navigation("UserDepartments");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.DeviceModel", b =>
+                {
+                    b.Navigation("DeviceCard");
+
+                    b.Navigation("DeviceConfig");
+
+                    b.Navigation("DeviceHardwareConfig");
+
+                    b.Navigation("DeviceHisData");
+
+                    b.Navigation("DeviceImage");
+
+                    b.Navigation("DeviceInputData");
+
+                    b.Navigation("DeviceLog");
+
+                    b.Navigation("DeviceMigration");
+
+                    b.Navigation("DeviceOnline");
+
+                    b.Navigation("DeviceVideo");
+
+                    b.Navigation("StatisticsData");
+
+                    b.Navigation("Warns");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.GroupModel", b =>
+                {
+                    b.Navigation("Departments");
+
+                    b.Navigation("Devices");
+
+                    b.Navigation("Projects");
+
+                    b.Navigation("Regions");
+
+                    b.Navigation("Roles");
+
+                    b.Navigation("Types");
+
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ProjectModel", b =>
+                {
+                    b.Navigation("Child");
+
+                    b.Navigation("Devices");
+
+                    b.Navigation("Images");
+
+                    b.Navigation("RoleProjects");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.RegionModel", b =>
+                {
+                    b.Navigation("Child");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.RoleModel", b =>
+                {
+                    b.Navigation("RoleProjects");
+
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeAccessoryModel", b =>
+                {
+                    b.Navigation("TypeAccessoryControlDatas");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeDataDefineModel", b =>
+                {
+                    b.Navigation("TypeAccessoryControlDatas");
+
+                    b.Navigation("TypeArguments");
+
+                    b.Navigation("TypeDisplayIcons");
+
+                    b.Navigation("TypeModuleControls");
+
+                    b.Navigation("TypeModuleFeedbacks");
+
+                    b.Navigation("TypeOverviews");
+
+                    b.Navigation("TypeSystemAccessoryControlDatas");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModel", b =>
+                {
+                    b.Navigation("Child");
+
+                    b.Navigation("Devices");
+
+                    b.Navigation("Schemas");
+
+                    b.Navigation("TypeAccessories");
+
+                    b.Navigation("TypeArguments");
+
+                    b.Navigation("TypeConfig");
+
+                    b.Navigation("TypeDataDefine");
+
+                    b.Navigation("TypeDisplayIcons");
+
+                    b.Navigation("TypeHardwareConfig");
+
+                    b.Navigation("TypeImages");
+
+                    b.Navigation("TypeModules");
+
+                    b.Navigation("TypeOverviews");
+
+                    b.Navigation("TypeStatisticsInfo");
+
+                    b.Navigation("TypeSystems");
+
+                    b.Navigation("TypeUpdateFiles");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleControlModel", b =>
+                {
+                    b.Navigation("TypeModuleFeedbacks");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeModuleModel", b =>
+                {
+                    b.Navigation("ModuleControls");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSchemaModel", b =>
+                {
+                    b.Navigation("Child");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryModel", b =>
+                {
+                    b.Navigation("TypeSystemAccessoryControlDatas");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemModel", b =>
+                {
+                    b.Navigation("SystemAccessories");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.UserModel", b =>
+                {
+                    b.Navigation("UserDepartments");
+
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.WarnCodeModel", b =>
+                {
+                    b.Navigation("Warn");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.WarnTypeModel", b =>
+                {
+                    b.Navigation("WarnCode");
                 });
 #pragma warning restore 612, 618
         }

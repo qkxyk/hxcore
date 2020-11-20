@@ -39,11 +39,18 @@ namespace HXCloud.APIV2
         {
             //var assemblyName = typeof(StartupTest).GetTypeInfo().Assembly.FullName;
             var bulider = Host.CreateDefaultBuilder(args);
-            bulider.ConfigureLogging((context, loggingBuilder) =>
+            bulider//.ConfigureLogging((context, loggingBuilder) =>
+            //{
+            //    loggingBuilder.AddFilter("System", LogLevel.Warning);
+            //    loggingBuilder.AddFilter("Microsoft", LogLevel.Warning);
+            //})
+            .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .ConfigureLogging(loggingBuilder =>
             {
-                loggingBuilder.AddFilter("System", LogLevel.Warning);
-                loggingBuilder.AddFilter("Microsoft", LogLevel.Warning);
-            }).UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                loggingBuilder.AddFilter("Microsoft", LogLevel.Warning)
+                              .AddFilter("System", LogLevel.Warning)
+                              .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug);
+            })
             .ConfigureWebHostDefaults(webBulider =>
             {
                 //webBulider.UseStartup(assemblyName);

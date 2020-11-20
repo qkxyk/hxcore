@@ -33,5 +33,15 @@ namespace HXCloud.Repository
             var data = _db.Devices.Include(a => a.DeviceOnline).Include(a => a.DeviceImage).Where(predicate);
             return data;
         }
+        /// <summary>
+        /// 获取设备和设备在线信息
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        public IQueryable<DeviceModel> FindWithOnline(Expression<Func<DeviceModel, bool>> predicate)
+        {
+            var data = _db.Devices.Include(a => a.DeviceOnline).Where(predicate);
+            return data;
+        }
     }
 }

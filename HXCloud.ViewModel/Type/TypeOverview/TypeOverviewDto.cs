@@ -11,7 +11,8 @@ namespace HXCloud.ViewModel
         public string DataDefineKey { get; set; }
         public string Format { get; set; }
         public string Unit { get; set; }
-        public string DataType { get; set; }
+        //20201106更改为showType
+        public string ShowType { get; set; }
         public string DefaultValue { get; set; }
         public int Sn { get; set; }  //显示顺序
     }

@@ -21,6 +21,9 @@ namespace HXCloud.Service
             CreateMap<DeviceCardAddDto, DeviceCardModel>();
             CreateMap<DeviceCardUpdateDto, DeviceCardModel>();
             CreateMap<DeviceCardModel, DeviceCardDto>();
+            //设备操作日志
+            CreateMap<DeviceLogAddDto, DeviceLogModel>();
+            CreateMap<DeviceLogModel, DeviceLogDto>();
             //设备统计数据
 
             //设备历史数据
@@ -42,12 +45,14 @@ namespace HXCloud.Service
             CreateMap<DeviceHardwareConfigAddDto, DeviceHardwareConfigModel>();
             CreateMap<DeviceHardwareConfigUpdateDto, DeviceHardwareConfigModel>();
             CreateMap<DeviceHardwareConfigModel, DeviceHardwareConfigDto>();
+            CreateMap<TypeHardwareConfigModel, DeviceHardwareConfigModel>().ForMember(dest => dest.Id, opt => opt.Ignore()).ForMember(dest => dest.Create, opt => opt.Ignore()).ForMember(dest => dest.CreateTime,
+                opt => opt.Ignore()).ForMember(dest => dest.Modify, opt => opt.Ignore()).ForMember(dest => dest.ModifyTime, opt => opt.Ignore());
             //设备输入数据
             CreateMap<DeviceInputAddDto, DeviceInputDataModel>();
             CreateMap<DeviceInputDataUpdateDto, DeviceInputDataModel>();
             CreateMap<DeviceInputDataModel, DeviceInputDto>();
             //设备迁移数据
-
+            CreateMap<DeviceMigrationModel, DeviceMigrationDto>();
             //设备在线数据
         }
     }

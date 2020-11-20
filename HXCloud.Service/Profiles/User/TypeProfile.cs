@@ -60,6 +60,9 @@ namespace HXCloud.Service
             CreateMap<TypeArgumentAddViewModel, TypeArgumentModel>();
             CreateMap<TypeArgumentUpdateViewModel, TypeArgumentModel>();
             CreateMap<TypeArgumentModel, TypeArgumentData>();
+            CreateMap<TypeArgumentModel, TypeArgumentDto>().ForMember(dest => dest.DefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.DefineType, opt => opt.MapFrom(
+                           src => src.TypeDataDefine.ShowType)).ForMember(dest => dest.DefineFormat, opt => opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.DefineUnit, opt => opt.MapFrom(
+                                       src => src.TypeDataDefine.Unit));
             //类型子系统
             CreateMap<TypeSystemAddDto, TypeSystemModel>();
             CreateMap<TypeSystemUpdateDto, TypeSystemModel>();
@@ -80,7 +83,7 @@ namespace HXCloud.Service
             CreateMap<TypeOverViewAddDto, TypeOverviewModel>();
             CreateMap<TypeOverviewUpdateDto, TypeOverviewModel>();
             CreateMap<TypeOverviewModel, TypeOverviewDto>().ForMember(dest => dest.DataDefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).
-            ForMember(dest => dest.DataType, opt => opt.MapFrom(src => src.TypeDataDefine.DataType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(
+            ForMember(dest => dest.ShowType, opt => opt.MapFrom(src => src.TypeDataDefine.ShowType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(
                           src => src.TypeDataDefine.DefaultValue)).ForMember(dest => dest.Format, opt => opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(
                 dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit));
             //类型显示图标
@@ -96,15 +99,15 @@ namespace HXCloud.Service
             CreateMap<TypeModuleControlAddDto, TypeModuleControlModel>();
             CreateMap<TypeModuleControlUpdateDto, TypeModuleControlModel>();
             CreateMap<TypeModuleControlModel, TypeModuleControlDto>().ForMember(dest => dest.Format, opt => opt.MapFrom(src => src.TypeDataDefine.Format))
-                .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.DataType, opt => opt.MapFrom(src => src.TypeDataDefine.DataType))
+                .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.ShowType, opt => opt.MapFrom(src => src.TypeDataDefine.ShowType))
                 .ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue)).ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey))
-                .ForMember(dest=>dest.FeedBacks,opt=>opt.MapFrom(src=>src.TypeModuleFeedbacks));
+                .ForMember(dest => dest.FeedBacks, opt => opt.MapFrom(src => src.TypeModuleFeedbacks));
             //类型反馈数据
             CreateMap<TypeModuleFeedbackAddDto, TypeModuleFeedbackModel>();
             CreateMap<TypeModuleFeedbackUpdateDto, TypeModuleFeedbackModel>();
             CreateMap<TypeModuleFeedbackModel, TypeModuleFeedbackDto>().ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.Format, opt =>
-                      opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.DataType, opt =>
-                      opt.MapFrom(src => src.TypeDataDefine.DataType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue));
+                      opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.ShowType, opt =>
+                      opt.MapFrom(src => src.TypeDataDefine.ShowType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue));
         }
     }
 }

@@ -14,6 +14,5 @@ namespace HXCloud.ViewModel
         public string Value { get; set; }//发送值
         public string OldValue { get; set; }       //原来值
         public string NewValue { get; set; }                  //返回值
-        public string DeviceSn { get; set; }
     }
 }

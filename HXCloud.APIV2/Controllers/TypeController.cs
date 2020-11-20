@@ -158,8 +158,9 @@ namespace HXCloud.APIV2.Controllers
                                                              //如果路径不存在，创建路径
             if (!Directory.Exists(ImagePath))
                 Directory.CreateDirectory(ImagePath);
-            int fi = filePath.LastIndexOf('\\');
-            int im = ImagePath.LastIndexOf('\\');
+            //注意此处的路径，在windows下为\\，linux下为/
+            int fi = filePath.LastIndexOf('/');
+            int im = ImagePath.LastIndexOf('/');
             filePath = filePath.Substring(0, fi);
             ImagePath = ImagePath.Substring(0, im);
             var rm = await _ts.CopyTypeFilesAsync(Account, filePath, ImagePath, req.SourceId, req.TargetId);

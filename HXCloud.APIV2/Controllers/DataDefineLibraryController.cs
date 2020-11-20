@@ -40,7 +40,7 @@ namespace HXCloud.APIV2.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BaseResponse>> Add(DataDefineLibraryAddDto req)
+        public async Task<ActionResult<BaseResponse>> Add([FromBody]DataDefineLibraryAddDto req)
         {
             //超级管理员有权限
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;

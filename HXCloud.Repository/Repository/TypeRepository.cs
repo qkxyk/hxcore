@@ -53,6 +53,7 @@ namespace HXCloud.Repository
                             Unit = item.Unit,
                             Category = item.Category,
                             DataType = item.DataType,
+                            ShowType=item.ShowType,
                             OutKey = item.OutKey,
                             DefaultValue = item.DefaultValue,
                             Format = item.Format,
@@ -431,6 +432,7 @@ namespace HXCloud.Repository
                             Name = item.Name,
                             //Url = item.Url,
                             Version = item.Version,
+                            Type=item.Type,
                             TypeId = targetId
                         };
                         //int index = item.Url.LastIndexOf('/');
@@ -531,5 +533,31 @@ namespace HXCloud.Repository
                 }
             }
         }
+        
+        /// <summary>
+        /// 获取类型所有子类型的标示
+        /// </summary>
+        /// <param name="Id">类型标示</param>
+        /// <returns>类型所有子类型的标示集合</returns>
+        public async Task<List<int>> FindTypeChildAsync(int Id)
+        {
+            List<int> list = new List<int>();
+            var data = await _db.Types.Where(a => a.ParentId == Id).Select(a=>a.Id).ToListAsync();
+            list.AddRange(data);
+            list.AddRange(await GetChildId(data));
+            return list;
+        }
+        public async Task<List<int>> GetChildId(List<int> id)
+        {
+            var p = await _db.Types.Where(a => id.Contains(a.ParentId.Value)).Select(a => a.Id).ToListAsync();
+            if (p.Count > 0)
+            {
+                var c = await GetChildId(p);
+                p.AddRange(c);
+            }
+            return p;
+        }
+
     }
+
 }

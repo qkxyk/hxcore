@@ -20,14 +20,16 @@ namespace HXCloud.Service
         private readonly IDeviceRepository _dr;
         private readonly IProjectService _ps;
         private readonly ITypeHardwareConfigService _th;
+        private readonly ITypeRepository _tr;
 
-        public DeviceService(ILogger<DeviceService> log, IMapper mapper, IDeviceRepository dr, IProjectService ps, ITypeHardwareConfigService th)
+        public DeviceService(ILogger<DeviceService> log, IMapper mapper, IDeviceRepository dr, IProjectService ps, ITypeHardwareConfigService th, ITypeRepository tr)
         {
             this._log = log;
             this._mapper = mapper;
             this._dr = dr;
             this._ps = ps;
             this._th = th;
+            this._tr = tr;
         }
         public async Task<bool> IsExist(Expression<Func<DeviceModel, bool>> predicate)
         {
@@ -102,6 +104,11 @@ namespace HXCloud.Service
                 //获取类型硬件配置数据
                 var data = await _th.GetTypeHardwareConfigAsync(req.TypeId);
                 var dtos = _mapper.Map<List<TypeHardwareConfigModel>, List<DeviceHardwareConfigModel>>(data);
+                foreach (var item in dtos)
+                {
+                    item.Device = entity;
+                    item.Create = account;
+                }
                 await _dr.AddAsync(entity, dtos);
                 br = new BResponse<string> { Data = entity.DeviceSn, Success = true, Message = "添加设备成功" };
                 _log.LogInformation($"{account}删除类型标示为{entity.DeviceSn}的设备数据成功");
@@ -335,6 +342,37 @@ namespace HXCloud.Service
             var device = await _dr.FindWithOnlineAndImages(a => Sites.Contains(a.ProjectId.Value)).ToListAsync();
             var dtos = _mapper.Map<List<DeviceDataDto>>(device);
             return new BResponse<List<DeviceDataDto>> { Success = true, Message = "获取数据成功", Data = dtos };
+        }
+
+        /// <summary>
+        /// 获取设备的总揽数据
+        /// </summary>
+        /// <param name="sites">场站编号集合</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetDeviceOverViewAsync(List<int> sites, string GroupId)
+        {
+            var device = await _dr.FindWithOnline(a => sites.Contains(a.ProjectId.Value)).ToListAsync();
+            //获取类型的分类以及分类下的子类型标示
+            var Types = await _tr.Find(a => a.GroupId == GroupId && a.Parent == null).ToListAsync();
+            if (Types == null || Types.Count == 0)
+            {
+                return new BaseResponse { Success = false, Message = "该组织没有添加类型" };
+            }
+            DeviceOverViewDto dto = new DeviceOverViewDto();
+            List<DeviceTypeInfo> list = new List<DeviceTypeInfo>();
+            foreach (var item in Types)
+            {
+                DeviceTypeInfo dti = new DeviceTypeInfo { TypeId = item.Id, TypeName = item.TypeName, Icon = item.ICON };
+                List<int> listType = await _tr.FindTypeChildAsync(item.Id);
+                var online = device.Where(a => listType.Contains(a.TypeId) && (a.DeviceOnline != null && a.DeviceOnline.State == true)).Count();
+                var num = device.Where(a => listType.Contains(a.TypeId)).Count();
+                dti.OnlineNum = online;
+                dti.Num = num;
+                dto.Num += dti.Num;
+                dto.OnlineNum += dti.OnlineNum;
+                dto.TypeData.Add(dti);
+            }
+            return new BResponse<DeviceOverViewDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
     }
 }

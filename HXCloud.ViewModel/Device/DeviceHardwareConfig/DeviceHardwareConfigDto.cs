@@ -26,6 +26,6 @@ namespace HXCloud.ViewModel
         public int Address { get; set; }//地址
         public int? BitOffSet { get; set; }//偏移量
         public int Lens { get; set; }//数据长度
-        public int TypeId { get; set; }
+        public string DeviceSn { get; set; }
     }
 }

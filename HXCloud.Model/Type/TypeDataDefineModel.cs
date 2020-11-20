@@ -12,6 +12,8 @@ namespace HXCloud.Model
         public string DataName { get; set; }//数据名称
         public string Unit { get; set; }//单位
         public string DataType { get; set; }//数据类型
+        //20202206新增ShowType，showType为平台使用的数据类型,datatype为设备使用的类型
+        public string ShowType { get; set; }//数据类型
         public string DefaultValue { get; set; }//默认值
         #region 数据格式字段，用于数据控制代表不同的含义
         public string Format { get; set; }
@@ -33,6 +35,7 @@ namespace HXCloud.Model
 
         public virtual ICollection<TypeModuleControlModel> TypeModuleControls { get; set; }
         public virtual ICollection<TypeModuleFeedbackModel> TypeModuleFeedbacks { get; set; }
+        public virtual ICollection<TypeArgumentModel> TypeArguments { get; set; }
 
     }
     //设备是否可控制

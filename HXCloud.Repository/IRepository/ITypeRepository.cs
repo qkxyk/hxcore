@@ -27,5 +27,11 @@ namespace HXCloud.Repository
         /// <param name="targetId">目标类型标示</param>
         /// <returns></returns>
         Task CopyTypeFileAsync(string Account, string filePath, string imagePath, int sourceId, int targetId);
+        /// <summary>
+        /// 获取类型所有子类型的标示
+        /// </summary>
+        /// <param name="Id">类型标示</param>
+        /// <returns>类型所有子类型的标示集合</returns>
+        Task<List<int>> FindTypeChildAsync(int Id);
     }
 }

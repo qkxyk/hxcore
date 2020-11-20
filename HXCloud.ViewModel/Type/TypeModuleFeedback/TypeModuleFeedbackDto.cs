@@ -13,7 +13,8 @@ namespace HXCloud.ViewModel
         public string Key { get; set; }//关联数据定义的key
         public string Format { get; set; }
         public string Unit { get; set; }
-        public string DataType { get; set; }
+        //20201106更改为showType
+        public string ShowType { get; set; }
         public string DefaultValue { get; set; }
     }
 }

@@ -160,5 +160,13 @@ namespace HXCloud.APIV2.Controllers
             var rm = await _tas.GetTypeArgumentAsync(typeId, req);
             return rm;
         }
+
+        [HttpGet("Category")]
+        [TypeFilter(typeof(TypeActionFilter))]
+        public async Task<ActionResult<BaseResponse>> GetTypeArgumentByCategory(int typeId, string Category)
+        {
+            var rm = await _tas.GetTypeArgumentByCategory(typeId, Category);
+            return rm;
+        }
     }
 }

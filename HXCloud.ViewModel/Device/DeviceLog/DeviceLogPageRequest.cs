@@ -6,7 +6,7 @@ namespace HXCloud.ViewModel
 {
     public class DeviceLogPageRequest : BasePageRequest
     {
-        public DateTime? Begin { get; set; }
-        public DateTime? End { get; set; }
+        public DateTime BeginTime { get; set; } = DateTime.Now.AddMonths(-1);
+        public DateTime EndTime { get; set; } = DateTime.Now;
     }
 }

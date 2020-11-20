@@ -16,7 +16,8 @@ namespace HXCloud.ViewModel
         public int ModuleId { get; set; }//模块标示
         public string Format { get; set; }
         public string Unit { get; set; }
-        public string DataType { get; set; }
+        //20201106更改为showType
+        public string ShowType { get; set; }
         public string DefaultValue { get; set; }
         public TypeModuleControlDto()
         {
