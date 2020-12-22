@@ -54,14 +54,19 @@ namespace HXCloud.Repository
         public DbSet<TypeStatisticsInfoModel> TypeStatisticsInfos { get; set; }
         public DbSet<TypeDataDefineModel> TypeDataDefines { get; set; }
         public DbSet<TypeHardwareConfigModel> TypeHardwareConfigs { get; set; }
+        #region 2020-12-17删除
+        /*
         public DbSet<TypeAccessoryModel> TypeAccessories { get; set; }
         public DbSet<TypeAccessoryControlDataModel> TypeAccessoryControlDatas { get; set; }
-        public DbSet<TypeSchemaModel> TypeSchemas { get; set; }
-        public DbSet<TypeConfigModel> TypeConfigs { get; set; }
-        public DbSet<TypeArgumentModel> TypeArguments { get; set; }
         public DbSet<TypeSystemModel> TypeSystems { get; set; }
         public DbSet<TypeSystemAccessoryModel> TypeSystemAccessories { get; set; }
         public DbSet<TypeSystemAccessoryControlDataModel> TypeSystemAccessoryControlDatas { get; set; }
+        */
+        #endregion
+        public DbSet<TypeSchemaModel> TypeSchemas { get; set; }
+        public DbSet<TypeConfigModel> TypeConfigs { get; set; }
+        public DbSet<TypeArgumentModel> TypeArguments { get; set; }
+
         public DbSet<TypeOverviewModel> TypeOverviews { get; set; }
         public DbSet<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
         public DbSet<TypeModuleModel> TypeModules { get; set; }
@@ -76,6 +81,7 @@ namespace HXCloud.Repository
         public DbSet<DeviceModel> Devices { get; set; }
         public DbSet<DeviceCardModel> DeviceCards { get; set; }
         public DbSet<DeviceStatisticsDataModel> DeviceStatisticsData { get; set; }
+        public DbSet<DeviceDiscreteStatisticsDataModel> DeviceDiscreteStatisticsData { get; set; }
         public DbSet<DeviceHisDataModel> DeviceHisData { get; set; }
         public DbSet<DeviceImageModel> DeviceImages { get; set; }
         public DbSet<DeviceVideoModel> DeviceVideos { get; set; }
@@ -120,13 +126,18 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new TypeStatisticsInfoModelMap());
             modelBuilder.ApplyConfiguration(new TypeSchemaModelMap());
             modelBuilder.ApplyConfiguration(new TypeConfigModelMap());
-            modelBuilder.ApplyConfiguration(new TypeAccessoryModelMap());
-            modelBuilder.ApplyConfiguration(new TypeAccessoryControlDataModelMap());
             modelBuilder.ApplyConfiguration(new TypeArgumentModelMap());
             modelBuilder.ApplyConfiguration(new TypeHardwareConfigModelMap());
+            #region 2020-12-17删除
+            /*
+            modelBuilder.ApplyConfiguration(new TypeAccessoryModelMap());
+            modelBuilder.ApplyConfiguration(new TypeAccessoryControlDataModelMap());
+           
             modelBuilder.ApplyConfiguration(new TypeSystemModelMap());
             modelBuilder.ApplyConfiguration(new TypeSystemAccessoyModelMap());
             modelBuilder.ApplyConfiguration(new TypeSystemAccessoryControlDataModelMap());
+            */
+            #endregion
             modelBuilder.ApplyConfiguration(new TypeOverviewModelMap());
             modelBuilder.ApplyConfiguration(new TypeDisplayIconModelMap());
             modelBuilder.ApplyConfiguration(new TypeModuleModelMap());
@@ -136,6 +147,7 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new DeviceModelMap());
             modelBuilder.ApplyConfiguration(new DeviceCardModelMap());
             modelBuilder.ApplyConfiguration(new DeviceStatisticsDataModelMap());
+            modelBuilder.ApplyConfiguration(new DeviceDiscreteStatisticsDataModelMap());
             modelBuilder.ApplyConfiguration(new DeviceHisDataModelMap());
             modelBuilder.ApplyConfiguration(new DeviceImageModelMap());
             modelBuilder.ApplyConfiguration(new DeviceVideoModelMap());

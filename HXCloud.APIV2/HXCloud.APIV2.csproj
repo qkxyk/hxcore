@@ -24,6 +24,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Controllers\TypeAccessoryControlDataController.cs" />
+    <Compile Remove="Controllers\TypeAccessoryController.cs" />
+    <Compile Remove="Controllers\TypeSystemAccessoryController.cs" />
+    <Compile Remove="Controllers\TypeSystemControlDataController.cs" />
+    <Compile Remove="Controllers\TypeSystemController.cs" />
+    <Compile Remove="Filters\TypeAccessoryFilterAttribute.cs" />
+    <Compile Remove="Filters\TypeSystemAccessoryFilterAttribute.cs" />
+    <Compile Remove="Filters\TypeSystemFilterAttribute.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\HXCloud.Service\HXCloud.Service.csproj" />
     <ProjectReference Include="..\HXCloud.ViewModel\HXCloud.ViewModel.csproj" />
   </ItemGroup>
@@ -32,6 +43,7 @@
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="EPPlus" Version="5.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -49,7 +61,7 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

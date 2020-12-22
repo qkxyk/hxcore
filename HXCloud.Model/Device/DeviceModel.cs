@@ -57,6 +57,7 @@ namespace HXCloud.Model
 
         #region 2019-1-7新增设备的统计数据(每个设备每一小时取一个值保存下来)
         public virtual ICollection<DeviceStatisticsDataModel> StatisticsData { get; set; }
+        public virtual ICollection<DeviceDiscreteStatisticsDataModel> DiscreteStatisticsData { get; set; }
         #endregion
         public DeviceCardModel DeviceCard { get; set; }
         public ICollection<DeviceHardwareConfigModel> DeviceHardwareConfig { get; set; }

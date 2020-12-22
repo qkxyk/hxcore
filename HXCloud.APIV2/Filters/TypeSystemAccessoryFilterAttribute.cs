@@ -40,10 +40,13 @@ namespace HXCloud.APIV2.Filters
             {
                 case "get":
                     //用户所在的组和超级管理员可以查看
-                    if (GroupId != GId || (!isAdmin && code != _config["Group"]))
+                    if (GroupId != GId)
                     {
-                        context.Result = new UnauthorizedResult();
-                        return;
+                        if (!(isAdmin && code == _config["Group"]))
+                        {
+                            context.Result = new UnauthorizedResult();
+                            return;
+                        }
                     }
                     break;
                 default:

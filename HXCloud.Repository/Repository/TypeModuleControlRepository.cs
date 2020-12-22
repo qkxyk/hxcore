@@ -18,7 +18,7 @@ namespace HXCloud.Repository
         }
         public async Task<IEnumerable<TypeModuleControlModel>> FindWithFeedbackAndDataDefineAsync(Expression<Func<TypeModuleControlModel, bool>> predicate)
         {
-            var data = await _db.TypeModuleControls.Include(a => a.TypeModuleFeedbacks).ThenInclude(a => a.TypeDataDefine)
+            var data = await _db.TypeModuleControls.Include(a => a.TypeDataDefine).Include(a => a.TypeModuleFeedbacks).ThenInclude(a => a.TypeDataDefine)
                 .Where(predicate).ToListAsync();
             return data;
         }

@@ -5,8 +5,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IRepository\ITypeAccessoryControlDataRepository.cs" />
+    <Compile Remove="IRepository\ITypeAccessoryRepository.cs" />
+    <Compile Remove="IRepository\ITypeSystemAccessoryControlDataRepository.cs" />
+    <Compile Remove="IRepository\ITypeSystemAccessoryRepository.cs" />
+    <Compile Remove="IRepository\ITypeSystemRepository.cs" />
     <Compile Remove="Maps\MenuModelMap.cs" />
     <Compile Remove="Maps\RoleMenuModelMap.cs" />
+    <Compile Remove="Maps\TypeAccessoryControlDataModelMap.cs" />
+    <Compile Remove="Maps\TypeAccessoryModelMap.cs" />
+    <Compile Remove="Maps\TypeSystemAccessoryControlDataModelMap.cs" />
+    <Compile Remove="Maps\TypeSystemAccessoyModelMap.cs" />
+    <Compile Remove="Maps\TypeSystemModelMap.cs" />
     <Compile Remove="Migrations\20200617023736_modifysystemaccessory.cs" />
     <Compile Remove="Migrations\20200617023736_modifysystemaccessory.Designer.cs" />
     <Compile Remove="Migrations\20200823092923_addwarn.cs" />
@@ -17,6 +27,11 @@
     <Compile Remove="Migrations\20200918073039_addTypeOverview.Designer.cs" />
     <Compile Remove="Migrations\20200918073306_addTypeOverview.cs" />
     <Compile Remove="Migrations\20200918073306_addTypeOverview.Designer.cs" />
+    <Compile Remove="Repository\TypeAccessoryControlDataRepository.cs" />
+    <Compile Remove="Repository\TypeAccessoryRepository.cs" />
+    <Compile Remove="Repository\TypeSystemAccessoryControlDataRepository.cs" />
+    <Compile Remove="Repository\TypeSystemAccessoryRepository.cs" />
+    <Compile Remove="Repository\TypeSystemRepository.cs" />
   </ItemGroup>
 
   <ItemGroup>

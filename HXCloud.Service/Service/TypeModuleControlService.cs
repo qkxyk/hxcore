@@ -30,7 +30,7 @@ namespace HXCloud.Service
         public async Task<bool> IsExist(Expression<Func<TypeModuleControlModel, bool>> predicate)
         {
             var data = await _tmcr.Find(predicate).FirstOrDefaultAsync();
-            if (data==null)
+            if (data == null)
             {
                 return false;
             }
@@ -91,7 +91,7 @@ namespace HXCloud.Service
             var data = await _tmcr.FindWithFeedbackAsync(Id);
             if (data == null)
             {
-                return new BaseResponse { Success = false, Message = "该控制项下存在反馈数据，不能删除" };
+                return new BaseResponse { Success = false, Message = "该控制项已删除，请勿重复删除" };
             }
             if (data.TypeModuleFeedbacks.Count > 0)
             {

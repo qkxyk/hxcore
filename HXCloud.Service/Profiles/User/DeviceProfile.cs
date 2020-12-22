@@ -25,8 +25,15 @@ namespace HXCloud.Service
             CreateMap<DeviceLogAddDto, DeviceLogModel>();
             CreateMap<DeviceLogModel, DeviceLogDto>();
             //设备统计数据
+            CreateMap<DeviceStatisticsDataModel, DeviceStatisticsDto>().ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Device.TypeId)).ForMember(dest => dest.DeviceName,
+                opt => opt.MapFrom(src => src.Device.DeviceName));
+            CreateMap<DeviceDiscreteStatisticsDataModel, DeviceStatisticsDto>().ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Device.TypeId)).ForMember(dest => dest.DeviceName,
+               opt => opt.MapFrom(src => src.Device.DeviceName));
 
             //设备历史数据
+            CreateMap<DeviceHisDataModel, DeviceHisDataDto>().ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Device.TypeId)).ForMember(dest => dest.DeviceName,
+                opt => opt.MapFrom(src => src.Device.DeviceName)).ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.Device.ProjectId)).ForMember(dest => dest.DeviceNo,
+                opt => opt.MapFrom(src => src.Device.DeviceNo));
 
             //设备图片
             CreateMap<DeviceImageAddDto, DeviceImageModel>();
@@ -53,7 +60,6 @@ namespace HXCloud.Service
             CreateMap<DeviceInputDataModel, DeviceInputDto>();
             //设备迁移数据
             CreateMap<DeviceMigrationModel, DeviceMigrationDto>();
-            //设备在线数据
         }
     }
 }

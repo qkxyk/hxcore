@@ -12,7 +12,7 @@ namespace HXCloud.ViewModel
         //[Required(ErrorMessage = "Key不能为空")]
         //public string DataKey { get; set; }//要统计的数据,
         [Required(ErrorMessage = "统计的类型不能为空")]
-        [Range(1, 2, ErrorMessage = "要统计的类型只能为1和2")]
+        [Range(1, 3, ErrorMessage = "要统计的类型只能为1、2和3")]
         public int StaticsType { get; set; }//要统计的是瞬时值或是累计值,1为瞬时值，2为累计值
         public string Standard { get; set; }//标准值
         //public string SUnit { get; set; }//标准值单位

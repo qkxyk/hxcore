@@ -7,13 +7,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HXCloud.Repository.Maps
 {
-  public  class DeviceHisDataModelMap:BaseModelMap<DeviceHisDataModel>
+  public  class DeviceHisDataModelMap: IEntityTypeConfiguration<DeviceHisDataModel>
     {
-        public override void Configure(EntityTypeBuilder<DeviceHisDataModel> builder)
+        public  void Configure(EntityTypeBuilder<DeviceHisDataModel> builder)
         {
             builder.ToTable("DeviceHisData").HasKey(a => a.Id);
             builder.HasOne(a => a.Device).WithMany(a => a.DeviceHisData).HasForeignKey(a => a.DeviceSn).OnDelete(DeleteBehavior.Cascade);
-            base.Configure(builder);    
         }
     }
 }

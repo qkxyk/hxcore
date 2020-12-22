@@ -8,7 +8,7 @@ namespace HXCloud.ViewModel
     {
         public int Id { get; set; }
         public string Account { get; set; }
-        public string Token { get; set; }
+        public string GroupId { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
         public int? CurrentPId { get; set; }//当前的场站标示
         public int? PrePId { get; set; }//迁移前的场站标示

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Linq.Expressions;
@@ -166,6 +167,7 @@ namespace HXCloud.Service
         public async Task<BaseResponse> ChangeDeviceProject(string account, string DeviceSn, string GroupId, int? projectId)
         {
             var entity = await _dr.FindAsync(DeviceSn);
+            var migration = new DeviceMigrationModel { Create = account, CreateTime = DateTime.Now, CurrentPId = projectId, PrePId = entity.ProjectId, DeviceSn = entity.DeviceSn, DeviceNo = entity.DeviceNo, GroupId = GroupId, TypeId = 1 };
             string message = "";
             try
             {
@@ -193,7 +195,7 @@ namespace HXCloud.Service
                     entity.FullId = null;
                     entity.FullName = null;
                 }
-                await _dr.SaveAsync(entity);
+                await _dr.SaveDeviceWithMigrationAsync(entity, migration);
                 _log.LogInformation($"{account}{message}成功");
                 return new BaseResponse { Success = true, Message = $"{message}成功" };
             }
@@ -345,6 +347,17 @@ namespace HXCloud.Service
         }
 
         /// <summary>
+        /// 获取场站列表下的所有设备编号
+        /// </summary>
+        /// <param name="sites">场站列表</param>
+        /// <returns>返回设备编号列表</returns>
+        public async Task<List<string>> GetDeviceSnBySitesAsync(List<int> sites)
+        {
+            var sn = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).Select(a => a.DeviceSn).ToListAsync();
+            return sn;
+        }
+
+        /// <summary>
         /// 获取设备的总揽数据
         /// </summary>
         /// <param name="sites">场站编号集合</param>
@@ -374,5 +387,44 @@ namespace HXCloud.Service
             }
             return new BResponse<DeviceOverViewDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
+
+        /// <summary>
+        /// 删除设备信息
+        /// </summary>
+        /// <param name="DeviceSn">设备编号</param>
+        /// <param name="path">设备图片保存路径</param>
+        /// <returns>返回删除设备是否成功</returns>
+        public async Task<BaseResponse> DeleteDeviceAsync(string Account, string DeviceSn, string path)
+        {
+            bool bRet = false;//用来记录repository的返回是否成功
+            try
+            {
+                bRet = await _dr.DeleteAsync(DeviceSn);
+                if (!bRet)//设备不存在
+                {
+                    return new BaseResponse { Success = false, Message = "输入的设备不存在" };
+                }
+                //删除磁盘上的设备图片
+                DirectoryInfo di = new DirectoryInfo(path);
+                di.Delete(true);
+                _log.LogInformation($"{Account}删除设备{DeviceSn}成功");
+                return new BaseResponse { Success = true, Message = "删除设备成功" };
+            }
+            catch (Exception ex)
+            {
+
+                if (bRet == true)
+                {
+                    _log.LogError($"{Account}删除设备{DeviceSn}成功，设备图片删除失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                    return new BaseResponse { Success = true, Message = "设备删除成功" };
+                }
+                else
+                {
+                    _log.LogError($"{Account}删除设备{DeviceSn}失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                    return new BaseResponse { Success = false, Message = "删除设备失败，请联系管理员" };
+                }
+            }
+        }
+
     }
 }

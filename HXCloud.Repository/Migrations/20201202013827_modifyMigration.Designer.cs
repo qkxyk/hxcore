@@ -4,14 +4,16 @@ using HXCloud.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HXCloud.Repository.Migrations
 {
     [DbContext(typeof(HXCloudContext))]
-    partial class HXCloudContextModelSnapshot : ModelSnapshot
+    [Migration("20201202013827_modifyMigration")]
+    partial class modifyMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -277,30 +279,6 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("DeviceConfig");
                 });
 
-            modelBuilder.Entity("HXCloud.Model.DeviceDiscreteStatisticsDataModel", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Data")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeviceSn")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DeviceSn");
-
-                    b.ToTable("DeviceDiscreteStatisticsData");
-                });
-
             modelBuilder.Entity("HXCloud.Model.DeviceHardwareConfigModel", b =>
                 {
                     b.Property<int>("Id")
@@ -396,6 +374,14 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
                     b.Property<string>("DataContent")
                         .HasColumnType("nvarchar(max)");
 
@@ -410,6 +396,12 @@ namespace HXCloud.Repository.Migrations
 
                     b.Property<string>("GroupId")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -613,6 +605,9 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Account")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
 
@@ -623,6 +618,9 @@ namespace HXCloud.Repository.Migrations
 
                     b.Property<int?>("CurrentPId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("DeviceNo")
                         .HasColumnType("nvarchar(max)");
@@ -1084,6 +1082,97 @@ namespace HXCloud.Repository.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("RoleProject");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeAccessoryControlDataModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("AccessoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssociateDefineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ControlName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("DataDefineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DataValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IState")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SequenceIn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SequenceOut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessoryId");
+
+                    b.HasIndex("DataDefineId");
+
+                    b.ToTable("TypeAccessoryControlData");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeAccessoryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("ICON")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("TypeAccessory");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeArgumentModel", b =>
@@ -1750,6 +1839,134 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("TypeStatisticsInfo");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryControlDataModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("AccessoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AssociateDefineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ControlName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<int>("DataDefineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("DataValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("IState")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SequenceIn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SequenceOut")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccessoryId");
+
+                    b.HasIndex("DataDefineId");
+
+                    b.ToTable("TypeSystemAccessoryControlData");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("ICON")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SystemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SystemId");
+
+                    b.ToTable("TypeSystemAccessory");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("TypeSystem");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeUpdateFileModel", b =>
                 {
                     b.Property<int>("Id")
@@ -2047,16 +2264,6 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Device");
                 });
 
-            modelBuilder.Entity("HXCloud.Model.DeviceDiscreteStatisticsDataModel", b =>
-                {
-                    b.HasOne("HXCloud.Model.DeviceModel", "Device")
-                        .WithMany("DiscreteStatisticsData")
-                        .HasForeignKey("DeviceSn")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("HXCloud.Model.DeviceHardwareConfigModel", b =>
                 {
                     b.HasOne("HXCloud.Model.DeviceModel", "Device")
@@ -2256,6 +2463,36 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeAccessoryControlDataModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeAccessoryModel", "TypeAccessory")
+                        .WithMany("TypeAccessoryControlDatas")
+                        .HasForeignKey("AccessoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
+                        .WithMany("TypeAccessoryControlDatas")
+                        .HasForeignKey("DataDefineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("TypeAccessory");
+
+                    b.Navigation("TypeDataDefine");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeAccessoryModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeModel", "Type")
+                        .WithMany("TypeAccessories")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeArgumentModel", b =>
                 {
                     b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
@@ -2445,6 +2682,47 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryControlDataModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeSystemAccessoryModel", "SystemAccessory")
+                        .WithMany("TypeSystemAccessoryControlDatas")
+                        .HasForeignKey("AccessoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
+                        .WithMany("TypeSystemAccessoryControlDatas")
+                        .HasForeignKey("DataDefineId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("SystemAccessory");
+
+                    b.Navigation("TypeDataDefine");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeSystemModel", "TypeSystem")
+                        .WithMany("SystemAccessories")
+                        .HasForeignKey("SystemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TypeSystem");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeModel", "Type")
+                        .WithMany("TypeSystems")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeUpdateFileModel", b =>
                 {
                     b.HasOne("HXCloud.Model.TypeModel", "Type")
@@ -2559,8 +2837,6 @@ namespace HXCloud.Repository.Migrations
 
                     b.Navigation("DeviceVideo");
 
-                    b.Navigation("DiscreteStatisticsData");
-
                     b.Navigation("StatisticsData");
 
                     b.Navigation("Warns");
@@ -2606,8 +2882,15 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeAccessoryModel", b =>
+                {
+                    b.Navigation("TypeAccessoryControlDatas");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeDataDefineModel", b =>
                 {
+                    b.Navigation("TypeAccessoryControlDatas");
+
                     b.Navigation("TypeArguments");
 
                     b.Navigation("TypeDisplayIcons");
@@ -2617,6 +2900,8 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("TypeModuleFeedbacks");
 
                     b.Navigation("TypeOverviews");
+
+                    b.Navigation("TypeSystemAccessoryControlDatas");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeModel", b =>
@@ -2626,6 +2911,8 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Devices");
 
                     b.Navigation("Schemas");
+
+                    b.Navigation("TypeAccessories");
 
                     b.Navigation("TypeArguments");
 
@@ -2645,6 +2932,8 @@ namespace HXCloud.Repository.Migrations
 
                     b.Navigation("TypeStatisticsInfo");
 
+                    b.Navigation("TypeSystems");
+
                     b.Navigation("TypeUpdateFiles");
                 });
 
@@ -2661,6 +2950,16 @@ namespace HXCloud.Repository.Migrations
             modelBuilder.Entity("HXCloud.Model.TypeSchemaModel", b =>
                 {
                     b.Navigation("Child");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemAccessoryModel", b =>
+                {
+                    b.Navigation("TypeSystemAccessoryControlDatas");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TypeSystemModel", b =>
+                {
+                    b.Navigation("SystemAccessories");
                 });
 
             modelBuilder.Entity("HXCloud.Model.UserModel", b =>

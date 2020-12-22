@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HXCloud.Model
 {
-    public class DeviceHisDataModel : BaseModel, IAggregateRoot
+    public class DeviceHisDataModel : IAggregateRoot
     {
         public int Id { get; set; }
         public string DeviceSn { get; set; }

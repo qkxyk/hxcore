@@ -26,8 +26,12 @@ namespace HXCloud.Model
         public int TypeId { get; set; }
         public TypeModel Type { get; set; }
 
+        #region 2020-12-17删除
+        /*
         public ICollection<TypeAccessoryControlDataModel> TypeAccessoryControlDatas { get; set; }
         public ICollection<TypeSystemAccessoryControlDataModel> TypeSystemAccessoryControlDatas { get; set; }
+        */
+        #endregion
         public string Category { get; set; }//数据定义标签，便于查找
 
         public virtual ICollection<TypeOverviewModel> TypeOverviews { get; set; }

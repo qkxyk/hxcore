@@ -44,5 +44,20 @@ namespace HXCloud.Service
         /// <param name="sites">场站编号集合</param>
         /// <returns></returns>
         Task<BaseResponse> GetDeviceOverViewAsync(List<int> sites, string GroupId);
+
+        /// <summary>
+        /// 获取场站列表下的所有设备编号
+        /// </summary>
+        /// <param name="sites">场站列表</param>
+        /// <returns>返回设备编号列表</returns>
+        Task<List<string>> GetDeviceSnBySitesAsync(List<int> sites);
+
+        /// <summary>
+        /// 删除设备信息
+        /// </summary>
+        /// <param name="DeviceSn">设备编号</param>
+        /// <param name="path">设备图片保存路径</param>
+        /// <returns>返回删除设备是否成功</returns>
+        Task<BaseResponse> DeleteDeviceAsync(string Account, string DeviceSn, string path);
     }
 }

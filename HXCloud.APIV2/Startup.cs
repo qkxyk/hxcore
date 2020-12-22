@@ -39,7 +39,7 @@ namespace HXCloud.APIV2
 
             services.AddScoped<TypeActionFilter>();
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson();
             #region 添加自定义模型认证
             services.Configure<ApiBehaviorOptions>(options =>
             {

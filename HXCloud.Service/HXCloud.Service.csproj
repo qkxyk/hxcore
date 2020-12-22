@@ -5,6 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="IService\ITypeAccessoryControlDataService.cs" />
+    <Compile Remove="IService\ITypeAccessoryService.cs" />
+    <Compile Remove="IService\ITypeSystemAccessoryControlDataService.cs" />
+    <Compile Remove="IService\ITypeSystemAccessoryService.cs" />
+    <Compile Remove="IService\ITypeSystemService.cs" />
+    <Compile Remove="Service\TypeAccessoryControlDataService.cs" />
+    <Compile Remove="Service\TypeAccessoryService.cs" />
+    <Compile Remove="Service\TypeSystemAccessoryControlDataService.cs" />
+    <Compile Remove="Service\TypeSystemAccessoryService.cs" />
+    <Compile Remove="Service\TypeSystemService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />

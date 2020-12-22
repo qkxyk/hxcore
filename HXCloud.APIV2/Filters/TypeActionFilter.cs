@@ -59,7 +59,8 @@ namespace HXCloud.APIV2.Filters
             var IsExist = ts.IsExist(a => a.Id == typeId, out GId);
             if (!IsExist)
             {
-                context.Result = new NotFoundResult();
+                // context.Result = new NotFoundResult();
+                context.Result = new NotFoundObjectResult("输入的类型编号不存在");
                 return;
             }
             var s = context.HttpContext.Request.Method.ToLower();
@@ -68,10 +69,13 @@ namespace HXCloud.APIV2.Filters
             {
                 case "get":
                     //用户所在的组和超级管理员可以查看
-                    if (GroupId != GId || (!isAdmin && code != _config["Group"]))
+                    if (GroupId != GId)
                     {
-                        context.Result = new UnauthorizedResult();
-                        return;
+                        if (!(isAdmin && code == _config["Group"]))
+                        {
+                            context.Result = new UnauthorizedResult();
+                            return;
+                        }
                     }
                     break;
                 default:

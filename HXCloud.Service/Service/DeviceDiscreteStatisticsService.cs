@@ -1,27 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using HXCloud.Model;
 using HXCloud.Repository;
 using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace HXCloud.Service
 {
-    public class DeviceStatisticsDataService : IDeviceStatistcsDataService
+    public class DeviceDiscreteStatisticsService : IDeviceDiscreteStatisticsService
     {
-        private readonly IDeviceStatisticsDataRepository _dsr;
+        private readonly IDeviceDiscreteStatisticsRepository _dsr;
         private readonly IMapper _map;
 
-        public DeviceStatisticsDataService(IDeviceStatisticsDataRepository dsr, IMapper map)
+        public DeviceDiscreteStatisticsService(IDeviceDiscreteStatisticsRepository dsr, IMapper map)
         {
             this._dsr = dsr;
             this._map = map;
         }
-        public Task<bool> IsExist(Expression<Func<DeviceStatisticsDataModel, bool>> predicate)
+        public Task<bool> IsExist(Expression<Func<DeviceDiscreteStatisticsDataModel, bool>> predicate)
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace HXCloud.Service
         /// <returns>返回设备的统计数据</returns>
         public async Task<BaseResponse> GetDeviceStatisticsAsync(DeviceStatisticsRequestDto req, List<string> devices)
         {
-            List<DeviceStatisticsDataModel> data;
+            List<DeviceDiscreteStatisticsDataModel> data;
             if (req.IsDevice)
             {
                 data = await _dsr.FindWithDevice(a => a.DeviceSn == req.DeviceSn).ToListAsync();

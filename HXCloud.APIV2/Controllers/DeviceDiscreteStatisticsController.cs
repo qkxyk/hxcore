@@ -1,29 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using HXCloud.Service;
+﻿using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace HXCloud.APIV2.Controllers
 {
     [Route("api/{GroupId}/[controller]")]
     [ApiController]
     [Authorize]
-    public class DeviceStatisticsDataController : ControllerBase
+    public class DeviceDiscreteStatisticsController : ControllerBase
     {
-        private readonly IDeviceStatistcsDataService _dsd;
+        private readonly IDeviceDiscreteStatisticsService _dsd;
         private readonly IGroupService _gs;
         private readonly IProjectService _ps;
         private readonly IDeviceService _ds;
         private readonly IConfiguration _config;
         private readonly IRoleProjectService _rps;
 
-        public DeviceStatisticsDataController(IDeviceStatistcsDataService dsd, IGroupService gs, IProjectService ps, IDeviceService ds, IConfiguration config, IRoleProjectService rps)
+        public DeviceDiscreteStatisticsController(IDeviceDiscreteStatisticsService dsd, IGroupService gs, IProjectService ps, IDeviceService ds, IConfiguration config, IRoleProjectService rps)
         {
             this._dsd = dsd;
             this._gs = gs;
@@ -32,7 +32,6 @@ namespace HXCloud.APIV2.Controllers
             this._config = config;
             this._rps = rps;
         }
-        /// <summary>
         /// 获取设备的统计数据
         /// </summary>
         /// <param name="GroupId">组织编号</param>

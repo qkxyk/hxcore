@@ -19,5 +19,13 @@ namespace HXCloud.Repository
         /// <param name="predicate">查询条件</param>
         /// <returns></returns>
         IQueryable<DeviceModel> FindWithOnline(Expression<Func<DeviceModel, bool>> predicate);
+        Task<bool> DeleteAsync(string DeviceSn);
+        /// <summary>
+        /// 迁移设备
+        /// </summary>
+        /// <param name="entity">设备信息</param>
+        /// <param name="migration">设备迁移信息</param>
+        /// <returns></returns>
+        Task SaveDeviceWithMigrationAsync(DeviceModel entity, DeviceMigrationModel migration);
     }
 }

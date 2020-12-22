@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using HXCloud.APIV2.Filters;
 using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -24,11 +26,12 @@ namespace HXCloud.APIV2.Controllers
         private readonly IGroupService _gs;
         private readonly IConfiguration _config;
         private readonly IRoleProjectService _rp;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         //获取设备时附带设备的图片、设备工艺图等信息,设备列表只返回设备的基本信息
 
         //注入项目用来验证项目是否存在，角色项目验证是否有权限操作，类型用来验证类型信息，组织用来验证组织信息
-        public DeviceController(ILogger<DeviceController> log, IDeviceService ds, IProjectService ps, ITypeService ts, IGroupService gs, IConfiguration config, IRoleProjectService rp)
+        public DeviceController(ILogger<DeviceController> log, IDeviceService ds, IProjectService ps, ITypeService ts, IGroupService gs, IConfiguration config, IRoleProjectService rp, IWebHostEnvironment webHostEnvironment)
         {
             this._log = log;
             this._ds = ds;
@@ -37,6 +40,7 @@ namespace HXCloud.APIV2.Controllers
             this._gs = gs;
             this._config = config;
             this._rp = rp;
+            this._webHostEnvironment = webHostEnvironment;
         }
         //添加设备需要导入类型的硬件配置数据
         [HttpPost]
@@ -124,28 +128,30 @@ namespace HXCloud.APIV2.Controllers
             #region
             if (dto.ProjectId.HasValue) //不是无项目的设备
             {
-                if (!isAdmin)
+                if (GroupId != GId)
                 {
-                    var bAuth = await _rp.IsAuth(Roles, dto.PathId, 2);//是否有权限编辑
-                    if (!bAuth)
+                    if (!(isAdmin && Code == _config["Group"]))
                     {
-                        return Unauthorized("用户没有权限修改设备");
+                        return new BaseResponse { Success = false, Message = "用户没有权限修改其它组织设备的权限" };
                     }
                 }
                 else
                 {
-                    if (GroupId != GId && Code != _config["Group"])
+                    if (!isAdmin)
                     {
-                        return Unauthorized("用户没有权限修改其它组织设备的权限");
+                        var bAuth = await _rp.IsAuth(Roles, dto.PathId, 2);//是否有权限编辑
+                        if (!bAuth)
+                        {
+                            return new BaseResponse { Success = false, Message = "用户没有权限修改设备" };
+                        }
                     }
                 }
-
             }
             else
             {
                 if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
                 {
-                    return Unauthorized("用户没有权限操作无项目的设备");
+                    return new BaseResponse { Success = false, Message = "用户没有权限操作无项目的设备" };
                 }
             }
             #endregion
@@ -181,28 +187,30 @@ namespace HXCloud.APIV2.Controllers
             #region
             if (dto.ProjectId.HasValue) //不是无项目的设备
             {
-                if (!isAdmin)
+                if (GroupId != GId)//非同一个组织
                 {
-                    var bAuth = await _rp.IsAuth(Roles, dto.PathId, 2);//是否有权限编辑
-                    if (!bAuth)
+                    if (!(isAdmin && Code == _config["Group"]))
                     {
-                        return Unauthorized("用户没有权限修改设备");
+                        return new BaseResponse { Success = false, Message = "用户没有权限修改其它组织设备的权限" };
                     }
                 }
                 else
                 {
-                    if (GroupId != GId && Code != _config["Group"])
+                    if (!isAdmin)
                     {
-                        return Unauthorized("用户没有权限修改其它组织设备的权限");
+                        var bAuth = await _rp.IsAuth(Roles, dto.PathId, 2);//是否有权限编辑
+                        if (!bAuth)
+                        {
+                            return new BaseResponse { Success = false, Message = "用户没有权限修改设备" };
+                        }
                     }
                 }
-
             }
             else
             {
                 if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
                 {
-                    return Unauthorized("用户没有权限操作无项目的设备");
+                    return new BaseResponse { Success = false, Message = "用户没有权限操作无项目的设备" };
                 }
             }
             #endregion
@@ -214,10 +222,10 @@ namespace HXCloud.APIV2.Controllers
         /// 把设备放入回收站
         /// </summary>
         /// <param name="GroupId"></param>
-        /// <param name="DeviceSn"></param>
+        /// <param name="req"></param>
         /// <returns></returns>
         [HttpPut("Project")]
-        public async Task<ActionResult<BaseResponse>> RemoveDeviceProject(string GroupId, [FromBody]DeviceDeleteDto req)
+        public async Task<ActionResult<BaseResponse>> RemoveDeviceProject(string GroupId, [FromBody] DeviceDeleteDto req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -233,29 +241,27 @@ namespace HXCloud.APIV2.Controllers
             #region
             if (dto.ProjectId.HasValue) //不是无项目的设备
             {
-                if (!isAdmin)
+                if (GroupId != GId)
                 {
-                    var bAuth = await _rp.IsAuth(Roles, dto.PathId, 2);//是否有权限编辑
-                    if (!bAuth)
+                    if (!(isAdmin && Code == _config["Group"]))
                     {
-                        return Unauthorized("用户没有权限修改设备");
+                        return new BaseResponse { Success = false, Message = "用户没有权限修改其它组织设备的权限" };
                     }
                 }
                 else
                 {
-                    if (GroupId != GId && Code != _config["Group"])
+                    if (!isAdmin)
                     {
-                        return Unauthorized("用户没有权限修改其它组织设备的权限");
+                        var bAuth = await _rp.IsAuth(Roles, dto.PathId, 2);//是否有权限编辑
+                        if (!bAuth)
+                        {
+                            return new BaseResponse { Success = false, Message = "用户没有权限修改设备" };
+                        }
                     }
                 }
-
             }
             else
             {
-                //if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
-                //{
-                //    return Unauthorized("用户没有权限操作无项目的设备");
-                //}
                 return new BaseResponse { Success = false, Message = "该设备已在回收站中，请勿重复操作" };
             }
             #endregion
@@ -308,14 +314,14 @@ namespace HXCloud.APIV2.Controllers
                 }
                 else
                 {
-                    return Unauthorized("用户没有权限跨组织迁移设备");
+                    return new BaseResponse { Success = false, Message = "用户没有权限跨组织迁移设备" };
                 }
             }
             else
             {
                 if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
                 {
-                    return Unauthorized("用户没有权限迁移设备");
+                    return new BaseResponse { Success = false, Message = "用户没有权限迁移设备" };
                 }
             }
             var rm = await _ds.ChangeDeviceProject(Account, DeviceSn, GroupId, projectId);
@@ -328,7 +334,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="GroupId"></param>
         /// <param name="DeviceSn"></param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{DeviceSn}")]
         [TypeFilter(typeof(AdminActionFilterAttribute))]
         public async Task<ActionResult<BaseResponse>> DeleteDevice(string GroupId, string DeviceSn)
         {
@@ -350,8 +356,14 @@ namespace HXCloud.APIV2.Controllers
             {
                 return Unauthorized("用户没有权限删除设备");
             }
-            throw new NotImplementedException();
-            //var rm = await _ds.
+            //先删除设备，再删除设备相关的图片和文件
+            //在service中处理删除图片，如果数据库删除成功，就标示为删除成功
+            string webRootPath = _webHostEnvironment.WebRootPath;//wwwroot文件夹
+            string userPath = Path.Combine(GroupId, "DeviceImage", DeviceSn);//设备图片保存位置
+            userPath = Path.Combine(_config["StoredImagesPath"], userPath);
+            var filePath = Path.Combine(webRootPath, userPath);//物理路径,不包含图片名称
+            var ret = await _ds.DeleteDeviceAsync(Account, DeviceSn, filePath);
+            return ret;
         }
 
         /// <summary>
@@ -362,7 +374,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="req"></param>
         /// <returns></returns>
         [HttpGet("Project")]
-        public async Task<ActionResult<BaseResponse>> GetProjectDevices(string GroupId, int projectId, [FromQuery]BasePageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetProjectDevices(string GroupId, int projectId, [FromQuery] BasePageRequest req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -403,7 +415,7 @@ namespace HXCloud.APIV2.Controllers
         }
 
         [HttpGet("NoProject")]
-        public async Task<ActionResult<BaseResponse>> GetNoProjectDevice(string GroupId, [FromQuery]BasePageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetNoProjectDevice(string GroupId, [FromQuery] BasePageRequest req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -432,7 +444,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name=""></param>
         /// <returns></returns>
         [HttpGet("MyDevice")]
-        public async Task<ActionResult<BaseResponse>> GetMyDevice(string GroupId, [FromQuery]BasePageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetMyDevice(string GroupId, [FromQuery] BasePageRequest req)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -466,17 +478,22 @@ namespace HXCloud.APIV2.Controllers
                 return new BaseResponse { Success = false, Message = "输入的设备编号不存在" };
             }
             //用户所在的组和超级管理员可以查看
-            if (GroupId != device.GroupId || (IsAdmin && Code != _config["Group"]))
+            if (GroupId != GId)//不是同一个组织
             {
-                return new BaseResponse { Success = false, Message = "用户没有权限" };
-            }
-            if (!IsAdmin)        //非管理员验证权限
-            {
-                //是否有设备的编辑权限
-                bool bAuth = await _rp.IsAuth(Roles, device.PathId, 1);
-                if (!bAuth)
+                if (!(IsAdmin && Code == _config["Group"]))
                 {
                     return new BaseResponse { Success = false, Message = "用户没有权限" };
+                }
+            }
+            else //同一个组织
+            {
+                if (!IsAdmin)
+                {
+                    bool bAuth = await _rp.IsAuth(Roles, device.PathId, 1);
+                    if (!bAuth)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限" };
+                    }
                 }
             }
             return new BaseResponse { Success = true, Message = "用户可以控制该设备" };

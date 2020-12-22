@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Type\TypeAccessoryControlDataModel.cs" />
+    <Compile Remove="Type\TypeAccessoryModel.cs" />
+    <Compile Remove="Type\TypeSystemAccessoryControlDataModel.cs" />
+    <Compile Remove="Type\TypeSystemAccessoryModel.cs" />
+    <Compile Remove="Type\TypeSystemModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Device\DeviceModel.cs~RF126201ea.TMP" />
   </ItemGroup>
 

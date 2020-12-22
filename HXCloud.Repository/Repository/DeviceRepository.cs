@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -16,6 +17,8 @@ namespace HXCloud.Repository
             //ef core默认的事务处理
             _db.Devices.Add(entity);
             _db.DeviceHardwareConfigs.AddRange(data);
+            //添加设备的迁移记录
+            _db.DeviceMigrations.Add(new DeviceMigrationModel { Create = entity.Create, CreateTime = entity.CreateTime, CurrentPId = entity.ProjectId, DeviceNo = entity.DeviceNo, DeviceSn = entity.DeviceSn, GroupId = entity.GroupId, TypeId = 0 });
             await _db.SaveChangesAsync();
         }
         public async Task SaveAsync(DeviceModel entity, List<DeviceHardwareConfigModel> data)
@@ -42,6 +45,78 @@ namespace HXCloud.Repository
         {
             var data = _db.Devices.Include(a => a.DeviceOnline).Where(predicate);
             return data;
+        }
+
+        /// <summary>
+        /// 迁移设备
+        /// </summary>
+        /// <param name="entity">设备信息</param>
+        /// <param name="migration">设备迁移信息</param>
+        /// <returns></returns>
+        public async Task SaveDeviceWithMigrationAsync(DeviceModel entity, DeviceMigrationModel migration)
+        {
+            using (var trans = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    _db.Entry<DeviceModel>(entity).State = EntityState.Modified;
+                    _db.DeviceMigrations.Add(migration);
+                    await _db.SaveChangesAsync();
+                    await trans.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    throw ex;
+                }
+            }
+
+        }
+        public async Task<bool> DeleteAsync(string DeviceSn)
+        {
+            using (var trans = _db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //设备删除之前，先删除设备的一些相关数据
+                    var device = await _db.Devices.Where(a => a.DeviceSn == DeviceSn).FirstOrDefaultAsync();
+                    if (device == null)
+                    {
+                        return false;
+                    }
+                    var statistics = await _db.DeviceStatisticsData.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceStatisticsData.RemoveRange(statistics);
+                    var discreteStatistics = await _db.DeviceDiscreteStatisticsData.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceDiscreteStatisticsData.RemoveRange(discreteStatistics);
+                    var his = await _db.DeviceHisData.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceHisData.RemoveRange(his);
+                    var card = await _db.DeviceCards.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceCards.RemoveRange(card);
+                    var config = await _db.DeviceConfigs.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceConfigs.RemoveRange(config);
+                    var hard = await _db.DeviceHardwareConfigs.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceHardwareConfigs.RemoveRange(hard);
+                    var log = await _db.DeviceLogs.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceLogs.RemoveRange(log);
+                    var migration = await _db.DeviceMigrations.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceMigrations.RemoveRange(migration);
+                    var online = await _db.DeviceOnlines.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceOnlines.RemoveRange(online);
+                    var video = await _db.DeviceVideos.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceVideos.RemoveRange(video);
+                    var img = await _db.DeviceImages.Where(a => a.DeviceSn == DeviceSn).ToListAsync();
+                    _db.DeviceImages.RemoveRange(img);
+                    _db.Devices.Remove(device);
+                    await _db.SaveChangesAsync();
+                    await trans.CommitAsync();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    throw ex;
+                }
+            }
         }
     }
 }

@@ -13,5 +13,9 @@ namespace HXCloud.ViewModel
         public string DataTitle { get; set; }
 
         public string GroupId { get; set; }
+        public string DeviceName { get; set; }
+        public string DeviceNo { get; set; }
+        public int TypeId { get; set; }
+        public int? ProjectId { get; set; }
     }
 }

@@ -30,8 +30,12 @@ namespace HXCloud.Model
         public virtual ICollection<TypeSchemaModel> Schemas { get; set; }//设备类型的模式
         public virtual ICollection<DeviceModel> Devices { get; set; }
         public virtual ICollection<TypeHardwareConfigModel> TypeHardwareConfig { get; set; }
+        #region 2020-12-17 删除配件
+        /*
         public virtual ICollection<TypeAccessoryModel> TypeAccessories { get; set; }
         public virtual ICollection<TypeSystemModel> TypeSystems { get; set; }
+        */
+        #endregion
 
         public virtual ICollection<TypeOverviewModel> TypeOverviews { get; set; }
         public virtual ICollection<TypeDisplayIconModel> TypeDisplayIcons { get; set; }

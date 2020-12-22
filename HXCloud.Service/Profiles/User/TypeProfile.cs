@@ -43,6 +43,7 @@ namespace HXCloud.Service
             CreateMap<TypeStatisticsUpdateViewModel, TypeStatisticsInfoModel>().ForMember(dest => dest.StaticsType, opt => opt.MapFrom(
                    src => (StatisticsType)src.StaticsType));
             CreateMap<TypeStatisticsInfoModel, TypeStatisticsData>().ForMember(opt => opt.StaticsType, opt => opt.MapFrom(src => (int)src.StaticsType));
+            /*
             //类型配件
             CreateMap<TypeAccessoryAddViewModel, TypeAccessoryModel>();
             CreateMap<TypeAccessoryUpdateViewModel, TypeAccessoryModel>();
@@ -56,6 +57,7 @@ namespace HXCloud.Service
             CreateMap<TypeControlDataAddDto, TypeAccessoryControlDataModel>();
             CreateMap<TypeControlDataUpdateDto, TypeAccessoryControlDataModel>();
             CreateMap<TypeAccessoryControlDataModel, TypeControlDataDto>();
+            */
             //类型参数
             CreateMap<TypeArgumentAddViewModel, TypeArgumentModel>();
             CreateMap<TypeArgumentUpdateViewModel, TypeArgumentModel>();
@@ -63,6 +65,7 @@ namespace HXCloud.Service
             CreateMap<TypeArgumentModel, TypeArgumentDto>().ForMember(dest => dest.DefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.DefineType, opt => opt.MapFrom(
                            src => src.TypeDataDefine.ShowType)).ForMember(dest => dest.DefineFormat, opt => opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.DefineUnit, opt => opt.MapFrom(
                                        src => src.TypeDataDefine.Unit));
+           /*
             //类型子系统
             CreateMap<TypeSystemAddDto, TypeSystemModel>();
             CreateMap<TypeSystemUpdateDto, TypeSystemModel>();
@@ -75,6 +78,7 @@ namespace HXCloud.Service
             CreateMap<TypeSystemAccessoryControlDataAddDto, TypeSystemAccessoryControlDataModel>();
             CreateMap<TypeSystemAccessoryControlDataUpdateDto, TypeSystemAccessoryControlDataModel>();
             CreateMap<TypeSystemAccessoryControlDataModel, TypeSystemAccessoryControlDataDto>();
+           */
             //类型硬件配置
             CreateMap<TypeHardwareConfigAddDto, TypeHardwareConfigModel>();
             CreateMap<TypeHardwareConfigUpdateDto, TypeHardwareConfigModel>();

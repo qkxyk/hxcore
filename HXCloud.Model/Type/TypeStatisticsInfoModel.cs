@@ -24,6 +24,7 @@ namespace HXCloud.Model
     public enum StatisticsType
     {
         Instant = 1,//瞬时值
-        Total //累计值
+        Total, //累计值
+        Discrete //离散型数据(离散型数据需要按时间点把所有数据都累积起来[dt,{data}])
     }
 }
