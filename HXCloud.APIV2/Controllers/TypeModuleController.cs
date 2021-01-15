@@ -26,7 +26,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPost]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> AddTypeModuleAsync(int typeId, [FromBody]TypeModuleAddDto req)
+        public async Task<ActionResult<BaseResponse>> AddTypeModuleAsync(int typeId, [FromBody] TypeModuleAddDto req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             #region 检测类型
@@ -45,7 +45,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPut]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> UpdateTypeModuleAsync(int typeId, [FromBody]TypeModuleUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateTypeModuleAsync(int typeId, [FromBody] TypeModuleUpdateDto req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             #region 检测类型
@@ -81,6 +81,11 @@ namespace HXCloud.APIV2.Controllers
         [TypeFilter(typeof(TypeActionFilter))]
         public async Task<ActionResult<BaseResponse>> GetById(int typeId, int Id)
         {
+            var exist = await _tms.IsExist(a => a.TypeId == typeId && a.Id == Id);
+            if (!exist)
+            {
+                return new BaseResponse { Success = false, Message = $"该类型下不存在编号为{Id}的模块" };
+            }
             var rm = await _tms.GetTypeModuleByIdAsync(Id);
             return rm;
         }

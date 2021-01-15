@@ -91,7 +91,7 @@ namespace HXCloud.Service
             }
             else
             {
-                var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+                OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var list = await g.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
             var dto = _mapper.Map<List<RoleDataDto>>(list);

@@ -179,7 +179,7 @@ namespace HXCloud.Service
             }
             else
             {
-                var orderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+                OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             Count = ret.Count();
 

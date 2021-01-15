@@ -14,6 +14,7 @@ namespace HXCloud.Repository.Maps
             builder.ToTable("TypeModuleControl").HasKey(a => a.Id);
             builder.HasOne(a => a.TypeModule).WithMany(a => a.ModuleControls).HasForeignKey(a => a.ModuleId).OnDelete(DeleteBehavior.Cascade);
             builder.HasOne(a => a.TypeDataDefine).WithMany(a => a.TypeModuleControls).HasForeignKey(a => a.DataDefineId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(a => a.TypeClass).WithMany(a => a.TypeModuleControls).HasForeignKey(a => a.ClassId).OnDelete(DeleteBehavior.ClientSetNull);
             base.Configure(builder);
         }
     }

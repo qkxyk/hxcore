@@ -19,10 +19,17 @@ namespace HXCloud.ViewModel
         //20201106更改为showType
         public string ShowType { get; set; }
         public string DefaultValue { get; set; }
+        public bool AutoControl { get; set; } = false;//自动模式下是否可以控制
+                                                      //20201230新增分组信息
+        public int ClassId { get; set; }//分组标识
+        public string ClassName { get; set; }//分组名称
+        public int Rank { get; set; }//分组序号
         public TypeModuleControlDto()
         {
             FeedBacks = new List<TypeModuleFeedbackDto>();
         }
         public List<TypeModuleFeedbackDto> FeedBacks { get; set; }
+
+
     }
 }

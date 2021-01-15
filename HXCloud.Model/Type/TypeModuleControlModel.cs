@@ -19,5 +19,8 @@ namespace HXCloud.Model
         public int ModuleId { get; set; }//模块标示
         public virtual TypeModuleModel TypeModule { get; set; }//关联的类型模块
         public virtual ICollection<TypeModuleFeedbackModel> TypeModuleFeedbacks { get; set; }//控制项的反馈数据
+
+        public int? ClassId { get; set; }//分组编号
+        public virtual TypeClassModel TypeClass { get; set; }//分组信息
     }
 }

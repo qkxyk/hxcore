@@ -122,5 +122,21 @@ namespace HXCloud.Service
             var dto = _map.Map<TypeModuleControlDto>(data.FirstOrDefault());
             return new BResponse<TypeModuleControlDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
+
+        public async Task<TypeModuleControlCheckDto> IsExistCheck(Expression<Func<TypeModuleControlModel, bool>> predicate)
+        {
+            TypeModuleControlCheckDto dto = new TypeModuleControlCheckDto();
+            var data = await _tmcr.Find(predicate).FirstOrDefaultAsync();
+            if (data == null)
+            {
+                dto.IsExist = false;
+            }
+            else
+            {
+                dto.IsExist = true;
+                dto.ModuleId = data.ModuleId;
+            }
+            return dto;
+        }
     }
 }

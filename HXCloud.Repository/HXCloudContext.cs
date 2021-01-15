@@ -73,6 +73,8 @@ namespace HXCloud.Repository
         public DbSet<TypeModuleControlModel> TypeModuleControls { get; set; }
         public DbSet<TypeModuleFeedbackModel> typeModuleFeedbacks { get; set; }
 
+        public DbSet<TypeClassModel> TypeClasses { get; set; }
+
 
         public DbSet<ProjectModel> Projects { get; set; }
         public DbSet<ProjectImageModel> ProjectImages { get; set; }
@@ -143,6 +145,8 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new TypeModuleModelMap());
             modelBuilder.ApplyConfiguration(new TypeModuleControlModelMap());
             modelBuilder.ApplyConfiguration(new TypeModuleFeedbackModelMap());
+
+            modelBuilder.ApplyConfiguration(new TypeClassModelMap());
 
             modelBuilder.ApplyConfiguration(new DeviceModelMap());
             modelBuilder.ApplyConfiguration(new DeviceCardModelMap());

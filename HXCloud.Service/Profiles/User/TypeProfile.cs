@@ -65,20 +65,20 @@ namespace HXCloud.Service
             CreateMap<TypeArgumentModel, TypeArgumentDto>().ForMember(dest => dest.DefineKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.DefineType, opt => opt.MapFrom(
                            src => src.TypeDataDefine.ShowType)).ForMember(dest => dest.DefineFormat, opt => opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.DefineUnit, opt => opt.MapFrom(
                                        src => src.TypeDataDefine.Unit));
-           /*
-            //类型子系统
-            CreateMap<TypeSystemAddDto, TypeSystemModel>();
-            CreateMap<TypeSystemUpdateDto, TypeSystemModel>();
-            CreateMap<TypeSystemModel, TypeSystemDto>();
-            //子系统配件
-            CreateMap<TypeSystemAccessoryAddDto, TypeSystemAccessoryModel>();
-            CreateMap<TypeSystemAccessoryUpdateDto, TypeSystemAccessoryModel>();
-            CreateMap<TypeSystemAccessoryModel, TypeSystemAccessoryDto>();
-            //子系统配件控制项
-            CreateMap<TypeSystemAccessoryControlDataAddDto, TypeSystemAccessoryControlDataModel>();
-            CreateMap<TypeSystemAccessoryControlDataUpdateDto, TypeSystemAccessoryControlDataModel>();
-            CreateMap<TypeSystemAccessoryControlDataModel, TypeSystemAccessoryControlDataDto>();
-           */
+            /*
+             //类型子系统
+             CreateMap<TypeSystemAddDto, TypeSystemModel>();
+             CreateMap<TypeSystemUpdateDto, TypeSystemModel>();
+             CreateMap<TypeSystemModel, TypeSystemDto>();
+             //子系统配件
+             CreateMap<TypeSystemAccessoryAddDto, TypeSystemAccessoryModel>();
+             CreateMap<TypeSystemAccessoryUpdateDto, TypeSystemAccessoryModel>();
+             CreateMap<TypeSystemAccessoryModel, TypeSystemAccessoryDto>();
+             //子系统配件控制项
+             CreateMap<TypeSystemAccessoryControlDataAddDto, TypeSystemAccessoryControlDataModel>();
+             CreateMap<TypeSystemAccessoryControlDataUpdateDto, TypeSystemAccessoryControlDataModel>();
+             CreateMap<TypeSystemAccessoryControlDataModel, TypeSystemAccessoryControlDataDto>();
+            */
             //类型硬件配置
             CreateMap<TypeHardwareConfigAddDto, TypeHardwareConfigModel>();
             CreateMap<TypeHardwareConfigUpdateDto, TypeHardwareConfigModel>();
@@ -105,13 +105,18 @@ namespace HXCloud.Service
             CreateMap<TypeModuleControlModel, TypeModuleControlDto>().ForMember(dest => dest.Format, opt => opt.MapFrom(src => src.TypeDataDefine.Format))
                 .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.ShowType, opt => opt.MapFrom(src => src.TypeDataDefine.ShowType))
                 .ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue)).ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey))
-                .ForMember(dest => dest.FeedBacks, opt => opt.MapFrom(src => src.TypeModuleFeedbacks));
+                .ForMember(dest => dest.FeedBacks, opt => opt.MapFrom(src => src.TypeModuleFeedbacks)).ForMember(dest => dest.AutoControl, opt => opt.MapFrom(src => src.TypeDataDefine.AutoControl))
+                .ForMember(dest=>dest.ClassName,opt=>opt.MapFrom(src=>src.TypeClass.Name)).ForMember(dest=>dest.Rank,opt=>opt.MapFrom(src=>src.TypeClass.Rank));
             //类型反馈数据
             CreateMap<TypeModuleFeedbackAddDto, TypeModuleFeedbackModel>();
             CreateMap<TypeModuleFeedbackUpdateDto, TypeModuleFeedbackModel>();
             CreateMap<TypeModuleFeedbackModel, TypeModuleFeedbackDto>().ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.Format, opt =>
                       opt.MapFrom(src => src.TypeDataDefine.Format)).ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.ShowType, opt =>
                       opt.MapFrom(src => src.TypeDataDefine.ShowType)).ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue));
+            //类型分组
+            CreateMap<TypeClassModel, TypeClassDto>();
+            CreateMap<TypeClassAddDto, TypeClassModel>();
+            CreateMap<TypeClassUpdateDto, TypeClassModel>();
         }
     }
 }

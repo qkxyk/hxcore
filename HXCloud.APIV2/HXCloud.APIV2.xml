@@ -105,7 +105,6 @@
             </summary>
             <param name="GroupId"></param>
             <param name="DeviceSn"></param>
-            <param name="req"></param>
             <returns></returns>
         </member>
         <member name="T:HXCloud.APIV2.Controllers.DeviceLogController">

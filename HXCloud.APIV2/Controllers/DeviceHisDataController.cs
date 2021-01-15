@@ -44,7 +44,6 @@ namespace HXCloud.APIV2.Controllers
         /// </summary>
         /// <param name="GroupId"></param>
         /// <param name="DeviceSn"></param>
-        /// <param name="req"></param>
         /// <returns></returns>
         [HttpGet("Latest")]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]

@@ -53,10 +53,10 @@ namespace HXCloud.APIV2.Controllers
             }
             #endregion
             #region 检查模块是否存在
-            var exist = await _tms.IsExist(a => a.Id == req.ModuleId);
+            var exist = await _tms.IsExist(a => a.Id == req.ModuleId&&a.TypeId==typeId);
             if (!exist)
             {
-                return new BaseResponse { Success = false, Message = "输入的类型模块不存在" };
+                return new BaseResponse { Success = false, Message = "输入的类型模块在该类型下不存在" };
             }
             #endregion
             var rm = await _tmcs.AddTypeModuleControlAsync(Account, req);
@@ -76,6 +76,18 @@ namespace HXCloud.APIV2.Controllers
             if (type.Status == 0)
             {
                 return new BaseResponse { Success = false, Message = "该类型为目录型节点，不允许添加数据" };
+            }
+            #endregion
+            var control = await _tmcs.IsExistCheck(a => a.Id == req.Id);
+            if (control.IsExist==false)
+            {
+                return new BaseResponse { Success = false, Message = "输入的控制数据编号不存在" };
+            }
+            #region 检查模块是否存在
+            var exist = await _tms.IsExist(a => a.Id == control.ModuleId && a.TypeId == typeId);
+            if (!exist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的类型模块在该类型下不存在" };
             }
             #endregion
             #region 检测数据定义标示是否存在
@@ -100,6 +112,11 @@ namespace HXCloud.APIV2.Controllers
         [TypeFilter(typeof(TypeActionFilter))]
         public async Task<ActionResult<BaseResponse>> GetByModuleIdAsync(int typeId, int ModuleId)
         {
+            var exist = await _tms.IsExist(a => a.TypeId == typeId && a.Id == ModuleId);
+            if (!exist)
+            {
+                return new BaseResponse { Success = false, Message = $"该类型下不存在编号为{ModuleId}的模块" };
+            }
             var rm = await _tmcs.GetTypeModuleControlsByModuleIdAsync(ModuleId);
             return rm;
         }
@@ -107,6 +124,18 @@ namespace HXCloud.APIV2.Controllers
         [TypeFilter(typeof(TypeActionFilter))]
         public async Task<ActionResult<BaseResponse>> GetByIdAsync(int typeId, int Id)
         {
+            var control = await _tmcs.IsExistCheck(a => a.Id == Id);
+            if (control.IsExist == false)
+            {
+                return new BaseResponse { Success = false, Message = "输入的控制数据编号不存在" };
+            }
+            #region 检查模块是否存在
+            var exist = await _tms.IsExist(a => a.Id == control.ModuleId && a.TypeId == typeId);
+            if (!exist)
+            {
+                return new BaseResponse { Success = false, Message =$"该类型下不存在控制数据编号为{Id}的模块" };
+            }
+            #endregion
             var rm = await _tmcs.GetTypeModuleControlsByIdAsync(Id);
             return rm;
         }

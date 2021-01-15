@@ -13,12 +13,12 @@ namespace HXCloud.Repository
     {
         public async Task<TypeModuleModel> FindWithControlAsync(int Id)
         {
-            var data = await _db.TypeModules.Include(a => a.ModuleControls).Where(a => a.Id == Id).FirstOrDefaultAsync();
+            var data = await _db.TypeModules.Include(a => a.ModuleControls).ThenInclude(a=>a.TypeClass).Where(a => a.Id == Id).FirstOrDefaultAsync();
             return data;
         }
         public async Task<IEnumerable<TypeModuleModel>> FindWithControlAndFeedbackAsync(Expression<Func<TypeModuleModel, bool>> predicate)
         {
-            var data = await _db.TypeModules.Include(a => a.ModuleControls).ThenInclude(a=>a.TypeDataDefine).
+            var data = await _db.TypeModules.Include(a=>a.ModuleControls).ThenInclude(a=>a.TypeClass).Include(a => a.ModuleControls).ThenInclude(a=>a.TypeDataDefine).
                 ThenInclude(a => a.TypeModuleFeedbacks).ThenInclude(a => a.TypeDataDefine).Where(predicate).ToListAsync();
             return data;
         }

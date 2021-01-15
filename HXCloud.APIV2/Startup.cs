@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -132,7 +134,17 @@ namespace HXCloud.APIV2
             }
             //中间件顺序 ExceptionHandler、HSTS、HttpsRedirection、Static Files、Routing 、CORS、Authentication、Authorization、Custom Middlewares、Endpoint
             loggerFactory.AddLog4Net();
-            app.UseStaticFiles();
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    //FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory()),
+                    //设置不限制content-type 该设置可以下载所有类型的文件，但是不建议这么设置，因为不安全
+                    //下面设置可以下载apk和nupkg类型的文件
+                    ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+                {
+                      { ".apk", "application/vnd.android.package-archive" }//可以并列加其他类型
+                })
+                });
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();

@@ -40,6 +40,8 @@ namespace HXCloud.Model
         public virtual ICollection<TypeOverviewModel> TypeOverviews { get; set; }
         public virtual ICollection<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
         public virtual ICollection<TypeModuleModel> TypeModules { get; set; }
+
+        public virtual ICollection<TypeClassModel> TypeClasses { get; set; }//类型控制项分组
     }
     public enum TypeStatus
     {

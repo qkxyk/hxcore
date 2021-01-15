@@ -7,7 +7,7 @@ using HXCloud.ViewModel;
 
 namespace HXCloud.Service
 {
-    public interface ITypeModuleControlService : IBaseService<TypeModuleControlModel>
+    public interface ITypeModuleControlService : IService<TypeModuleControlModel, TypeModuleControlCheckDto>// IBaseService<TypeModuleControlModel>
     {
         /// <summary>
         /// 添加模块控制项
@@ -23,7 +23,7 @@ namespace HXCloud.Service
         /// <param name="Account">操作人</param>
         /// <param name="req">模块控制项数据</param>
         /// <returns></returns>
-        Task<BaseResponse> UpdateTypeModuleControlAsync(string Account,  TypeModuleControlUpdateDto req);
+        Task<BaseResponse> UpdateTypeModuleControlAsync(string Account, TypeModuleControlUpdateDto req);
         /// <summary>
         /// 删除模块控制项数据
         /// </summary>
