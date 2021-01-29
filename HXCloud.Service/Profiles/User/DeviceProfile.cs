@@ -20,6 +20,7 @@ namespace HXCloud.Service
             //设备流量卡
             CreateMap<DeviceCardAddDto, DeviceCardModel>();
             CreateMap<DeviceCardUpdateDto, DeviceCardModel>();
+            CreateMap<DeviceCardPositionUpdateDto, DeviceCardModel>();
             CreateMap<DeviceCardModel, DeviceCardDto>();
             //设备操作日志
             CreateMap<DeviceLogAddDto, DeviceLogModel>();

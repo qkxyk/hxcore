@@ -11,7 +11,7 @@ namespace HXCloud.Repository.Maps
     {
         public override void Configure(EntityTypeBuilder<DeviceCardModel> builder)
         {
-            builder.ToTable("DeviceCard").HasKey(a => a.CardNo);
+            builder.ToTable("DeviceCard").HasKey(a => a.Id);
             builder.HasOne(a => a.Device).WithOne(a => a.DeviceCard).HasForeignKey<DeviceCardModel>(a => a.DeviceSn).OnDelete(DeleteBehavior.Cascade);
             base.Configure(builder);
         }

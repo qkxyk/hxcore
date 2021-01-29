@@ -270,14 +270,14 @@ namespace HXCloud.APIV2.Controllers
         }
 
         [HttpPut("Migration")]
-        public async Task<ActionResult<BaseResponse>> ChangeDeviceProject(string GroupId, string DeviceSn, int projectId)
+        public async Task<ActionResult<BaseResponse>> ChangeDeviceProject(string GroupId, [FromBody] DeviceMigDto req/* string DeviceSn, int projectId*/)
         {
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-            var dto = await _ds.IsExistCheck(a => a.DeviceSn == DeviceSn);
+            var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn);
             if (!dto.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "输入的设备不存在" };
@@ -286,7 +286,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "只能迁移回收站中的设备" };
             }
-            var pc = await _ps.GetProjectCheckAsync(projectId);
+            var pc = await _ps.GetProjectCheckAsync(req.ProjectId);
             if (!pc.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };
@@ -324,7 +324,7 @@ namespace HXCloud.APIV2.Controllers
                     return new BaseResponse { Success = false, Message = "用户没有权限迁移设备" };
                 }
             }
-            var rm = await _ds.ChangeDeviceProject(Account, DeviceSn, GroupId, projectId);
+            var rm = await _ds.ChangeDeviceProject(Account, req.DeviceSn, GroupId, req.ProjectId);
             return rm;
         }
 

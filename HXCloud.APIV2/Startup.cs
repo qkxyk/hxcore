@@ -139,11 +139,13 @@ namespace HXCloud.APIV2
                 {
                     //FileProvider = new PhysicalFileProvider(Directory.GetCurrentDirectory()),
                     //设置不限制content-type 该设置可以下载所有类型的文件，但是不建议这么设置，因为不安全
-                    //下面设置可以下载apk和nupkg类型的文件
-                    ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
-                {
-                      { ".apk", "application/vnd.android.package-archive" }//可以并列加其他类型
-                })
+                    //下面设置可以下载apk和nupkg类型的文件(变成只能下载apk)
+                    //ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+                    //{
+                    //      { ".apk", "application/vnd.android.package-archive" }//可以并列加其他类型
+                    //})
+                    ServeUnknownFileTypes = true,
+                    DefaultContentType = "application/x-msdownload"
                 });
             app.UseRouting();
             app.UseAuthentication();

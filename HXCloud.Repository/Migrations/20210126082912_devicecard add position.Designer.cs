@@ -4,14 +4,16 @@ using HXCloud.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HXCloud.Repository.Migrations
 {
     [DbContext(typeof(HXCloudContext))]
-    partial class HXCloudContextModelSnapshot : ModelSnapshot
+    [Migration("20210126082912_devicecard add position")]
+    partial class devicecardaddposition
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
