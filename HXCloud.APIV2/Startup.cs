@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Text;
-using Autofac;
+﻿using Autofac;
 using AutoMapper;
 using HXCloud.APIV2.Filters;
 using HXCloud.Repository;
@@ -14,13 +9,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
 
 namespace HXCloud.APIV2
 {
@@ -104,6 +104,23 @@ namespace HXCloud.APIV2
             {
                 s.SwaggerDoc("V2.0", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "HX api V2", Version = "V2.0 " });
                 s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "HXCloud.APIV2.xml"));
+
+
+                #region Jwt
+                             //开启权限小锁
+                s.OperationFilter<AddResponseHeadersFilter>();
+                s.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+
+                //在header中添加token，传递到后台
+                s.OperationFilter<SecurityRequirementsOperationFilter>();
+                s.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "JWT授权(数据将在请求头中进行传递)直接在下面框中输入Bearer {token}(注意两者之间是一个空格) \"",
+                    Name = "Authorization",//jwt默认的参数名称
+                    In = ParameterLocation.Header,//jwt默认存放Authorization信息的位置(请求头中)
+                    Type = SecuritySchemeType.ApiKey
+                });
+                #endregion
             });
         }
         #region 添加sql日志输出控制台

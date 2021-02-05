@@ -53,7 +53,7 @@ namespace HXCloud.Repository
                             Unit = item.Unit,
                             Category = item.Category,
                             DataType = item.DataType,
-                            ShowType=item.ShowType,
+                            ShowType = item.ShowType,
                             OutKey = item.OutKey,
                             DefaultValue = item.DefaultValue,
                             Format = item.Format,
@@ -371,6 +371,9 @@ namespace HXCloud.Repository
                     //}
                     #endregion
 
+                    #region 处理分组
+
+                    #endregion
                     _db.SaveChanges();
                     trans.Commit();
                 }
@@ -432,7 +435,7 @@ namespace HXCloud.Repository
                             Name = item.Name,
                             //Url = item.Url,
                             Version = item.Version,
-                            Type=item.Type,
+                            Type = item.Type,
                             TypeId = targetId
                         };
                         //int index = item.Url.LastIndexOf('/');
@@ -533,7 +536,7 @@ namespace HXCloud.Repository
                 }
             }
         }
-        
+
         /// <summary>
         /// 获取类型所有子类型的标示
         /// </summary>
@@ -542,7 +545,7 @@ namespace HXCloud.Repository
         public async Task<List<int>> FindTypeChildAsync(int Id)
         {
             List<int> list = new List<int>();
-            var data = await _db.Types.Where(a => a.ParentId == Id).Select(a=>a.Id).ToListAsync();
+            var data = await _db.Types.Where(a => a.ParentId == Id).Select(a => a.Id).ToListAsync();
             list.AddRange(data);
             list.AddRange(await GetChildId(data));
             return list;

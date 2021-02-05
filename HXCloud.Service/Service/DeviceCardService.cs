@@ -106,14 +106,24 @@ namespace HXCloud.Service
                 var d = await _dcr.Find(a => a.DeviceSn == DeviceSn).FirstOrDefaultAsync();
                 if (d == null)
                 {
-                    return new BaseResponse { Success = false, Message = "该设备没有添加相关的数据，请添加" };
+                    //不存在，就添加
+                    var entity = _mapper.Map<DeviceCardModel>(req);
+                    entity.DeviceSn = DeviceSn;
+                    entity.Create = account;
+                    await _dcr.AddAsync(entity);
+                    _log.LogInformation($"修改流量卡数据时不存在，{account}添加标示为{entity.Id}的流量卡成功");
+                    return new BaseResponse { Success = true, Message = "修改数据成功" };
                 }
-                var entity = _mapper.Map(req, d);
-                entity.Modify = account;
-                entity.ModifyTime = DateTime.Now;
-                await _dcr.SaveAsync(entity);
-                _log.LogInformation($"{account}修改标示为{entity.Id}的流量卡信息成功");
-                return new BaseResponse { Success = true, Message = "修改数据成功" };
+                else
+                {
+                    var entity = _mapper.Map(req, d);
+                    entity.Modify = account;
+                    entity.ModifyTime = DateTime.Now;
+                    await _dcr.SaveAsync(entity);
+                    _log.LogInformation($"{account}修改标示为{entity.Id}的流量卡信息成功");
+                    return new BaseResponse { Success = true, Message = "修改数据成功" };
+                }
+
             }
             catch (Exception ex)
             {
