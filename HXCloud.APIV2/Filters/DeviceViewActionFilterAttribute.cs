@@ -26,7 +26,7 @@ namespace HXCloud.APIV2.Filters
             //获取用户登录信息
             var u = context.HttpContext.User;
             string name = u.Identity.Name;
-            var Roles = u.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Roles = u.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = u.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GroupId = u.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = u.Claims.FirstOrDefault(a => a.Type == "Account").Value;

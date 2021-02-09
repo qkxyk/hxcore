@@ -38,7 +38,7 @@ namespace HXCloud.APIV2.Controllers
         {
             //有用户控制权限的可以操作
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;

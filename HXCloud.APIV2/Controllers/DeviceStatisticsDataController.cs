@@ -49,7 +49,7 @@ namespace HXCloud.APIV2.Controllers
             var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             //验证输入的groupid是否存在
             var ex = await _gs.IsExist(a => a.Id == GroupId);
             if (!ex)

@@ -237,10 +237,23 @@ namespace HXCloud.Service
                 OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
             var list = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
-            var dtos = _mapper.Map<List<ProjectsDto>>(list);
+            var dtos = _mapper.Map<List<ProjectDto>>(list);
             //获取项目的区域名称
             foreach (var item in dtos)
             {
+                //获取项目或者场站下设备的数量
+                if (item.ProjectType == (int)ProjectType.Project)
+                {
+                    var sites = await GetProjectSitesIdAsync(item.Id);
+                    int num = await _dr.Find(a => sites.Contains(a.ProjectId.Value)).CountAsync();
+                    item.DeviceCount = num;
+                }
+                else
+                {
+                    int num = await _dr.Find(a => a.ProjectId == item.Id).CountAsync();
+                    item.DeviceCount = num;
+                }
+                //获取区域名称
                 if (item.RegionId != null && "" != item.RegionId)
                 {
                     var r = await _rr.FindAsync(item.RegionId, item.GroupId);
@@ -250,7 +263,7 @@ namespace HXCloud.Service
                     }
                 }
             }
-            var br = new BasePageResponse<List<ProjectsDto>>();
+            var br = new BasePageResponse<List<ProjectDto>>();
             br.Success = true;
             br.Message = "获取数据成功";
             br.PageSize = req.PageSize;

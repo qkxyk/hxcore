@@ -202,6 +202,24 @@ namespace HXCloud.Repository
                     await _db.TypeOverviews.AddRangeAsync(typeOverviewList);
                     #endregion
 
+                    #region 类型分组
+                    List<TypeClassModel> typeClassList = new List<TypeClassModel>();
+                    var typeClasses = await _db.TypeClasses.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeClasses)
+                    {
+                        TypeClassModel data = new TypeClassModel
+                        {
+                            Type = target,
+                            Name = item.Name,
+                            Create = target.Create,
+                            CreateTime = target.CreateTime,
+                            Rank = item.Rank
+                        };
+                        typeClassList.Add(data);
+                    }
+                    await _db.TypeClasses.AddRangeAsync(typeClassList);
+                    #endregion
+
                     #region 处理类型模块
                     List<TypeModuleModel> typeModuleList = new List<TypeModuleModel>();
                     var typeModules = await _db.TypeModules.Include(a => a.ModuleControls).ThenInclude(a => a.TypeModuleFeedbacks).Where(a => a.TypeId == sourceId).ToListAsync();
@@ -234,6 +252,7 @@ namespace HXCloud.Repository
                                     Sn = ite.Sn,
                                     TypeDataDefine = tdc
                                 };
+                                dc.TypeClass = typeClassList.Where(a => a.Name == typeClasses.FirstOrDefault(a => a.Id == ite.ClassId).Name).FirstOrDefault();
                                 #region 处理类型模块控制反馈数据
                                 if (ite.TypeModuleFeedbacks != null && ite.TypeModuleFeedbacks.Count > 0)
                                 {

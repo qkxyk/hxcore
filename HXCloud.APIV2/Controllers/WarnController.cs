@@ -90,7 +90,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 state = true;
             }
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
@@ -145,7 +145,7 @@ namespace HXCloud.APIV2.Controllers
         [HttpGet("/api/{controller}/statistics")]
         public async Task<ActionResult<BaseResponse>> GetMyWarnStatistics([FromQuery]WarnStatisticsDto req)
         {
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;

@@ -466,7 +466,7 @@ namespace HXCloud.APIV2.Controllers
         public async Task<ActionResult<BaseResponse>> CheckDeviceControl(string GroupId, string DeviceSn)
         {
             //获取用户登录信息
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").ToString();
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
