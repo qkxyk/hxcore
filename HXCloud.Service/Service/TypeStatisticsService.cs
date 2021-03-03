@@ -65,7 +65,7 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "输入类型的数据定义不存在" };
             }
             //验证统计名称和数据定义key是否存在
-            var count = _tsr.Find(a => a.TypeId == typeId && a.Name == req.Name || a.DataKey == data.DataKey).Count();
+            var count = _tsr.Find(a => a.TypeId == typeId && (a.Name == req.Name || a.DataKey == data.DataKey)).Count();
             if (count > 0)
             {
                 return new BaseResponse { Success = false, Message = "此类型下已存在相同名称的统计数据或者相同的key值" };

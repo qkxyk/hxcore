@@ -39,10 +39,11 @@ namespace HXCloud.Service
 
         public async Task<BaseResponse> AddTypeModuleControlAsync(string Account/*, int ModuleId*/, TypeModuleControlAddDto req)
         {
-            var count = await _tmcr.Find(a => a.ModuleId == req.ModuleId && a.ControlName == req.ControlName).CountAsync();
+            //2021-3-1 名称可以重复，key不能重复（数据定义不能重复）
+            var count = await _tmcr.Find(a => a.ModuleId == req.ModuleId && a.DataDefineId == req.DataDefineId).CountAsync();
             if (count > 0)
             {
-                return new BaseResponse { Success = false, Message = "此模块下已添加相同名称的控制项" };
+                return new BaseResponse { Success = false, Message = "此模块下已添加相同的控制项" };
             }
             try
             {
@@ -66,10 +67,10 @@ namespace HXCloud.Service
             {
                 return new BaseResponse { Success = false, Message = "输入的控制项不存在" };
             }
-            var count = await _tmcr.Find(a => a.ModuleId == data.ModuleId && a.ControlName == req.ControlName && a.Id != req.Id).CountAsync();
+            var count = await _tmcr.Find(a => a.ModuleId == data.ModuleId && a.DataDefineId == req.DataDefineId && a.Id != req.Id).CountAsync();
             if (count > 0)
             {
-                return new BaseResponse { Success = false, Message = "已存在相同名称的控制项" };
+                return new BaseResponse { Success = false, Message = "已存在相同的控制项" };
             }
             try
             {
