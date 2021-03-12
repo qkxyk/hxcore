@@ -222,7 +222,7 @@ namespace HXCloud.Repository
 
                     #region 处理类型模块
                     List<TypeModuleModel> typeModuleList = new List<TypeModuleModel>();
-                    var typeModules = await _db.TypeModules.Include(a => a.ModuleControls).ThenInclude(a => a.TypeModuleFeedbacks).Where(a => a.TypeId == sourceId).ToListAsync();
+                    var typeModules = await _db.TypeModules.Include(a => a.ModeleArguments).Include(a => a.ModuleControls).ThenInclude(a => a.TypeModuleFeedbacks).Where(a => a.TypeId == sourceId).ToListAsync();
                     foreach (var item in typeModules)
                     {
                         TypeModuleModel data = new TypeModuleModel
@@ -234,6 +234,26 @@ namespace HXCloud.Repository
                             ModuleType = item.ModuleType,
                             Sn = item.Sn
                         };
+                        #region 处理模块的配置数据
+                        if (item.ModeleArguments != null && item.ModeleArguments.Count > 0)
+                        {
+                            data.ModeleArguments = new List<TypeModuleArgumentModel>();
+                            foreach (var itArgument in item.ModeleArguments)
+                            {
+                                TypeModuleArgumentModel tma = new TypeModuleArgumentModel
+                                {
+                                    Create = target.Create,
+                                    CreateTime = target.CreateTime,
+                                    Name = itArgument.Name,
+                                    Category = itArgument.Category
+                                };
+                                var key = dataDefines.FirstOrDefault(a => a.Id == itArgument.DataDefineId).DataKey;
+                                var tdc = dataDefineList.Where(a => a.DataKey == key).FirstOrDefault();
+                                tma.TypeDataDefine = tdc;
+                                data.ModeleArguments.Add(tma);
+                            }
+                        }
+                        #endregion
                         #region 处理类型模块控制数据
                         if (item.ModuleControls != null && item.ModuleControls.Count > 0)
                         {

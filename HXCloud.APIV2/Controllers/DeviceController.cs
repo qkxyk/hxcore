@@ -578,11 +578,15 @@ namespace HXCloud.APIV2.Controllers
                 {
                     return new BaseResponse { Success = false, Message = "输入的项目或者场站编号不存在" };
                 }
-                var rp = await _rp.IsAuth(Roles, project.PathId, 0);
-                if (!rp)
+                if (!isAdmin)
                 {
-                    return new BaseResponse { Success = false, Message = "用户没有权限查看该项目的设备" };
+                    var rp = await _rp.IsAuth(Roles, project.PathId, 0);
+                    if (!rp)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限查看该项目的设备" };
+                    }
                 }
+
                 if (project.IsSite)
                 {
                     sites.Add(ProjectId.Value);

@@ -19,13 +19,15 @@ namespace HXCloud.Service
         private readonly IMapper _map;
         private readonly ITypeModuleRepository _tmr;
         private readonly ITypeRepository _tr;
+        private readonly ITypeModuleArgumentRepository _tar;
 
-        public TypeModuleService(ILogger<TypeModuleService> log, IMapper map, ITypeModuleRepository tmr, ITypeRepository tr)
+        public TypeModuleService(ILogger<TypeModuleService> log, IMapper map, ITypeModuleRepository tmr, ITypeRepository tr, ITypeModuleArgumentRepository tar)
         {
             this._log = log;
             this._map = map;
             this._tmr = tmr;
             this._tr = tr;
+            this._tar = tar;
         }
         public async Task<bool> IsExist(Expression<Func<TypeModuleModel, bool>> predicate)
         {
@@ -98,6 +100,10 @@ namespace HXCloud.Service
             {
                 return new BaseResponse { Success = false, Message = "该模块下存在相关的控制数据，不能删除" };
             }
+            if (m.ModeleArguments.Count > 0)
+            {
+                return new BaseResponse { Success = false, Message = "该模块下存在相关的配置数据，不能删除" };
+            }
             try
             {
                 await _tmr.RemoveAsync(m);
@@ -114,12 +120,19 @@ namespace HXCloud.Service
         {
             var data = await _tmr.FindWithControlAndFeedbackAsync(a => a.TypeId == TypeId);
             var dtos = _map.Map<IEnumerable<TypeModuleDto>>(data);
+            foreach (var item in dtos)
+            {
+                var dt = await _tar.FindWithTypeDataDefineAsync(a => a.ModuleId == item.Id);
+                item.Arguments = _map.Map<List<TypeModuleArgumentDto>>(dt);
+            }
             return new BResponse<IEnumerable<TypeModuleDto>> { Success = true, Message = "获取数据成功", Data = dtos };
         }
         public async Task<BaseResponse> GetTypeModuleByIdAsync(int Id)
         {
             var data = await _tmr.FindWithControlAndFeedbackAsync(a => a.Id == Id);
             var dto = _map.Map<TypeModuleDto>(data.FirstOrDefault());
+            var dt = await _tar.FindWithTypeDataDefineAsync(a => a.ModuleId == Id);
+            dto.Arguments = _map.Map<List<TypeModuleArgumentDto>>(dt);
             return new BResponse<TypeModuleDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
     }

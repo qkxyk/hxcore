@@ -21,5 +21,11 @@ namespace HXCloud.Repository
         /// <param name="predicate"></param>
         /// <returns></returns>
         public Task<IEnumerable<TypeModuleModel>> FindWithControlAndFeedbackAsync(Expression<Func<TypeModuleModel, bool>> predicate);
+        /// <summary>
+        /// 获取模块和模块的类型信息
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        Task<TypeModuleModel> FindWithTypeAsync(Expression<Func<TypeModuleModel, bool>> predicate);
     }
 }

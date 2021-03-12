@@ -71,7 +71,8 @@ namespace HXCloud.Repository
         public DbSet<TypeDisplayIconModel> TypeDisplayIcons { get; set; }
         public DbSet<TypeModuleModel> TypeModules { get; set; }
         public DbSet<TypeModuleControlModel> TypeModuleControls { get; set; }
-        public DbSet<TypeModuleFeedbackModel> typeModuleFeedbacks { get; set; }
+        public DbSet<TypeModuleFeedbackModel> TypeModuleFeedbacks { get; set; }
+        public DbSet<TypeModuleArgumentModel> TypeModuleArguments { get; set; }
 
         public DbSet<TypeClassModel> TypeClasses { get; set; }
 
@@ -147,6 +148,7 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new TypeModuleFeedbackModelMap());
 
             modelBuilder.ApplyConfiguration(new TypeClassModelMap());
+            modelBuilder.ApplyConfiguration(new TypeModuleArgumentModelMap());
 
             modelBuilder.ApplyConfiguration(new DeviceModelMap());
             modelBuilder.ApplyConfiguration(new DeviceCardModelMap());

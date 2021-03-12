@@ -97,7 +97,8 @@ namespace HXCloud.Service
             //类型模块
             CreateMap<TypeModuleAddDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
             CreateMap<TypeModuleUpdateDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
-            CreateMap<TypeModuleModel, TypeModuleDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls));
+            CreateMap<TypeModuleModel, TypeModuleDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls))/*.ForMember(dest => dest.Arguments,
+                opt => opt.MapFrom(src => src.ModeleArguments))*/;
 
             //类型控制项
             CreateMap<TypeModuleControlAddDto, TypeModuleControlModel>();
@@ -106,7 +107,7 @@ namespace HXCloud.Service
                 .ForMember(dest => dest.Unit, opt => opt.MapFrom(src => src.TypeDataDefine.Unit)).ForMember(dest => dest.ShowType, opt => opt.MapFrom(src => src.TypeDataDefine.ShowType))
                 .ForMember(dest => dest.DefaultValue, opt => opt.MapFrom(src => src.TypeDataDefine.DefaultValue)).ForMember(dest => dest.Key, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey))
                 .ForMember(dest => dest.FeedBacks, opt => opt.MapFrom(src => src.TypeModuleFeedbacks)).ForMember(dest => dest.AutoControl, opt => opt.MapFrom(src => src.TypeDataDefine.AutoControl))
-                .ForMember(dest=>dest.ClassName,opt=>opt.MapFrom(src=>src.TypeClass.Name)).ForMember(dest=>dest.Rank,opt=>opt.MapFrom(src=>src.TypeClass.Rank));
+                .ForMember(dest => dest.ClassName, opt => opt.MapFrom(src => src.TypeClass.Name)).ForMember(dest => dest.Rank, opt => opt.MapFrom(src => src.TypeClass.Rank));
             //类型反馈数据
             CreateMap<TypeModuleFeedbackAddDto, TypeModuleFeedbackModel>();
             CreateMap<TypeModuleFeedbackUpdateDto, TypeModuleFeedbackModel>();
@@ -117,6 +118,10 @@ namespace HXCloud.Service
             CreateMap<TypeClassModel, TypeClassDto>();
             CreateMap<TypeClassAddDto, TypeClassModel>();
             CreateMap<TypeClassUpdateDto, TypeClassModel>();
+            CreateMap<TypeModuleArgumentAddDto, TypeModuleArgumentModel>();
+            CreateMap<TypeModuleArgumentUpdateDto, TypeModuleArgumentModel>();
+            CreateMap<TypeModuleArgumentModel, TypeModuleArgumentDto>().ForMember(dest => dest.DataKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.DataName, opt => opt.MapFrom(
+                           src => src.TypeDataDefine.DataName)).ForMember(dest => dest.DefineFormat, opt => opt.MapFrom(src => src.TypeDataDefine.Format));
         }
     }
 }

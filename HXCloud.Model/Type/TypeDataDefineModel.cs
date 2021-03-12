@@ -40,6 +40,7 @@ namespace HXCloud.Model
         public virtual ICollection<TypeModuleControlModel> TypeModuleControls { get; set; }
         public virtual ICollection<TypeModuleFeedbackModel> TypeModuleFeedbacks { get; set; }
         public virtual ICollection<TypeArgumentModel> TypeArguments { get; set; }
+        public virtual ICollection<TypeModuleArgumentModel> TypeModuleArguments { get; set; }
 
     }
     //设备是否可控制

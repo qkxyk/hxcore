@@ -7,7 +7,7 @@ namespace HXCloud.Model
     /// <summary>
     /// 类型模块
     /// </summary>
-    public class TypeModuleModel:BaseModel,IAggregateRoot
+    public class TypeModuleModel : BaseModel, IAggregateRoot
     {
         public int Id { get; set; }
         public string ModuleName { get; set; }
@@ -16,6 +16,7 @@ namespace HXCloud.Model
         public int TypeId { get; set; }
         public virtual TypeModel Type { get; set; }
         public virtual ICollection<TypeModuleControlModel> ModuleControls { get; set; }
+        public virtual ICollection<TypeModuleArgumentModel> ModeleArguments { get; set; }
 
     }
     public enum ModuleType

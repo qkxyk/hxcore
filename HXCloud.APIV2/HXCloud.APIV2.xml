@@ -222,6 +222,50 @@
             <param name="req">包含源类型标示和目标类型标示</param>
             <returns>把一个类型复制到另一个类型下</returns>
         </member>
+        <member name="T:HXCloud.APIV2.Controllers.TypeModuleArgumentController">
+            <summary>
+            类型模块配置数据
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeModuleArgumentController.#ctor(HXCloud.Service.ITypeDataDefineService,Microsoft.Extensions.Configuration.IConfiguration,HXCloud.Service.ITypeModuleService,HXCloud.Service.ITypeModuleArgumentService)">
+            <summary>
+            初始化类型模块配置数据
+            </summary>
+            <param name="td">注入类型数据定义</param>
+            <param name="tms">注入模块数据</param>
+            <param name="tma">注入模块配置数据</param>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeModuleArgumentController.AddTypeModuleArgumentAsync(System.Int32,HXCloud.ViewModel.TypeModuleArgumentAddDto)">
+            <summary>
+            添加模块配置数据
+            </summary>
+            <param name="ModuleId">模块标识</param>
+            <param name="req">配置数据</param>
+            <returns>添加模块配置数据是否成功</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeModuleArgumentController.UpdateTypeModuleArgumentAsync(System.Int32,HXCloud.ViewModel.TypeModuleArgumentUpdateDto)">
+            <summary>
+            修改模块配置数据
+            </summary>
+            <param name="ModuleId">模块标识</param>
+            <param name="req">模块配置数据信息</param>
+            <returns>返回修改数据是否成功的信息</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeModuleArgumentController.DeleteTypeModuleArgumentAsync(System.Int32,System.Int32)">
+            <summary>
+            删除模块配置数据
+            </summary>
+            <param name="ModuleId">模块标识</param>
+            <param name="Id">配置数据标识</param>
+            <returns>返回删除是否成功</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeModuleArgumentController.GetTypeModuleArguments(System.Int32)">
+            <summary>
+            获取模块的配置数据
+            </summary>
+            <param name="ModuleId">模块标识</param>
+            <returns>返回模块配置的数据</returns>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.TypeSchemaController">
              <summary>
              考虑类型模式数据量不大，不提供分页功能

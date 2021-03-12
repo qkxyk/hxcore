@@ -13,7 +13,9 @@ namespace HXCloud.ViewModel
         public TypeModuleDto()
         {
             Controls = new List<TypeModuleControlDto>();
+            Arguments = new List<TypeModuleArgumentDto>();
         }
         public List<TypeModuleControlDto> Controls { get; set; }
+        public IList<TypeModuleArgumentDto> Arguments { get; set; }
     }
 }

@@ -7,6 +7,7 @@
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <_PublishTargetUrl>D:\CoreVersion</_PublishTargetUrl>
+    <History>True|2021-03-11T02:53:36.9500569Z;</History>
   </PropertyGroup>
   <ItemGroup>
     <DestinationConnectionStrings Include="SqlServer">
