@@ -115,7 +115,7 @@ namespace HXCloud.Service
             {
                 await _tar.RemoveAsync(data);
                 _log.LogInformation($"{account}删除标示为{Id}的类型配置数据成功");
-                return new BaseResponse { Success = false, Message = "删除类型配置数据失败" };
+                return new BaseResponse { Success = true, Message = "删除类型配置数据成功" };
             }
             catch (Exception ex)
             {

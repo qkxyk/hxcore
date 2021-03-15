@@ -29,5 +29,11 @@ namespace HXCloud.Service
         Task<BaseResponse> GetProjectWarnAsync(List<string> Devices, DateTime begin, DateTime end, bool state, BasePageRequest req);
         Task<BaseResponse> GetWarnStatisticsAsync(List<string> Devices);
         Task<BaseResponse> UpdateWarnInfo(string account, WarnUpdateDto req);
+        /// <summary>
+        /// 获取报警数量
+        /// </summary>
+        /// <param name="Devices">设备列表</param>
+        /// <returns></returns>
+        Task<BaseResponse> GetWarnCount(List<string> Devices);
     }
 }

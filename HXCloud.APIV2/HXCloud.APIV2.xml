@@ -298,5 +298,11 @@
             1、获取用户角色.2、更新用户角色.3、删除用户单个角色
             </summary>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.WarnController.GetMyWarnCount">
+            <summary>
+            获取我的未处理报警数量
+            </summary>
+            <returns></returns>
+        </member>
     </members>
 </doc>

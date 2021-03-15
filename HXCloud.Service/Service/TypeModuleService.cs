@@ -120,19 +120,19 @@ namespace HXCloud.Service
         {
             var data = await _tmr.FindWithControlAndFeedbackAsync(a => a.TypeId == TypeId);
             var dtos = _map.Map<IEnumerable<TypeModuleDto>>(data);
-            foreach (var item in dtos)
-            {
-                var dt = await _tar.FindWithTypeDataDefineAsync(a => a.ModuleId == item.Id);
-                item.Arguments = _map.Map<List<TypeModuleArgumentDto>>(dt);
-            }
+            //foreach (var item in dtos)
+            //{
+            //    var dt = await _tar.FindWithTypeDataDefineAsync(a => a.ModuleId == item.Id);
+            //    item.Arguments = _map.Map<List<TypeModuleArgumentDto>>(dt);
+            //}
             return new BResponse<IEnumerable<TypeModuleDto>> { Success = true, Message = "获取数据成功", Data = dtos };
         }
         public async Task<BaseResponse> GetTypeModuleByIdAsync(int Id)
         {
             var data = await _tmr.FindWithControlAndFeedbackAsync(a => a.Id == Id);
             var dto = _map.Map<TypeModuleDto>(data.FirstOrDefault());
-            var dt = await _tar.FindWithTypeDataDefineAsync(a => a.ModuleId == Id);
-            dto.Arguments = _map.Map<List<TypeModuleArgumentDto>>(dt);
+            //var dt = await _tar.FindWithTypeDataDefineAsync(a => a.ModuleId == Id);
+            //dto.Arguments = _map.Map<List<TypeModuleArgumentDto>>(dt);
             return new BResponse<TypeModuleDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
     }

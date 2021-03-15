@@ -157,6 +157,16 @@ namespace HXCloud.Service
             }
             return new BResponse<List<WarnTypeStatisticsDataDto>> { Success = true, Message = "获取数据成功", Data = list };
         }
+        /// <summary>
+        /// 获取报警数量
+        /// </summary>
+        /// <param name="Devices">设备列表</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetWarnCount(List<string> Devices)
+        {
+            var num = await _warn.Find(a => a.State == false && Devices.Contains(a.DeviceSn)).Select(a => a.DeviceSn).Distinct().CountAsync();
+            return new BResponse<int> { Success = true, Message = "获取数据成功", Data = num };
+        }
         public async Task<BaseResponse> UpdateWarnInfo(string account, WarnUpdateDto req)
         {
             var warn = await _warn.FindAsync(req.Id);

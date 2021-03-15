@@ -43,7 +43,7 @@ namespace HXCloud.APIV2.Controllers
         //获取设备的报警信息(设备报警)
         [HttpGet]
         [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceWarn(string DeviceSn, [FromQuery]DeviceWarnPageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetDeviceWarn(string DeviceSn, [FromQuery] DeviceWarnPageRequest req)
         {
             var data = await _ws.GetWarnByDeviceSnAsync(DeviceSn, req);
             return data;
@@ -142,8 +142,8 @@ namespace HXCloud.APIV2.Controllers
             return data;
         }
         //获取报警统计信息（项目、场站或者全部),按类型统计个数
-        [HttpGet("/api/{controller}/statistics")]
-        public async Task<ActionResult<BaseResponse>> GetMyWarnStatistics([FromQuery]WarnStatisticsDto req)
+        [HttpGet("/api/[controller]/statistics")]
+        public async Task<ActionResult<BaseResponse>> GetMyWarnStatistics([FromQuery] WarnStatisticsDto req)
         {
             var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
@@ -220,6 +220,25 @@ namespace HXCloud.APIV2.Controllers
             }
             var data = await _ws.GetWarnStatisticsAsync(Devices);
             return data;
+        }
+
+        /// <summary>
+        /// 获取我的未处理报警数量
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("/api/MyWarnCount/[controller]")]
+        public async Task<ActionResult<BaseResponse>> GetMyWarnCount()
+        {
+            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            List<string> Devices = new List<string>();
+            //获取我的设备编号
+            Devices = await _ds.GetMyDeviceSnAsync(GId, Roles, IsAdmin);
+            var ret = await _ws.GetWarnCount(Devices);
+            return ret;
         }
     }
 }

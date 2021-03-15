@@ -97,8 +97,8 @@ namespace HXCloud.Service
             //类型模块
             CreateMap<TypeModuleAddDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
             CreateMap<TypeModuleUpdateDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
-            CreateMap<TypeModuleModel, TypeModuleDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls))/*.ForMember(dest => dest.Arguments,
-                opt => opt.MapFrom(src => src.ModeleArguments))*/;
+            CreateMap<TypeModuleModel, TypeModuleDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls)).ForMember(dest => dest.Arguments,
+                opt => opt.MapFrom(src => src.ModeleArguments));
 
             //类型控制项
             CreateMap<TypeModuleControlAddDto, TypeModuleControlModel>();
