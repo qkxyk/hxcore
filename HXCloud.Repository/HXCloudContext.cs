@@ -100,6 +100,7 @@ namespace HXCloud.Repository
         public DbSet<WarnModel> Warns { get; set; }
 
         public DbSet<CategoryModel> Categories { get; set; }
+        public DbSet<PlcSecurityModel> PlcSecurities { get; set; }
 
 
 
@@ -173,6 +174,7 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new WarnModelMap());
 
             modelBuilder.ApplyConfiguration(new CategoryModelMap());
+            modelBuilder.ApplyConfiguration(new PlcSecurityModelMap());
 
             #region 初始化种子数据
             /*

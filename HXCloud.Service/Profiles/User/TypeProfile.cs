@@ -122,6 +122,8 @@ namespace HXCloud.Service
             CreateMap<TypeModuleArgumentUpdateDto, TypeModuleArgumentModel>();
             CreateMap<TypeModuleArgumentModel, TypeModuleArgumentDto>().ForMember(dest => dest.DataKey, opt => opt.MapFrom(src => src.TypeDataDefine.DataKey)).ForMember(dest => dest.DataName, opt => opt.MapFrom(
                            src => src.TypeDataDefine.DataName)).ForMember(dest => dest.DefineFormat, opt => opt.MapFrom(src => src.TypeDataDefine.Format));
+            //PLC鉴权码
+            CreateMap<PlcSecurityAddDto, PlcSecurityModel>();
         }
     }
 }

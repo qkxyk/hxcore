@@ -76,7 +76,7 @@ namespace HXCloud.APIV2.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<BaseResponse>> Get([FromQuery]UserPageRequestViewModel req)
+        public async Task<ActionResult<BaseResponse>> Get([FromQuery] UserPageRequestViewModel req)
         {
             //该组织管理员有权限
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -118,16 +118,15 @@ namespace HXCloud.APIV2.Controllers
             }
             UserLoginDto u = login as UserLoginDto;
             var claims = new Claim[]
-                {
-                        new Claim ("Account", u.Account), new Claim ("Role", u.Roles),
-                        new Claim("Code",u.Code),new Claim("GroupId",u.GroupId),
-                        new Claim("IsAdmin",u.IsAdmin.ToString()),new Claim("Id",u.Id.ToString()),
-                        new Claim("Key",$"{u.Account}+{u.Id}")
-                    //new Claim(ClaimTypes.Name,user.UserName),
-                    //new Claim(ClaimTypes.Role,"admin"),
-                    //new Claim(ClaimTypes.Email,"abc@163.com")
-                    //   new Claim(ClaimTypes.NameIdentifier,userInfo.Id.ToString()),
-                };
+            {
+                new Claim ("Account", u.Account),
+                new Claim ("Role", u.Roles),
+                new Claim("Code",u.Code),
+                new Claim("GroupId",u.GroupId),
+                new Claim("IsAdmin",u.IsAdmin.ToString()),
+                new Claim("Id",u.Id.ToString()),
+                new Claim("Key",$"{u.Account}+{u.Id}")
+            };
             //ClaimsIdentity id =  
             var now = DateTime.Now;
             var expires = now.Add(TimeSpan.FromMinutes(_options.Value.AccessTokenExpiresMinutes));
@@ -145,7 +144,7 @@ namespace HXCloud.APIV2.Controllers
 
         [AllowAnonymous]
         [HttpPost("Register")]
-        public async Task<ActionResult<BaseResponse>> Register([FromBody]UserRegisterViewModel req)
+        public async Task<ActionResult<BaseResponse>> Register([FromBody] UserRegisterViewModel req)
         {
             BaseResponse br = new BaseResponse();
             if (req.Password != req.PasswordAgain)
@@ -201,7 +200,7 @@ namespace HXCloud.APIV2.Controllers
 
         [RequestSizeLimit(1024 * 1024 * 2)]
         [HttpPost("Picture")]
-        public async Task<ActionResult<BaseResponse>> UpdateUserPicture([FromForm]IFormFile file/*, UserPictureViewModel req*/)
+        public async Task<ActionResult<BaseResponse>> UpdateUserPicture([FromForm] IFormFile file/*, UserPictureViewModel req*/)
         {
             //图片保存为用户的id编号
             BaseResponse br = new BaseResponse();
@@ -366,7 +365,7 @@ namespace HXCloud.APIV2.Controllers
 
         //[TypeFilter(typeof(AdminActionFilterAttribute))]
         [HttpPost("AddUser")]
-        public async Task<ActionResult<BaseResponse>> AddUser([FromBody]UserAddViewModel req)
+        public async Task<ActionResult<BaseResponse>> AddUser([FromBody] UserAddViewModel req)
         {
             //该组织管理员有权限
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
@@ -380,7 +379,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "用户没有权限" };
             }
-            var rm = await _us.AddUserAsync(Account,GroupId, req);
+            var rm = await _us.AddUserAsync(Account, GroupId, req);
             return rm;
         }
     }

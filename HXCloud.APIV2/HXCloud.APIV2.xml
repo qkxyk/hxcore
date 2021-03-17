@@ -163,6 +163,18 @@
             <param name="req"></param>
             <returns></returns>
         </member>
+        <member name="T:HXCloud.APIV2.Controllers.PlcSecurityController">
+            <summary>
+            plc鉴权
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.PlcSecurityController.AddPlcSecurityAsync(HXCloud.ViewModel.PlcSecurityAddDto)">
+            <summary>
+            添加plc鉴权
+            </summary>
+            <param name="req">鉴权数据</param>
+            <returns>返回鉴权码</returns>
+        </member>
         <member name="M:HXCloud.APIV2.Controllers.ProjectController.GetGroupProject(System.String)">
             <summary>
             获取组织的项目,组织的管理员有权限
