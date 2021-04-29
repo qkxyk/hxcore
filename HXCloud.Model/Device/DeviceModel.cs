@@ -66,5 +66,20 @@ namespace HXCloud.Model
         public ICollection<DeviceLogModel> DeviceLog { get; set; }
         public ICollection<WarnModel> Warns { get; set; }
 
+        public ICollection<DeviceMonitorDataModel> DeviceMonitorData { get; set; }//设备关联的数采仪上传数据
+
+        #region 20210423新增设备水类型
+        public DeviceWater Water { get; set; } = DeviceWater.None;//默认没有
+        #endregion
+
+    }
+
+    //设备水类型
+    public enum DeviceWater
+    {
+        None,//没有数采仪
+        In,//只有进水
+        Out,//只有出水
+        Both//进水和出水都有
     }
 }

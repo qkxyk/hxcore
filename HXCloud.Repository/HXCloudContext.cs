@@ -101,6 +101,8 @@ namespace HXCloud.Repository
 
         public DbSet<CategoryModel> Categories { get; set; }
         public DbSet<PlcSecurityModel> PlcSecurities { get; set; }
+        //数采仪
+        public DbSet<DeviceMonitorDataModel> DeviceMonitorDatas { get; set; }
 
 
 
@@ -175,6 +177,9 @@ namespace HXCloud.Repository
 
             modelBuilder.ApplyConfiguration(new CategoryModelMap());
             modelBuilder.ApplyConfiguration(new PlcSecurityModelMap());
+
+            //数采仪
+            modelBuilder.ApplyConfiguration(new DeviceMonitorDataModelMap());
 
             #region 初始化种子数据
             /*

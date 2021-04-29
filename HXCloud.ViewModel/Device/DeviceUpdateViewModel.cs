@@ -18,5 +18,7 @@ namespace HXCloud.ViewModel
         //public int TypeId { get; set; }//设备类型
         public string RegionId { get; set; }
         public string Address { get; set; }
+        [Range(0, 3, ErrorMessage = "水类型只能输入0到3")]
+        public int Water { get; set; } = 0;
     }
 }

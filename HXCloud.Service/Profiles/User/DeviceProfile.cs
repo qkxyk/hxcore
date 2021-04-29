@@ -12,10 +12,13 @@ namespace HXCloud.Service
         public DeviceProfile()
         {
             //设备
-            CreateMap<DeviceAddDto, DeviceModel>();
-            CreateMap<DeviceUpdateViewModel, DeviceModel>();
+            CreateMap<DeviceAddDto, DeviceModel>().ForMember(dest=>dest.Water,opt=>opt.MapFrom(src=>(DeviceWater)src.Water));
+            CreateMap<DeviceUpdateViewModel, DeviceModel>().ForMember(dest => dest.Water, opt => opt.MapFrom(src => (DeviceWater)src.Water));
             CreateMap<DeviceModel, DeviceDataDto>().ForMember(dest => dest.OnLine, opt => opt.MapFrom(src => src.DeviceOnline == null ? false : src.DeviceOnline.State))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.DeviceImage));
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.DeviceImage)).ForMember(dest=>dest.Water,opt=>opt.MapFrom(src=>(int)src.Water));
+            //设备patch数据
+            CreateMap<DevicePatchDto, DeviceModel>();
+            CreateMap<DeviceModel, DevicePatchDto>();
 
             //设备流量卡
             CreateMap<DeviceCardAddDto, DeviceCardModel>();
@@ -61,6 +64,9 @@ namespace HXCloud.Service
             CreateMap<DeviceInputDataModel, DeviceInputDto>();
             //设备迁移数据
             CreateMap<DeviceMigrationModel, DeviceMigrationDto>();
+
+            //设备集采仪数据
+            CreateMap<DeviceMonitorDataModel, DeviceMonitorDto>().ForMember(dest=>dest.WaterType,opt=>opt.MapFrom(src=>src.WaterType.ToString()));
         }
     }
 }

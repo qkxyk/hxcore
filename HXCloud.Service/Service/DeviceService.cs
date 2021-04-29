@@ -426,5 +426,43 @@ namespace HXCloud.Service
             }
         }
 
+        /// <summary>
+        /// 部分更新设备数据
+        /// </summary>
+        /// <param name="Account">操作人</param>
+        /// <param name="DeviceSn">设备编号</param>
+        /// <param name="req">要修改的数据</param>
+        /// <returns>返回修改设备是否成功</returns>
+        public async Task<BaseResponse> PathUpdateDeviceAsync(string Account, string DeviceSn, DevicePatchDto req)
+        {
+            try
+            {
+                var Device = await _dr.FindAsync(DeviceSn);
+                _mapper.Map(req, Device);
+                await _dr.SaveAsync(Device);
+                _log.LogInformation($"{Account}设备编号为{DeviceSn}修改数据成功");
+                return new BaseResponse { Success = true, Message = "修改数据成功" };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"修改数据失败，失败原因：{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "修改数据失败，请联系管理员" };
+            }
+        }
+        /// <summary>
+        /// 转换设备数据为设备修改数据
+        /// </summary>
+        /// <param name="DeviceSn">设备序列号</param>
+        /// <returns>返回设备修改数据</returns>
+        public async Task<DevicePatchDto> GetDevicePathDtoAsync(string DeviceSn)
+        {
+            var Device = await _dr.FindAsync(DeviceSn);
+            if (Device != null)
+            {
+                var dto = _mapper.Map<DevicePatchDto>(Device);
+                return dto;
+            }
+            return null;
+        }
     }
 }

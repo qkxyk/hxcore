@@ -59,5 +59,20 @@ namespace HXCloud.Service
         /// <param name="path">设备图片保存路径</param>
         /// <returns>返回删除设备是否成功</returns>
         Task<BaseResponse> DeleteDeviceAsync(string Account, string DeviceSn, string path);
+
+        /// <summary>
+        /// 转换设备数据为设备修改数据
+        /// </summary>
+        /// <param name="DeviceSn">设备序列号</param>
+        /// <returns>返回设备修改数据</returns>
+        Task<DevicePatchDto> GetDevicePathDtoAsync(string DeviceSn);
+        /// <summary>
+        /// 部分更新设备数据
+        /// </summary>
+        /// <param name="Account">操作人</param>
+        /// <param name="DeviceSn">设备编号</param>
+        /// <param name="req">要修改的数据</param>
+        /// <returns>返回修改设备是否成功</returns>
+       Task<BaseResponse> PathUpdateDeviceAsync(string Account, string DeviceSn, DevicePatchDto req);
     }
 }

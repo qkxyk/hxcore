@@ -31,5 +31,6 @@ namespace HXCloud.ViewModel
         public string Address { get; set; }
         public bool OnLine { get; set; }//设备是否在线
         public List<DeviceImageDto> Images { get; set; }//返回给调用者设备图片
+        public int Water { get; set; }//0代表没有数采仪，1代表只有进水，2代表只有出水，3代表进出水都有
     }
 }

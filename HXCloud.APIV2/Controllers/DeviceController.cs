@@ -8,6 +8,7 @@ using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -605,15 +606,52 @@ namespace HXCloud.APIV2.Controllers
             var ret = await _ds.GetDeviceOverViewAsync(sites, GroupId);
             return ret;
         }
-        [HttpGet("Region")]
-        public async Task<ActionResult<BaseResponse>> GetRegionDeviceAsync()
+        //[HttpGet("Region")]
+        //public async Task<ActionResult<BaseResponse>> GetRegionDeviceAsync()
+        //{
+        //    var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+        //    var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+        //    string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+        //    string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+        //    string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+        //    throw new NotImplementedException();
+        //}
+
+        /// <summary>
+        /// 部分更新设备数据
+        /// </summary>
+        /// <param name="DeviceSn">设备序列号</param>
+        /// <param name="patchDoc">设备部分修改的数据</param>
+        /// <returns></returns>
+        [HttpPatch("{DeviceSn}")]
+        [TypeFilter(typeof(DeviceActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> JsonPatchWithModelState(string DeviceSn,
+            [FromBody] JsonPatchDocument<DevicePatchDto> patchDoc)
         {
-            var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-            throw new NotImplementedException();
+            if (patchDoc != null)
+            {
+                var dto = await _ds.GetDevicePathDtoAsync(DeviceSn);
+                patchDoc.ApplyTo(dto, ModelState);
+                if (!ModelState.IsValid) //Patch方法的Model参数是JsonPatchDocument而不是DevicePatchDto
+                {
+                    return BadRequest(ModelState);
+                }
+                else
+                {
+                    TryValidateModel(dto);//此处需要验证dto的数据是否合法
+                    if (!ModelState.IsValid)
+                    {
+                        return BadRequest(ModelState);
+                    }
+                }
+                var ret = await _ds.PathUpdateDeviceAsync(Account, DeviceSn, dto);
+                return ret;
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
     }
 }

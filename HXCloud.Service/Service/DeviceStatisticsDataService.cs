@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,14 +35,16 @@ namespace HXCloud.Service
         public async Task<BaseResponse> GetDeviceStatisticsAsync(DeviceStatisticsRequestDto req, List<string> devices)
         {
             List<DeviceStatisticsDataModel> data;
+            IQueryable<DeviceStatisticsDataModel> query;
             if (req.IsDevice)
             {
-                data = await _dsr.FindWithDevice(a => a.DeviceSn == req.DeviceSn).ToListAsync();
+                query =  _dsr.FindWithDevice(a => a.DeviceSn == req.DeviceSn);
             }
             else
             {
-                data = await _dsr.FindWithDevice(a => devices.Contains(a.DeviceSn)).ToListAsync();
+                query =  _dsr.FindWithDevice(a => devices.Contains(a.DeviceSn));
             }
+            data = await query.Where(a => a.Date >= req.BeginTime && a.Date <= req.EndTime).ToListAsync();
             var dtos = _map.Map<List<DeviceStatisticsDto>>(data);
             return new BResponse<List<DeviceStatisticsDto>> { Success = true, Message = "获取数据成功", Data = dtos };
         }

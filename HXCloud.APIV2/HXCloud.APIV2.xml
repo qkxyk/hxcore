@@ -93,6 +93,14 @@
             <param name="ProjectId">项目或者场站标示</param>
             <returns>返回设备的总揽数据</returns>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceController.JsonPatchWithModelState(System.String,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{HXCloud.ViewModel.DevicePatchDto})">
+            <summary>
+            部分更新设备数据
+            </summary>
+            <param name="DeviceSn">设备序列号</param>
+            <param name="patchDoc">设备部分修改的数据</param>
+            <returns></returns>
+        </member>
         <!-- Badly formed XML comment ignored for member "M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.GetDeviceStatisticsAsync(System.String,HXCloud.ViewModel.DeviceStatisticsRequestDto)" -->
         <member name="T:HXCloud.APIV2.Controllers.DeviceHisDataController">
             <summary>

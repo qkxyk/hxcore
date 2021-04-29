@@ -41,7 +41,7 @@ namespace HXCloud.APIV2.Controllers
         [HttpGet]
         public async Task<ActionResult<BaseResponse>> GetDeviceStatisticsAsync(string GroupId, [FromQuery] DeviceStatisticsRequestDto req)
         {
-            if (req.Begin > req.End)
+            if (req.BeginTime > req.EndTime)
             {
                 return new BaseResponse { Success = false, Message = "开始时间不能大于结束时间" };
             }
