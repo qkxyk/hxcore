@@ -96,6 +96,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new NotFoundResult();
             }
+            else
+            {
+                pathId += "/" + req.Id;
+            }
             if (GroupId != GId)
             {
                 if (!(isAdmin && Code == _config["Group"]))
@@ -131,6 +135,10 @@ namespace HXCloud.APIV2.Controllers
             if (pathId == null)
             {
                 return new NotFoundResult();
+            }
+            else
+            {
+                pathId += "/" + Id;
             }
             if (GroupId != GId)
             {
@@ -226,6 +234,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 pathId = Id.ToString();
             }
+            else
+            {
+                pathId += "/" + Id;
+            }
             if (GroupId != groupId)
             {
                 if (!(isAdmin && Code == _config["Group"]))//非超级管理员
@@ -271,6 +283,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 pathId = Id.ToString();
             }
+            else
+            {
+                pathId += "/" + Id;
+            }
             if (GroupId != groupId)
             {
                 if (!(isAdmin && Code == _config["Group"]))//非超级管理员
@@ -314,6 +330,10 @@ namespace HXCloud.APIV2.Controllers
             if (pathId == null)   //如果是顶级项目，则把当前Id赋值给项目路径
             {
                 pathId = Id.ToString();
+            }
+            else
+            {
+                pathId += "/" + Id;
             }
             if (GroupId != groupId)
             {

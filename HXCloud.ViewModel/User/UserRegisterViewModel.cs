@@ -30,7 +30,7 @@ namespace HXCloud.ViewModel
         //public string LastName { get; set; }//用户名字
         [RegularExpression(@"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "电子邮件地址不正确")]
         public string Email { get; set; }//用户邮件
-        //[Required(ErrorMessage = "组织代号不能为空")]
-        //public string Code { get; set; }//组织代号
-    }
+                                         //[Required(ErrorMessage = "组织代号不能为空")]
+                                         //public string Code { get; set; }//组织代号
+          }
 }

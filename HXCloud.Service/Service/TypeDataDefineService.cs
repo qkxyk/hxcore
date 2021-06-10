@@ -181,7 +181,7 @@ namespace HXCloud.Service
             var data = _td.Find(a => a.TypeId == typeId);
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
-                data = data.Where(a => a.DataKey == req.Search || a.DataName == req.Search);
+                data = data.Where(a => a.DataKey.Contains(req.Search) || a.DataName.Contains(req.Search));
             }
             //单个标签查找，第一步先查找包含的id，第二步查找id包含的，如果是多个标签的或查找需要根据标签或
             //Regex r = new Regex(@"(?=(,|\b)1\b)|(?=(,|\b)2\b)")

@@ -27,5 +27,8 @@ namespace HXCloud.ViewModel
         [RegularExpression(@"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "电子邮件地址不正确")]
         public string Email { get; set; }//用户邮件
         //public int Status { get; set; }//用户状态,未激活、有效用户、无效用户
+        public string Remark { get; set; }//用户备注
+        [Range(0, 1, ErrorMessage = "只能输入0和1，0表示员工，1表示客户")]
+        public int UserType { get; set; } = 0;//用户类型，0表示公司内部人员，1表示客户
     }
 }

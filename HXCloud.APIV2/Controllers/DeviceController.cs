@@ -94,6 +94,7 @@ namespace HXCloud.APIV2.Controllers
                 }
                 else
                 {
+                    pc.PathId = $"{pc.PathId}/{req.ProjectId.Value}";
                     bRet = await _rp.IsAuth(Roles, pc.PathId, 3);
                     if (!bRet)
                     {
@@ -404,6 +405,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 if (!isAdmin)
                 {
+                    p.PathId = $"{p.PathId}/{projectId}";
                     var bAccess = await _rp.IsAuth(Roles, p.PathId, 0);
                     if (!bAccess)
                     {
@@ -529,6 +531,7 @@ namespace HXCloud.APIV2.Controllers
                 }
                 if (!isAdmin)
                 {
+                    p.PathId = $"{p.PathId}/{projectId}";
                     bool isAuth = await _rp.IsAuth(Roles, p.PathId, 0);
                     if (!isAuth)
                     {
@@ -581,6 +584,8 @@ namespace HXCloud.APIV2.Controllers
                 }
                 if (!isAdmin)
                 {
+
+                    project.PathId = $"{project.PathId}/{ProjectId.Value}";
                     var rp = await _rp.IsAuth(Roles, project.PathId, 0);
                     if (!rp)
                     {

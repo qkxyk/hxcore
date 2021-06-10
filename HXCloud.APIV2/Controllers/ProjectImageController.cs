@@ -52,6 +52,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new NotFoundResult();
             }
+            else
+            {
+                pathId = $"{pathId}/{projectId}";
+            }
             if (GId != GroupId)
             {
                 if (!(isAdmin && Code == _config["Group"]))
@@ -145,6 +149,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new NotFoundResult();
             }
+            else
+            {
+                pathId = $"{pathId}/{projectId}";
+            }
             if (GId != GroupId)
             {
                 if (!(isAdmin && Code == _config["Group"]))
@@ -182,6 +190,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new NotFoundResult();
             }
+            else
+            {
+                pathId = $"{pathId}/{projectId}";
+            }
             if (GId != GroupId)
             {
                 if (!(isAdmin && Code == _config["Group"]))
@@ -218,6 +230,10 @@ namespace HXCloud.APIV2.Controllers
             if (pathId == null)
             {
                 return new NotFoundResult();
+            }
+            else
+            {
+                pathId = $"{pathId}/{projectId}";
             }
             if (GId != GroupId)
             {

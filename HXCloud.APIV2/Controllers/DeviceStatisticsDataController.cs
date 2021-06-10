@@ -104,6 +104,7 @@ namespace HXCloud.APIV2.Controllers
                     }
                     if (!isAdmin)
                     {
+                        pro.PathId = $"{pro.PathId}/{req.ProjectId}";
                         var auth = await _rps.IsAuth(Roles, pro.PathId, 0);
                         if (!auth)
                         {

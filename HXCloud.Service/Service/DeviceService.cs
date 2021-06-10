@@ -78,13 +78,14 @@ namespace HXCloud.Service
                 var p = await _ps.GetProjectAsync(req.ProjectId.Value);
                 if (p != null)
                 {
-                    pathId = p.PathId == null ? p.Id.ToString() : p.PathId;
-                    PathName = p.PathName == null ? p.Name : p.PathName;
+                    //设备增加所属场站编号和名称
+                    pathId = $"{p.PathId}/{p.Id}";
+                    PathName = $"{p.PathName}/{p.Name}";
                 }
                 else
                 {
                     br.Success = false;
-                    br.Message = "输入的项目不存在";
+                    br.Message = "输入的场站不存在";
                     return br;
                 }
             }

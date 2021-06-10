@@ -19,5 +19,7 @@ namespace HXCloud.ViewModel
         public string Picture { get; set; }
 
         public int Status { get; set; }//用户状态,未激活、有效用户、无效用户
+        public string Remark { get; set; }//用户备注
+        public int UserType { get; set; } = 0;//用户类型，0表示公司内部人员，1表示客户
     }
 }

@@ -12,5 +12,5 @@ namespace HXCloud.ViewModel
         public string UserName { get; set; }
 
         public string Email { get; set; }//用户邮件
-    }
+        }
 }

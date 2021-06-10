@@ -116,6 +116,7 @@ namespace HXCloud.APIV2.Controllers
                 {
                     if (!IsAdmin)
                     {
+                        pro.PathId = $"{pro.PathId}/{req.ProjectId.Value}";
                         bool isAuth = await _rp.IsAuth(Roles, pro.PathId, 0);
                         if (!isAuth)
                         {
@@ -201,6 +202,7 @@ namespace HXCloud.APIV2.Controllers
                     {
                         if (!IsAdmin)
                         {
+                            project.PathId = $"{project.PathId}/{req.ProjectId.Value}";
                             bool isAuth = await _rp.IsAuth(Roles, project.PathId, 0);
                             if (!isAuth)
                             {

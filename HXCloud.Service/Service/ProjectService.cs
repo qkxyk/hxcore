@@ -112,6 +112,12 @@ namespace HXCloud.Service
         }
         public async Task<BaseResponse> AddProjectAsync(ProjectAddDto req, string account, string GroupId)
         {
+            var data = await _pr.Find(a => a.GroupId == GroupId && a.ParentId == req.ParentId && a.Name == req.Name).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                return new BaseResponse { Success = false, Message = "该项目下已存在相同名称的项目或者场站" };
+            }
+
             string pathId = null, PathName = null;
             //获取父项目
             if (req.ParentId.HasValue)     //存在父节点
@@ -132,11 +138,7 @@ namespace HXCloud.Service
                     PathName = $"{parent.PathName}/{parent.Name}";
                 }
             }
-            var data = await _pr.Find(a => a.GroupId == GroupId && a.ParentId == req.ParentId && a.Name == req.Name).FirstOrDefaultAsync();
-            if (data != null)
-            {
-                return new BaseResponse { Success = false, Message = "该项目下已存在相同名称的项目或者场站" };
-            }
+          
             try
             {
                 var entity = _mapper.Map<ProjectModel>(req);
@@ -490,6 +492,13 @@ namespace HXCloud.Service
             return pids;
         }
 
+        /// <summary>
+        /// 获取角色项目标识
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <param name="roles"></param>
+        /// <param name="isAdmin"></param>
+        /// <returns></returns>
         public async Task<List<int>> GetMyProjectIdSync(string GroupId, string roles, bool isAdmin)
         {
             List<int> pids = new List<int>();
@@ -534,9 +543,30 @@ namespace HXCloud.Service
         public async Task<List<int>> GetMySitesIdAsync(string GroupId, string roles, bool isAdmin)
         {
             var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
+            
             var sites = await _pr.Find(a => pids.Contains(a.ParentId.Value) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
+            //获取用户直属的场站标识
+            if (!isAdmin)//管理员在项目编号中获取所有的场站
+            {
+                sites.AddRange(await GetRolesSitesAsync(GroupId, roles));
+            }
             return sites;
         }
-
+        /// <summary>
+        /// 获取普通用户直属的场站标识
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <param name="roles"></param>
+        /// <param name="isAdmin"></param>
+        /// <returns></returns>
+        public async Task<List<int>> GetRolesSitesAsync(string GroupId, string roles)
+        {
+            //获取用户分配的项目
+            int[] rs = Array.ConvertAll<string, int>(roles.Split(','), src => int.Parse(src));
+            //包含有场站
+            var pids = await _rp.Find(a => rs.Contains(a.RoleId) && (int)a.Operate >= 0).Select(a => a.ProjectId).ToListAsync();
+            var s = await _pr.Find(a => pids.Contains(a.Id) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
+            return s;
+        }
     }
 }
