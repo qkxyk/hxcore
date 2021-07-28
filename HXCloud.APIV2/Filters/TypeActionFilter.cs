@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using HXCloud.Service;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
@@ -48,10 +49,21 @@ namespace HXCloud.APIV2.Filters
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             //同一个组织的合法用户都有权限
-            var u = context.HttpContext.User;
-            var isAdmin = u.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var GroupId = u.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var code = u.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            bool isAdmin = false;
+            string GroupId = "";
+            string code = "";
+            try
+            {
+                var u = context.HttpContext.User;
+                 isAdmin = u.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+                 GroupId = u.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+                 code = u.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            }
+            catch (Exception ex)
+            {
+                context.Result = new UnauthorizedResult();
+            }
+        
 
             var typeParameter = context.ActionArguments.Single(a => a.Key == "typeId");
             int typeId = int.Parse(typeParameter.Value.ToString());

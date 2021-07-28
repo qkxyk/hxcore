@@ -101,7 +101,7 @@
             <param name="patchDoc">设备部分修改的数据</param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.GetDeviceStatisticsAsync(System.String,HXCloud.ViewModel.DeviceStatisticsRequestDto)" -->
+        <!-- Badly formed XML comment ignored for member "M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.GetDeviceStatisticsAsync(System.String,HXCloud.ViewModel.DeviceDisStatisticsRequestDto)" -->
         <member name="T:HXCloud.APIV2.Controllers.DeviceHisDataController">
             <summary>
             增加一个获取一天历史数据的接口，根据日期
@@ -299,6 +299,11 @@
             <param name="typeId"></param>
             <param name="Id"></param>
             <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.TypeThreeDController">
+            <summary>
+            类型的3d文件
+            </summary>
         </member>
         <member name="M:HXCloud.APIV2.Controllers.UserController.Get(HXCloud.ViewModel.UserPageRequestViewModel)">
             <summary>

@@ -9,6 +9,6 @@ namespace HXCloud.Service
 {
     public interface IDeviceDiscreteStatisticsService : IBaseService<DeviceDiscreteStatisticsDataModel>
     {
-        Task<BaseResponse> GetDeviceStatisticsAsync(DeviceStatisticsRequestDto req, List<string> devices);
+        Task<BaseResponse> GetDeviceStatisticsAsync(DeviceDisStatisticsRequestDto req, List<string> devices);
     }
 }

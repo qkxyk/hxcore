@@ -42,6 +42,8 @@ namespace HXCloud.Model
         public virtual ICollection<TypeModuleModel> TypeModules { get; set; }
 
         public virtual ICollection<TypeClassModel> TypeClasses { get; set; }//类型控制项分组
+
+        public virtual TypeGltfModel TypeGltf { get; set; }
     }
     public enum TypeStatus
     {

@@ -75,6 +75,7 @@ namespace HXCloud.Repository
         public DbSet<TypeModuleArgumentModel> TypeModuleArguments { get; set; }
 
         public DbSet<TypeClassModel> TypeClasses { get; set; }
+        public DbSet<TypeGltfModel> TypeGltfs { get; set; }
 
 
         public DbSet<ProjectModel> Projects { get; set; }
@@ -152,6 +153,8 @@ namespace HXCloud.Repository
 
             modelBuilder.ApplyConfiguration(new TypeClassModelMap());
             modelBuilder.ApplyConfiguration(new TypeModuleArgumentModelMap());
+            modelBuilder.ApplyConfiguration(new TypeGltfModelMap());
+
 
             modelBuilder.ApplyConfiguration(new DeviceModelMap());
             modelBuilder.ApplyConfiguration(new DeviceCardModelMap());

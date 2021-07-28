@@ -38,7 +38,7 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="req">请求参数</param>
         /// <returns>返回设备的统计数据</returns>
         [HttpGet]
-        public async Task<ActionResult<BaseResponse>> GetDeviceStatisticsAsync(string GroupId, [FromQuery] DeviceStatisticsRequestDto req)
+        public async Task<ActionResult<BaseResponse>> GetDeviceStatisticsAsync(string GroupId, [FromQuery] DeviceDisStatisticsRequestDto req)
         {
             if (req.BeginTime > req.EndTime)
             {
@@ -63,8 +63,8 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
 
-            if (req.IsDevice)//设备的权限
-            {
+            //if (req.IsDevice)//设备的权限
+            //{
                 if (req.DeviceSn == null || "" == req.DeviceSn.Trim())
                 {
                     return new BaseResponse { Success = false, Message = "设备序列号不能为空" };
@@ -85,7 +85,7 @@ namespace HXCloud.APIV2.Controllers
                 }
                 //获取设备的统计数据
                 return await _dsd.GetDeviceStatisticsAsync(req, null);
-            }
+         /*   }
             else
             {
                 //获取场站列表
@@ -121,7 +121,7 @@ namespace HXCloud.APIV2.Controllers
                 }
                 var devices = await _ds.GetDeviceSnBySitesAsync(sites);
                 return await _dsd.GetDeviceStatisticsAsync(req, devices);
-            }
+            }*/
         }
     }
 }

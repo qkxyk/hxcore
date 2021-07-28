@@ -124,6 +124,8 @@ namespace HXCloud.Service
                            src => src.TypeDataDefine.DataName)).ForMember(dest => dest.DefineFormat, opt => opt.MapFrom(src => src.TypeDataDefine.Format));
             //PLC鉴权码
             CreateMap<PlcSecurityAddDto, PlcSecurityModel>();
+            //类型图片
+            CreateMap < TypeGltfAddDto, TypeGltfModel>();
         }
     }
 }

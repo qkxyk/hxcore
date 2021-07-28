@@ -13,7 +13,7 @@
     <WebStackScaffolding_IsReferencingScriptLibrariesSelected>True</WebStackScaffolding_IsReferencingScriptLibrariesSelected>
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
-    <ShowAllFiles>false</ShowAllFiles>
-    <NameOfLastUsedPublishProfile>CoreVersion</NameOfLastUsedPublishProfile>
+    <ShowAllFiles>true</ShowAllFiles>
+    <NameOfLastUsedPublishProfile>D:\work\CloudPlatform\coreApi\trunk\HXCloud\HXCloud.APIV2\Properties\PublishProfiles\CoreVersion.pubxml</NameOfLastUsedPublishProfile>
   </PropertyGroup>
 </Project>

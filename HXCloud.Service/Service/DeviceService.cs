@@ -250,6 +250,11 @@ namespace HXCloud.Service
                 var sites = await _ps.GetProjectSitesIdAsync(projectId);
                 device = device.Where(a => sites.Contains(a.ProjectId.Value));
             }
+            if (!string.IsNullOrWhiteSpace( req.Search))
+            {
+                device = device.Where(a => a.DeviceName.Contains(req.Search));
+            }
+           
             int count = device.Count();
             string OrderExpression = "";
             if (string.IsNullOrEmpty(req.OrderBy))
