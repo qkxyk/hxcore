@@ -32,10 +32,6 @@ namespace HXCloud.APIV2.Controllers
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
         public async Task<ActionResult<BaseResponse>> GetDeviceHisDataAsync(string GroupId, string DeviceSn, [FromQuery] DeviceHisDataPageRequest req)
         {
-            if (req.Begin > req.End)
-            {
-                return new BaseResponse { Success = false, Message = "开始时间不能大于结束时间" };
-            }
             var ret = await _dhs.GetDeviceHisDataAsync(DeviceSn, req);
             return ret;
         }
@@ -47,9 +43,9 @@ namespace HXCloud.APIV2.Controllers
         /// <returns></returns>
         [HttpGet("Latest")]
         [TypeFilter(typeof(DeviceActionFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> GetDeviceLatestHisDataAsync(string GroupId, string DeviceSn)
+        public async Task<ActionResult<BaseResponse>> GetDeviceLatestHisDataAsync(string GroupId, string DeviceSn,int order=0)
         {
-            var ret = await _dhs.GetDeviceLatestHisDataAsync(DeviceSn);
+            var ret = await _dhs.GetDeviceLatestHisDataAsync(DeviceSn,order);
             return ret;
         }
     }

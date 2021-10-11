@@ -10,5 +10,6 @@ namespace HXCloud.ViewModel
         [Required]
         public int Id { get; set; }
         public string Comments { get; set; }//报警处理意见
+        public string Handler { get; set; }//报警处理人和modify可能不是同一个人
     }
 }

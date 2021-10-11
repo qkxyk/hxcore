@@ -8,6 +8,7 @@ namespace HXCloud.ViewModel
     {
         public string Modify { get; set; }//报警处理人
         public DateTime? ModifyTime { get; set; }     //报警处理时间
+        public string Handler { get; set; }//报警处理人和modify可能不是同一个人
         public int Id { get; set; }
         public string Code { get; set; }//外键，报警编码 
         public string CodeDescription { get; set; }

@@ -32,6 +32,40 @@ namespace HXCloud.Service
             this._rp = rp;
             this._rr = rr;
         }
+        public async Task<bool> CheckProjectIdIsTopProjectAsync(int projectId)
+        {
+            var data = await _pr.FindAsync(projectId);
+            if (data==null)//判断是否存在
+            {
+                return false;
+            }
+            if (data.ParentId==null)//是否存在父项目
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 如果返回0值表示该项目不存在
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
+        public async Task<int> GetTopProjectIdAsync(int projectId)
+        {
+            var data = await _pr.FindAsync(projectId);
+            if (data==null)
+            {
+                return 0;
+            }
+            if (data.ParentId==null)
+            {
+                return projectId;
+            }
+            else
+            {
+              return  await GetTopProjectIdAsync(data.ParentId.Value);
+            }
+        }
 
         //检查输入的项目或者场站是否存在，并返回项目或者场站的路径以及所属的组织编号
         public bool IsExist(int Id, out string pathId, out string groupId)

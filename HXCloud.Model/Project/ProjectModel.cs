@@ -22,6 +22,8 @@ namespace HXCloud.Model
         public virtual ICollection<RoleProjectModel> RoleProjects { get; set; }//项目角色信息
         public ICollection<ProjectImageModel> Images { get; set; }//项目或者场站图片
         public virtual ICollection<DeviceModel> Devices { get; set; }
+
+        public ICollection<ProjectPrincipalsModel> Principals { get; set; }//项目运维人员信息
     }
     //项目类型，0为项目，1为项目下的场站
     public enum ProjectType

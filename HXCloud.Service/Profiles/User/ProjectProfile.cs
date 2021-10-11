@@ -28,6 +28,9 @@ namespace HXCloud.Service
             CreateMap<ProjectUpdateDto, ProjectModel>();
             CreateMap<ProjectImageAddDto, ProjectImageModel>();
             CreateMap<ProjectImageModel, ProjectImageData>();
+            CreateMap<ProjectPrincipalsModel, ProjectPrincipalsDto>();
+            CreateMap<ProjectPrincipalsAddDto, ProjectPrincipalsModel>();
+            CreateMap<ProjectPrincipalsUpdateDto, ProjectPrincipalsModel>();
         }
     }
 }

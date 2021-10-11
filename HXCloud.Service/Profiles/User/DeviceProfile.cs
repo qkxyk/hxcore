@@ -12,10 +12,10 @@ namespace HXCloud.Service
         public DeviceProfile()
         {
             //设备
-            CreateMap<DeviceAddDto, DeviceModel>().ForMember(dest=>dest.Water,opt=>opt.MapFrom(src=>(DeviceWater)src.Water));
+            CreateMap<DeviceAddDto, DeviceModel>().ForMember(dest => dest.Water, opt => opt.MapFrom(src => (DeviceWater)src.Water));
             CreateMap<DeviceUpdateViewModel, DeviceModel>().ForMember(dest => dest.Water, opt => opt.MapFrom(src => (DeviceWater)src.Water));
             CreateMap<DeviceModel, DeviceDataDto>().ForMember(dest => dest.OnLine, opt => opt.MapFrom(src => src.DeviceOnline == null ? false : src.DeviceOnline.State))
-                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.DeviceImage)).ForMember(dest=>dest.Water,opt=>opt.MapFrom(src=>(int)src.Water));
+                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.DeviceImage)).ForMember(dest => dest.Water, opt => opt.MapFrom(src => (int)src.Water));
             //设备patch数据
             CreateMap<DevicePatchDto, DeviceModel>();
             CreateMap<DeviceModel, DevicePatchDto>();
@@ -35,9 +35,10 @@ namespace HXCloud.Service
                opt => opt.MapFrom(src => src.Device.DeviceName));
 
             //设备历史数据
-            CreateMap<DeviceHisDataModel, DeviceHisDataDto>().ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Device.TypeId)).ForMember(dest => dest.DeviceName,
-                opt => opt.MapFrom(src => src.Device.DeviceName)).ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.Device.ProjectId)).ForMember(dest => dest.DeviceNo,
-                opt => opt.MapFrom(src => src.Device.DeviceNo));
+            //CreateMap<DeviceHisDataModel, DeviceHisDataDto>().ForMember(dest => dest.TypeId, opt => opt.MapFrom(src => src.Device.TypeId)).ForMember(dest => dest.DeviceName,
+            //    opt => opt.MapFrom(src => src.Device.DeviceName)).ForMember(dest => dest.ProjectId, opt => opt.MapFrom(src => src.Device.ProjectId)).ForMember(dest => dest.DeviceNo,
+            //    opt => opt.MapFrom(src => src.Device.DeviceNo));
+            CreateMap<CoreDeviceHisDataMoel, DeviceHisDataDto>();
 
             //设备图片
             CreateMap<DeviceImageAddDto, DeviceImageModel>();
@@ -66,7 +67,7 @@ namespace HXCloud.Service
             CreateMap<DeviceMigrationModel, DeviceMigrationDto>();
 
             //设备集采仪数据
-            CreateMap<DeviceMonitorDataModel, DeviceMonitorDto>().ForMember(dest=>dest.WaterType,opt=>opt.MapFrom(src=>src.WaterType.ToString()));
+            CreateMap<DeviceMonitorDataModel, DeviceMonitorDto>().ForMember(dest => dest.WaterType, opt => opt.MapFrom(src => src.WaterType.ToString()));
         }
     }
 }

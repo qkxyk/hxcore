@@ -180,6 +180,7 @@ namespace HXCloud.Service
                 warn.Modify = account;
                 warn.ModifyTime = DateTime.Now;
                 warn.Comments = req.Comments;
+                warn.Handler = req.Handler;
                 await _warn.SaveAsync(warn);
                 _log.LogInformation($"{account}处理了标识未{req.Id}的报警信息");
                 return new BaseResponse { Success = true, Message = "处理数据成功" };

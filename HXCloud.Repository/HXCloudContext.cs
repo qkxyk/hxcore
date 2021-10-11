@@ -79,6 +79,8 @@ namespace HXCloud.Repository
 
 
         public DbSet<ProjectModel> Projects { get; set; }
+        //2021-9-14新增项目运维人员
+        public DbSet<ProjectPrincipalsModel> ProjectPrincipals { get; set; }
         public DbSet<ProjectImageModel> ProjectImages { get; set; }
         public DbSet<RoleProjectModel> RoleProjects { get; set; }
 
@@ -104,6 +106,9 @@ namespace HXCloud.Repository
         public DbSet<PlcSecurityModel> PlcSecurities { get; set; }
         //数采仪
         public DbSet<DeviceMonitorDataModel> DeviceMonitorDatas { get; set; }
+
+        //数据定义关联报警编码
+        public DbSet<DataDefineWarnCodeModel> DataDefineWarnCodes { get; set; }
 
 
 
@@ -173,6 +178,8 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new ProjectModelMap());
             modelBuilder.ApplyConfiguration(new ProjectImageModelMap());
             modelBuilder.ApplyConfiguration(new RoleProjectModelMap());
+            //2021-9-14新增项目运维人员
+            modelBuilder.ApplyConfiguration(new ProjectPrincipalsModelMap());
 
             modelBuilder.ApplyConfiguration(new WarnTypeModelMap());
             modelBuilder.ApplyConfiguration(new WarnCodeModelMap());
@@ -183,6 +190,8 @@ namespace HXCloud.Repository
 
             //数采仪
             modelBuilder.ApplyConfiguration(new DeviceMonitorDataModelMap());
+            //数据定义关联报警编码
+            modelBuilder.ApplyConfiguration(new DataDefineWarnCodeModelMap());
 
             #region 初始化种子数据
             /*

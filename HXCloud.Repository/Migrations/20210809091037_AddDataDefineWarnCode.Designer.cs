@@ -4,14 +4,16 @@ using HXCloud.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HXCloud.Repository.Migrations
 {
     [DbContext(typeof(HXCloudContext))]
-    partial class HXCloudContextModelSnapshot : ModelSnapshot
+    [Migration("20210809091037_AddDataDefineWarnCode")]
+    partial class AddDataDefineWarnCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1076,43 +1078,6 @@ namespace HXCloud.Repository.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Project");
-                });
-
-            modelBuilder.Entity("HXCloud.Model.ProjectPrincipalsModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Create")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreateTime")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("Modify")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("ModifyTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectPrincipals");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RegionModel", b =>
@@ -2230,9 +2195,6 @@ namespace HXCloud.Repository.Migrations
                     b.Property<DateTime>("Dt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Handler")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Modify")
                         .HasColumnType("nvarchar(max)");
 
@@ -2494,17 +2456,6 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Group");
 
                     b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("HXCloud.Model.ProjectPrincipalsModel", b =>
-                {
-                    b.HasOne("HXCloud.Model.ProjectModel", "Project")
-                        .WithMany("Principals")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RegionModel", b =>
@@ -2934,8 +2885,6 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Devices");
 
                     b.Navigation("Images");
-
-                    b.Navigation("Principals");
 
                     b.Navigation("RoleProjects");
                 });

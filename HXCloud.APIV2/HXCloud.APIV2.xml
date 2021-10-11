@@ -107,7 +107,7 @@
             增加一个获取一天历史数据的接口，根据日期
             </summary>
         </member>
-        <member name="M:HXCloud.APIV2.Controllers.DeviceHisDataController.GetDeviceLatestHisDataAsync(System.String,System.String)">
+        <member name="M:HXCloud.APIV2.Controllers.DeviceHisDataController.GetDeviceLatestHisDataAsync(System.String,System.String,System.Int32)">
             <summary>
             获取设备最新一条历史数据
             </summary>

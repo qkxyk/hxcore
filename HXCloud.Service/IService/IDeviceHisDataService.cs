@@ -15,6 +15,6 @@ namespace HXCloud.Service
         /// </summary>
         /// <param name="DeviceSn">设备序列号</param>
         /// <returns>返回设备最新一条历史数据</returns>
-        Task<BaseResponse> GetDeviceLatestHisDataAsync(string DeviceSn);
+        Task<BaseResponse> GetDeviceLatestHisDataAsync(string DeviceSn,int order);
     }
 }

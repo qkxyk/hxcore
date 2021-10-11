@@ -26,9 +26,14 @@ namespace HXCloud.Service
             this._mapper = mapper;
             this._warnCode = warnCode;
         }
-        public Task<bool> IsExist(Expression<Func<WarnCodeModel, bool>> predicate)
+        public async Task<bool> IsExist(Expression<Func<WarnCodeModel, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var data = await _warnCode.Find(predicate).FirstOrDefaultAsync();
+            if (data == null)
+            {
+                return false;
+            }
+            return true;
         }
 
         public async Task<BaseResponse> AddWarnCodeAsync(string account, int warnTypeId, WarnCodeAddDto req)

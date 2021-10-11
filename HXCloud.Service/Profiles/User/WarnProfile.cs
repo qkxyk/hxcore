@@ -30,6 +30,10 @@ namespace HXCloud.Service
                                             src => src.Device.FullId)).ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Device.FullName));
             CreateMap<WarnUpdateDto, WarnModel>();
             #endregion
+            #region 数据定义关联报警编码
+            CreateMap<DataDefineWarnCodeAddDto, DataDefineWarnCodeModel>();
+            CreateMap<DataDefineWarnCodeModel, DataDefineWarnCodeDto>();
+            #endregion
         }
     }
 }

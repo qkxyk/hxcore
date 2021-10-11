@@ -7,7 +7,7 @@ namespace HXCloud.Model
     //报警自动上传，报警可以处理
     public class WarnModel : IModify, IAggregateRoot
     {
-        public string Modify { get; set; }//报警处理人
+        public string Modify { get; set; }//报警处理操作人
         public DateTime? ModifyTime { get; set; }     //报警处理时间
         public int Id { get; set; }
         public string Code { get; set; }//外键，报警编码 
@@ -17,6 +17,7 @@ namespace HXCloud.Model
         public string DeviceNo { get; set; }//设备序列号
         public bool State { get; set; } = false;//报警状态
         public string Comments { get; set; }//报警处理意见
+        public string Handler { get; set; }//报警处理人和modify可能不是同一个人
         public virtual WarnCodeModel WarnCode { get; set; }
         public virtual DeviceModel Device { get; set; }
     }
