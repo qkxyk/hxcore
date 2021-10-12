@@ -68,8 +68,10 @@ namespace HXCloud.Model
 
         public ICollection<DeviceMonitorDataModel> DeviceMonitorData { get; set; }//设备关联的数采仪上传数据
 
+        public ICollection<DeviceDayMonitorDataModel> DeviceMonitorData_Day { get; set; }//设备关联的数采仪上传数据
         #region 20210423新增设备水类型
         public DeviceWater Water { get; set; } = DeviceWater.None;//默认没有
+
         #endregion
 
     }

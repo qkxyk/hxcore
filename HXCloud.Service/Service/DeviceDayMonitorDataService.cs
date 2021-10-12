@@ -1,30 +1,30 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
+using AutoMapper;
 using HXCloud.Model;
 using HXCloud.Repository;
 using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HXCloud.Service
 {
-    public class DeviceMonitorDataService : IDeviceMonitorDataService
+   public class DeviceDayMonitorDataService:IDeviceDayMonitorDataService
     {
-        private readonly IDeviceMonitorDataRepository _dmdr;
-        private readonly ILogger<DeviceMonitorDataService> _log;
+        private readonly IDeviceDayMonitorDataRepository _dmdr;
+        private readonly ILogger<DeviceDayMonitorDataService> _log;
         private readonly IMapper _mapper;
 
-        public DeviceMonitorDataService(IDeviceMonitorDataRepository dmdr, ILogger<DeviceMonitorDataService> log, IMapper mapper)
+        public DeviceDayMonitorDataService(IDeviceDayMonitorDataRepository dmdr, ILogger<DeviceDayMonitorDataService> log, IMapper mapper)
         {
             this._dmdr = dmdr;
             this._log = log;
             this._mapper = mapper;
         }
-        public Task<bool> IsExist(Expression<Func<DeviceMonitorDataModel, bool>> predicate)
+        public Task<bool> IsExist(Expression<Func<DeviceDayMonitorDataModel, bool>> predicate)
         {
             throw new NotImplementedException();
         }

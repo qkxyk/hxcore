@@ -106,6 +106,7 @@ namespace HXCloud.Repository
         public DbSet<PlcSecurityModel> PlcSecurities { get; set; }
         //数采仪
         public DbSet<DeviceMonitorDataModel> DeviceMonitorDatas { get; set; }
+        public DbSet<DeviceDayMonitorDataModel> DeviceDayMonitorDatas { get; set; }
 
         //数据定义关联报警编码
         public DbSet<DataDefineWarnCodeModel> DataDefineWarnCodes { get; set; }
@@ -190,6 +191,7 @@ namespace HXCloud.Repository
 
             //数采仪
             modelBuilder.ApplyConfiguration(new DeviceMonitorDataModelMap());
+            modelBuilder.ApplyConfiguration(new DeviceDayMonitorDataModelMap());
             //数据定义关联报警编码
             modelBuilder.ApplyConfiguration(new DataDefineWarnCodeModelMap());
 
