@@ -48,6 +48,7 @@ namespace HXCloud.Service
                    End = Convert.ToDateTime(req.Dt.Value.ToString("yyyy-MM-dd 23:59:59"));
                }
                var query = _dmdr.Find(a => a.DeviceSn == DeviceSn&&a.Date>Begin&&a.Date<End);*/
+            req.GetDate();//设置时间，如果dt有值，设置为某一天的开始和结束时间，否则就按输入的时间
             var query = _dmdr.Find(a => a.DeviceSn == DeviceSn && a.Date > req.Begin && a.Date < req.End);
             var data = await query.ToListAsync();
             var dtos = _mapper.Map<List<DeviceMonitorDto>>(data);

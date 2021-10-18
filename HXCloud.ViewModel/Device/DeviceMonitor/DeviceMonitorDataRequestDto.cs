@@ -15,12 +15,11 @@ namespace HXCloud.ViewModel
         //public string DeviceSn { get; set; }//设备序列号
         public DeviceMonitorDataRequestDto()
         {
-            if (Dt == null)
-            {
-                Begin = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd 00:00:00"));
-                End = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd 23:59:59"));
-            }
-            else
+        }
+
+        public void GetDate()
+        {
+            if (Dt.HasValue)
             {
                 Begin = Convert.ToDateTime(Dt.Value.ToString("yyyy-MM-dd 00:00:00"));
                 End = Convert.ToDateTime(Dt.Value.ToString("yyyy-MM-dd 23:59:59"));
