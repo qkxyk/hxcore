@@ -68,6 +68,9 @@ namespace HXCloud.Service
 
             //设备集采仪数据
             CreateMap<DeviceMonitorDataModel, DeviceMonitorDto>().ForMember(dest => dest.WaterType, opt => opt.MapFrom(src => src.WaterType.ToString()));
+
+            //设备集采仪数据
+            CreateMap<DeviceDayMonitorDataModel, DeviceMonitorDto>().ForMember(dest => dest.WaterType, opt => opt.MapFrom(src => src.WaterType.ToString()));
         }
     }
 }
