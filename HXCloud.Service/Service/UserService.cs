@@ -39,6 +39,25 @@ namespace HXCloud.Service
             return "张三";
         }
 
+        /// <summary>
+        /// 获取用户数据
+        /// </summary>
+        /// <param name="account">用户名称</param>
+        /// <returns>用户数据</returns>
+        public async Task<UserData> GetUserByAccountAsync(string account)
+        {
+            var userData = await _user.FindWithRoleAsync(a => a.Account == account);
+            if (userData == null)
+            {
+                return null;
+            }
+            var dto = _mapper.Map<UserData>(userData);
+            if (userData.UserRoles != null)
+            {
+                dto.Roles = string.Join(',', userData.UserRoles.Select(a => a.RoleId));
+            }
+            return dto;
+        }
         public async Task<BaseResponse> GetUserInfoAsync(int Id, bool IsAdmin)
         {
             var User = await _user.FindWithGroup(a => a.Id == Id);
@@ -453,5 +472,78 @@ namespace HXCloud.Service
             }
         }
 
+        /// <summary>
+        /// 获取用户名列表（用户的下级，用于运维平台）
+        /// </summary>
+        /// <param name="Account">用户名</param>
+        /// <returns>返回用户列表,如果用户不存在返回空数据</returns>
+        public async Task<Dictionary<string, UserCategory>> GetUserAndChildAsync(string Account, bool isAdmin)
+        {
+            Dictionary<string, UserCategory> Users = new Dictionary<string, UserCategory>();
+            //Users.Add(Account);
+            var data = await _user.Find(a => a.Account == Account).FirstOrDefaultAsync();
+            //管理员可以查看所有运维人员
+            if (isAdmin)
+            {
+                var list = await _user.Find(a => a.Category > 0).ToListAsync();
+                //添加自己
+                Users.Add(Account, data.Category);
+                foreach (var item in list)
+                {
+                    Users.Add(item.Account, item.Category);
+                }
+                return Users;
+            }
+            if (data != null)
+            {
+                Users = await GetUserChildAsync(Users, data.Id);
+                //添加自己
+                Users.Add(Account, data.Category);
+                //return Users;
+            }
+            return Users;
+        }
+        private async Task<Dictionary<string, UserCategory>> GetUserChildAsync(Dictionary<string, UserCategory> users, int Id)
+        {
+            var data = await _user.Find(a => a.ParentId == Id).ToListAsync();
+            if (data.Count > 0)
+            {
+                foreach (var item in data)
+                {
+                    users.Add(item.UserName, item.Category);
+                    //递归
+                    return await GetUserChildAsync(users, item.Id);
+                }
+            }
+            return users;
+        }
+        /// <summary>
+        /// 修改用户的运维信息
+        /// </summary>
+        /// <param name="account">操作人</param>
+        /// <param name="req">运维数据</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> UpdateUserOpsAsync(string account, UserOpsUpdateDto req)
+        {
+            try
+            {
+                var data = await _user.FindAsync(req.Id);
+                if (data == null)
+                {
+                    return new BaseResponse { Success = false, Message = "输入的用户不存在" };
+                }
+                data.Category = (UserCategory)req.Category;
+                data.ParentId = req.ParentId;
+
+                await _user.SaveAsync(data);
+                _log.LogInformation($"{account}修改标识为{req.Id}的运维信息成功");
+                return new BaseResponse { Success = true, Message = "修改数据成功" };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{account}修改{req.Id}运维数据失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                return new BaseResponse { Success = false, Message = "修改数据失败，请联系管理员" };
+            }
+        }
     }
 }

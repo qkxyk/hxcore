@@ -22,5 +22,11 @@ namespace HXCloud.Service
         /// <param name="req">流量卡的定位等信息</param>
         /// <returns>返回是否更新成功</returns>
         Task<BaseResponse> UpdateDeviceCardPositionAsync(string account, string DeviceSn, DeviceCardPositionUpdateDto req);
+        /// <summary>
+        /// 获取设备sim卡信息
+        /// </summary>
+        /// <param name="deviceSn">设备序列号</param>
+        /// <returns>返回设备sim卡数据</returns>
+        Task<BaseResponse> GetDeviceSimbossAsync(string deviceSn);
     }
 }

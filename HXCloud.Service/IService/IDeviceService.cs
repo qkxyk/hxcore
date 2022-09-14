@@ -73,6 +73,10 @@ namespace HXCloud.Service
         /// <param name="DeviceSn">设备编号</param>
         /// <param name="req">要修改的数据</param>
         /// <returns>返回修改设备是否成功</returns>
-       Task<BaseResponse> PathUpdateDeviceAsync(string Account, string DeviceSn, DevicePatchDto req);
+        Task<BaseResponse> PathUpdateDeviceAsync(string Account, string DeviceSn, DevicePatchDto req);
+        /// <summary>
+        /// 获取设备的名称，运维时根据设备序列号获取设备名称
+        /// </summary>
+        Task<DeviceWithNameDto> CheckDeviceAsync(string DeviceSn);
     }
 }

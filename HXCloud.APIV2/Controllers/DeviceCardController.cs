@@ -76,5 +76,13 @@ namespace HXCloud.APIV2.Controllers
             var rm = await _dcs.GetDeviceCardsAsync(DeviceSn);
             return rm;
         }
+
+        [HttpGet("simboss")]
+        [TypeFilter(typeof(DeviceViewActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> GetDeviceSimbossInfoAsync(string GroupId, string DeviceSn)
+        {
+            var rm = await _dcs.GetDeviceSimbossAsync(DeviceSn);
+            return rm;
+        }
     }
 }

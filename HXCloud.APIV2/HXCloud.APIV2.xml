@@ -74,7 +74,7 @@
             获取我的设备
             </summary>
             <param name="GroupId"></param>
-            <param name=""></param>
+            <param name="req"></param>
             <returns></returns>
         </member>
         <member name="M:HXCloud.APIV2.Controllers.DeviceController.GetAllDevice(System.String,System.Int32)">
@@ -101,7 +101,25 @@
             <param name="patchDoc">设备部分修改的数据</param>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.GetDeviceStatisticsAsync(System.String,HXCloud.ViewModel.DeviceDisStatisticsRequestDto)" -->
+        <member name="M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.#ctor(HXCloud.Service.IDeviceDiscreteStatisticsService,HXCloud.Service.IGroupService,HXCloud.Service.IProjectService,HXCloud.Service.IDeviceService,Microsoft.Extensions.Configuration.IConfiguration,HXCloud.Service.IRoleProjectService)">
+            <summary>
+            
+            </summary>
+            <param name="dsd"></param>
+            <param name="gs"></param>
+            <param name="ps"></param>
+            <param name="ds"></param>
+            <param name="config"></param>
+            <param name="rps"></param>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.GetDeviceStatisticsAsync(System.String,HXCloud.ViewModel.DeviceDisStatisticsRequestDto)">
+            <summary>
+            获取设备的统计数据
+            </summary>
+            <param name="GroupId">组织编号</param>
+            <param name="req">请求参数</param>
+            <returns>返回设备的统计数据</returns>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.DeviceHisDataController">
             <summary>
             增加一个获取一天历史数据的接口，根据日期
@@ -171,6 +189,71 @@
             <param name="req"></param>
             <returns></returns>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.IssueController.#ctor(HXCloud.Service.IIssueService,Microsoft.Extensions.Logging.ILogger{HXCloud.APIV2.Controllers.IssueController},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HXCloud.Service.IDeviceService,HXCloud.Service.IUserService,HXCloud.Service.IRoleProjectService)">
+            <summary>
+            问题单
+            </summary>
+            <param name="issue"></param>
+            <param name="log"></param>
+            <param name="config"></param>
+            <param name="webHostEnvironment"></param>
+            <param name="ds"></param>
+            <param name="user"></param>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.IssueController.AddIssueAsync(HXCloud.ViewModel.IssueAddRequest)">
+            <summary>
+            录入问题单
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.IssueController.GetIssueAsync(HXCloud.ViewModel.IssuePageRequest)">
+            <summary>
+            获取用户的问题单，分页数据（可以获取到包含用户下级的问题单）
+            </summary>
+            <param name="req">可根据设备名称模糊搜索</param>
+            <returns>返回用户问题单列表</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsItemController.AddOpsItemAsync(HXCloud.ViewModel.OpsItemAddDto)">
+            <summary>
+            添加巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsItemController.UpdateOpsItemAsync(HXCloud.ViewModel.OpsItemUpdateDto)">
+            <summary>
+            更新巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsItemController.DeleteOpsItemAsync(System.Int32)">
+            <summary>
+            删除巡检项目
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsItemController.GetAllOpsItemAsync(HXCloud.ViewModel.BaseRequest)">
+            <summary>
+            获取全部巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsItemController.GetPageOpsItemAsync(HXCloud.ViewModel.BasePageRequest)">
+            <summary>
+            获取分页巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Controllers.PatrolDataController">
+            <summary>
+            巡检数据
+            </summary>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.PlcSecurityController">
             <summary>
             plc鉴权
@@ -195,6 +278,49 @@
             根据标识获取项目或者场站信息,获取项目下所有的项目、场站信息
             </summary>
             <param name="Id">项目或者场站标识</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.ProjectController.GetProjectSimbossInfoAsync(System.String,System.Int32)">
+            <summary>
+            获取项目或者场站下设备的simboss数据，注：simboss只支持100个数据的查询
+            </summary>
+            <param name="GroupId"></param>
+            <param name="Id">项目或者场站标识</param>
+            <returns>返回所有设备对应的simboss数据</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairController.AddRepairAsync(HXCloud.ViewModel.RepairAddRequest)">
+            <summary>
+            派单,运维管理者创建运维单
+            </summary>
+            <param name="req">运维单数据</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairController.ReceiveRepairAsync(HXCloud.ViewModel.RepairStatusUpdateDto)">
+            <summary>
+            接单
+            </summary>
+            <param name="req">运维单编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairController.WaitRepairAsync(HXCloud.ViewModel.RepairStatusUpdateDto)">
+            <summary>
+            设置运维单为等待配件
+            </summary>
+            <param name="req">运维单状态信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairController.UpLoadRepairImageAsync(HXCloud.ViewModel.RepairAddImageRequest)">
+            <summary>
+            上传运维结果
+            </summary>
+            <param name="req">运维结果</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairController.DeleteRepairAsync(System.String)">
+            <summary>
+            删除运维单,只能删除为接单的运维单
+            </summary>
+            <param name="Id">运维单</param>
             <returns></returns>
         </member>
         <member name="T:HXCloud.APIV2.Controllers.RoleController">
@@ -286,6 +412,41 @@
             <param name="ModuleId">模块标识</param>
             <returns>返回模块配置的数据</returns>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeOpsItemController.AddOpsItemAsync(System.Int32,HXCloud.ViewModel.TypeOpsItemAddDto)">
+            <summary>
+            添加类型巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeOpsItemController.UpdateOpsItemAsync(HXCloud.ViewModel.TypeOpsItemUpdateDto)">
+            <summary>
+            更新类型巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeOpsItemController.DeleteOpsItemAsync(System.Int32)">
+            <summary>
+            删除类型巡检项目
+            </summary>
+            <param name="Id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeOpsItemController.GetAllOpsItemAsync(HXCloud.ViewModel.BaseRequest,System.Int32)">
+            <summary>
+            获取全部类型巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.TypeOpsItemController.GetPageOpsItemAsync(System.Int32,HXCloud.ViewModel.BasePageRequest)">
+            <summary>
+            获取分页类型巡检项目
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.TypeSchemaController">
              <summary>
              考虑类型模式数据量不大，不提供分页功能
@@ -327,6 +488,30 @@
             <summary>
             获取我的未处理报警数量
             </summary>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Filters.OpsManagerFilterAttribute">
+            <summary>
+            合法用户
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Filters.OpsManagerFilterAttribute.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            验证运维管理人员
+            </summary>
+            <param name="context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.Filters.OpsUserFilterAttribute">
+            <summary>
+            运维用户验证
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.Filters.OpsUserFilterAttribute.OnAuthorizationAsync(Microsoft.AspNetCore.Mvc.Filters.AuthorizationFilterContext)">
+            <summary>
+            用户授权验证
+            </summary>
+            <param name="context"></param>
             <returns></returns>
         </member>
     </members>

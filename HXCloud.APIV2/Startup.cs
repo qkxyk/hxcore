@@ -35,6 +35,9 @@ namespace HXCloud.APIV2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //注册IHttpClientFactory
+            services.AddHttpClient();//调用外部api
+
             //添加automapper 需要载入automapper配置类
             var test2 = AppDomain.CurrentDomain.Load("hxcloud.service");
             services.AddAutoMapper(test2/*AppDomain.CurrentDomain.GetAssemblies()*//*Assembly.Load("HXCloud.ViewModel")*/);
@@ -102,7 +105,7 @@ namespace HXCloud.APIV2
             });
             services.AddSwaggerGen(s =>
             {
-                s.SwaggerDoc("V2.0", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "HX api V2", Version = "V2.0 " });
+                s.SwaggerDoc("V2.0", new OpenApiInfo { Title = "HX api V2", Version = "V2.0 " });
                 s.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "HXCloud.APIV2.xml"));
 
 

@@ -56,7 +56,7 @@ namespace HXCloud.Service
             catch (Exception ex)
             {
                 _log.LogError($"{account}添加升级文件{req.VersionNo}失败，失败原因:{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "添加失败文件失败" };
+                return new BaseResponse { Success = false, Message = "添加升级文件失败" };
             }
         }
 

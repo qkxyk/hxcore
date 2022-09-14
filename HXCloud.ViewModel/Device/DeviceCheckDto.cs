@@ -13,5 +13,6 @@ namespace HXCloud.ViewModel
         public int? ProjectId { get; set; }
         public string PathId { get; set; }//用来验证用户权限
         public bool IsExist { get; set; }//输入的设备编号是否存在
+        public int TypeId { get; set; }
     }
 }

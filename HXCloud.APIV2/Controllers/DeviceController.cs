@@ -405,7 +405,14 @@ namespace HXCloud.APIV2.Controllers
             {
                 if (!isAdmin)
                 {
-                    p.PathId = $"{p.PathId}/{projectId}";
+                    if (p.PathId != null)
+                    {
+                        p.PathId = $"{p.PathId}/{projectId}";
+                    }
+                    else
+                    {
+                        p.PathId = projectId.ToString();
+                    }
                     var bAccess = await _rp.IsAuth(Roles, p.PathId, 0);
                     if (!bAccess)
                     {
@@ -444,7 +451,7 @@ namespace HXCloud.APIV2.Controllers
         /// 获取我的设备
         /// </summary>
         /// <param name="GroupId"></param>
-        /// <param name=""></param>
+        /// <param name="req"></param>
         /// <returns></returns>
         [HttpGet("MyDevice")]
         public async Task<ActionResult<BaseResponse>> GetMyDevice(string GroupId, [FromQuery] BasePageRequest req)

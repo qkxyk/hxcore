@@ -10,5 +10,11 @@ namespace HXCloud.Repository
     public interface IUserRepository : IBaseRepository<UserModel>
     {
         Task<UserModel> FindWithGroup(Expression<Func<UserModel, bool>> predicate);
+        /// <summary>
+        /// 获取用户和用户角色信息
+        /// </summary>
+        /// <param name="predicate">用户的查询条件</param>
+        /// <returns></returns>
+        Task<UserModel> FindWithRoleAsync(Expression<Func<UserModel, bool>> predicate);
     }
 }

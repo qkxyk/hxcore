@@ -23,6 +23,15 @@ namespace HXCloud.APIV2.Controllers
         private readonly IConfiguration _config;
         private readonly IRoleProjectService _rps;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="dsd"></param>
+        /// <param name="gs"></param>
+        /// <param name="ps"></param>
+        /// <param name="ds"></param>
+        /// <param name="config"></param>
+        /// <param name="rps"></param>
         public DeviceDiscreteStatisticsController(IDeviceDiscreteStatisticsService dsd, IGroupService gs, IProjectService ps, IDeviceService ds, IConfiguration config, IRoleProjectService rps)
         {
             this._dsd = dsd;
@@ -32,6 +41,7 @@ namespace HXCloud.APIV2.Controllers
             this._config = config;
             this._rps = rps;
         }
+        /// <summary>
         /// 获取设备的统计数据
         /// </summary>
         /// <param name="GroupId">组织编号</param>
@@ -65,63 +75,63 @@ namespace HXCloud.APIV2.Controllers
 
             //if (req.IsDevice)//设备的权限
             //{
-                if (req.DeviceSn == null || "" == req.DeviceSn.Trim())
-                {
-                    return new BaseResponse { Success = false, Message = "设备序列号不能为空" };
-                }
-                var dev = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn);
-                if (!dev.IsExist)
-                {
-                    return new BaseResponse { Success = false, Message = "输入的设备序列号不存在" };
-                }
-                //验证权限 
-                if (!isAdmin)
-                {
-                    var auth = await _rps.IsAuth(Roles, dev.PathId, 0);
-                    if (!auth)
-                    {
-                        return new BaseResponse { Success = false, Message = "用户没有权限查看该设备的统计数据" };
-                    }
-                }
-                //获取设备的统计数据
-                return await _dsd.GetDeviceStatisticsAsync(req, null);
-         /*   }
-            else
+            if (req.DeviceSn == null || "" == req.DeviceSn.Trim())
             {
-                //获取场站列表
-                List<int> sites = null;
-                if (req.ProjectId == 0)//全部设备
+                return new BaseResponse { Success = false, Message = "设备序列号不能为空" };
+            }
+            var dev = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn);
+            if (!dev.IsExist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的设备序列号不存在" };
+            }
+            //验证权限 
+            if (!isAdmin)
+            {
+                var auth = await _rps.IsAuth(Roles, dev.PathId, 0);
+                if (!auth)
                 {
-                    sites = await _ps.GetMySitesIdAsync(GroupId, Roles, isAdmin);
+                    return new BaseResponse { Success = false, Message = "用户没有权限查看该设备的统计数据" };
                 }
-                else
-                {
-                    var pro = await _ps.GetProjectCheckAsync(req.ProjectId);
-                    if (!pro.IsExist)
-                    {
-                        return new BaseResponse { Success = false, Message = "输入的项目或场站编号不存在" };
-                    }
-                    if (!isAdmin)
-                    {
-                        pro.PathId = $"{pro.PathId}/{req.ProjectId}";
-                        var auth = await _rps.IsAuth(Roles, pro.PathId, 0);
-                        if (!auth)
-                        {
-                            return new BaseResponse { Success = false, Message = "用户没有权限查看该项目下的数据" };
-                        }
-                    }
-                    if (pro.IsSite)
-                    {
-                        sites = new List<int>() { req.ProjectId };
-                    }
-                    else
-                    {
-                        sites = await _ps.GetProjectSitesIdAsync(req.ProjectId);
-                    }
-                }
-                var devices = await _ds.GetDeviceSnBySitesAsync(sites);
-                return await _dsd.GetDeviceStatisticsAsync(req, devices);
-            }*/
+            }
+            //获取设备的统计数据
+            return await _dsd.GetDeviceStatisticsAsync(req, null);
+            /*   }
+               else
+               {
+                   //获取场站列表
+                   List<int> sites = null;
+                   if (req.ProjectId == 0)//全部设备
+                   {
+                       sites = await _ps.GetMySitesIdAsync(GroupId, Roles, isAdmin);
+                   }
+                   else
+                   {
+                       var pro = await _ps.GetProjectCheckAsync(req.ProjectId);
+                       if (!pro.IsExist)
+                       {
+                           return new BaseResponse { Success = false, Message = "输入的项目或场站编号不存在" };
+                       }
+                       if (!isAdmin)
+                       {
+                           pro.PathId = $"{pro.PathId}/{req.ProjectId}";
+                           var auth = await _rps.IsAuth(Roles, pro.PathId, 0);
+                           if (!auth)
+                           {
+                               return new BaseResponse { Success = false, Message = "用户没有权限查看该项目下的数据" };
+                           }
+                       }
+                       if (pro.IsSite)
+                       {
+                           sites = new List<int>() { req.ProjectId };
+                       }
+                       else
+                       {
+                           sites = await _ps.GetProjectSitesIdAsync(req.ProjectId);
+                       }
+                   }
+                   var devices = await _ds.GetDeviceSnBySitesAsync(sites);
+                   return await _dsd.GetDeviceStatisticsAsync(req, devices);
+               }*/
         }
     }
 }

@@ -23,7 +23,7 @@ namespace HXCloud.Service
         /// <param name="DeviceSn">设备序列号</param>
         /// <param name="req">设备操作日志</param>
         /// <returns>返回写入设备日志是否成功</returns>
-        Task<BaseResponse> AddDeviceLogAsync(string Account, string DeviceSn, DeviceLogAddDto req);
+        Task<BaseResponse> AddDeviceLogAsync(string Account, string DeviceSn, int TypeId, DeviceLogAddDto req);
         /// <summary>
         /// 删除设备操作日志
         /// </summary>

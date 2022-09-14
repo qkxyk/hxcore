@@ -32,5 +32,29 @@ namespace HXCloud.Repository
             var data = _db.Projects.Include(a => a.Images).Include(a => a.Devices).Where(predicate);//.FirstOrDefaultAsync();
             return data;
         }
+
+        public async Task<Dictionary<string, DeviceCardInfoModel>> FindWithDeviceCardsAsync(List<int> sitesId)
+        {
+            var data = from device in _db.Devices
+                       join cards in _db.DeviceCards on device.DeviceSn equals cards.DeviceSn
+                       where cards.ICCID != null && sitesId.Contains(device.ProjectId.Value)
+                       select new DeviceCardInfoModel
+                       {
+                           FullName = device.FullName,
+                           DeviceName = device.DeviceName,
+                           DeviceSn = cards.DeviceSn,
+                           ICCID = cards.ICCID,
+                           ProjectId = device.ProjectId,
+                           FullId = device.FullId,
+                           DeviceNo = device.DeviceNo
+                       };
+            var ret = await data.ToListAsync();
+            Dictionary<string, DeviceCardInfoModel> dicRet = new Dictionary<string, DeviceCardInfoModel>();
+            foreach (var item in ret)
+            {
+                dicRet.Add(item.ICCID, item);
+            }
+            return dicRet;
+        }
     }
 }

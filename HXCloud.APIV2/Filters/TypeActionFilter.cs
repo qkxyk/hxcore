@@ -59,8 +59,8 @@ namespace HXCloud.APIV2.Filters
                  GroupId = u.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
                  code = u.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             }
-            catch (Exception ex)
-            {
+            catch (Exception)
+            {                
                 context.Result = new UnauthorizedResult();
             }
         

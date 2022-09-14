@@ -65,7 +65,7 @@ namespace HXCloud.APIV2.Controllers
                     }
                 }
             }
-            var rm = await _dls.AddDeviceLogAsync(account, DeviceSn, req);
+            var rm = await _dls.AddDeviceLogAsync(account, DeviceSn,device.TypeId, req);
             return rm;
         }
         /// <summary>

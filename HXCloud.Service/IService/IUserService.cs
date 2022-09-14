@@ -29,5 +29,26 @@ namespace HXCloud.Service
         Task<BaseResponse> UpdateUserPasswordAsync(UserPasswordViewModel req, int Id);
         Task<BaseResponse> ResetPassword(UserResetPasswordViewModel req, string account);
         Task<BaseResponse> AddUserAsync(string Account, string GroupId, UserAddViewModel req);
+
+        /// <summary>
+        /// 获取用户名列表（用户的下级，用于运维平台）
+        /// </summary>
+        /// <param name="Account">用户名</param>
+        ///<param name="isAdmin">是否管理员，管理员能看到所有巡检人员填写的巡检单</param>
+        /// <returns>返回用户列表,如果用户不存在返回空数据</returns>
+        Task<Dictionary<string, UserCategory>> GetUserAndChildAsync(string Account, bool isAdmin);
+        /// <summary>
+        /// 修改用户的运维信息
+        /// </summary>
+        /// <param name="account">操作人</param>
+        /// <param name="req">运维数据</param>
+        /// <returns></returns>
+        Task<BaseResponse> UpdateUserOpsAsync(string account, UserOpsUpdateDto req);
+        /// <summary>
+        /// 获取用户数据
+        /// </summary>
+        /// <param name="account">用户名称</param>
+        /// <returns>用户数据</returns>
+        Task<UserData> GetUserByAccountAsync(string account);
     }
 }

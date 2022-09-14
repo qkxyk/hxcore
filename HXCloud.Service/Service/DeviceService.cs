@@ -55,10 +55,32 @@ namespace HXCloud.Service
                 dto.GroupId = data.GroupId;
                 dto.ProjectId = data.ProjectId;
                 dto.PathId = data.FullId;
+                dto.TypeId = data.TypeId;
             }
             return dto;
         }
-
+        /// <summary>
+        /// 获取设备的名称，运维时根据设备序列号获取设备名称
+        /// </summary>
+        public async Task<DeviceWithNameDto> CheckDeviceAsync(string DeviceSn)
+        {
+            DeviceWithNameDto dto = new DeviceWithNameDto();
+            var data = await _dr.Find(a => a.DeviceSn == DeviceSn).FirstOrDefaultAsync();
+            if (data==null)
+            {
+                dto.IsExist = false;
+            }
+            else
+            {
+                dto.IsExist = true;
+                dto.DeviceName = data.DeviceName;
+                dto.DeviceNo = data.DeviceNo;
+                dto.DeviceSn = DeviceSn;
+                dto.TypeId = data.TypeId;
+                dto.PathId = data.FullId;
+            }
+            return dto;
+        }
 
         public async Task<BaseResponse> AddDeviceAsync(DeviceAddDto req, string account, string GroupId)
         {
@@ -250,11 +272,11 @@ namespace HXCloud.Service
                 var sites = await _ps.GetProjectSitesIdAsync(projectId);
                 device = device.Where(a => sites.Contains(a.ProjectId.Value));
             }
-            if (!string.IsNullOrWhiteSpace( req.Search))
+            if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 device = device.Where(a => a.DeviceName.Contains(req.Search));
             }
-           
+
             int count = device.Count();
             string OrderExpression = "";
             if (string.IsNullOrEmpty(req.OrderBy))

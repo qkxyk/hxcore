@@ -30,8 +30,16 @@ namespace HXCloud.Model
         public virtual GroupModel Group { get; set; }//组织信息
         public virtual ICollection<UserDepartmentModel> UserDepartments { get; set; }//部门信息
         public virtual ICollection<UserRoleModel> UserRoles { get; set; }//角色信息
-        public string  Remark { get; set; }//用户备注
+        public string Remark { get; set; }//用户备注
         public UserType UserType { get; set; } = UserType.Employee;//用户分类
+        /// <summary>
+        /// 区分用户是否运维人员
+        /// </summary>
+        public UserCategory Category { get; set; }
+        /// <summary>
+        /// 用户关联的上级用户标识，非强制
+        /// </summary>
+        public int? ParentId { get; set; }
     }
     //用户状态,未激活、有效用户、无效用户
     public enum UserStatus
@@ -40,6 +48,13 @@ namespace HXCloud.Model
     }
     public enum UserType
     {
-        Employee,Customer
+        Employee, Customer
+    }
+    /// <summary>
+    /// 用户分类，用来区分是巡检、维修人员和负责运维的经理
+    /// </summary>
+    public enum UserCategory
+    {
+        Normal, Patrol, Repair,Manager
     }
 }

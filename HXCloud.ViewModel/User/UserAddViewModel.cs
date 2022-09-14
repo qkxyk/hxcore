@@ -30,5 +30,14 @@ namespace HXCloud.ViewModel
         public string Remark { get; set; }//用户备注
         [Range(0, 1, ErrorMessage = "只能输入0和1，0表示员工，1表示客户")]
         public int UserType { get; set; } = 0;//用户类型，0表示公司内部人员，1表示客户
+        [Range(0,3,ErrorMessage ="运维人员分类只能输入0，3")]
+        /// <summary>
+        /// 用户分类，用来区分是巡检和维修人员,0为一般人员，2，3为运维人员  巡检、维修人员和负责运维的经理
+        /// </summary>
+        public int Category { get; set; } = 0;
+        /// <summary>
+        /// 用户是否有上级，只要用来获取运维人员
+        /// </summary>
+        public int? ParentId { get; set; }
     }
 }

@@ -20,5 +20,15 @@ namespace HXCloud.Repository
             var rm = await _db.Users.Include(a => a.Group)/*.Include(a => a.UserRoles)*/.Where(predicate).FirstOrDefaultAsync();
             return rm;
         }
+        /// <summary>
+        /// 获取用户和用户角色信息
+        /// </summary>
+        /// <param name="predicate">用户的查询条件</param>
+        /// <returns></returns>
+        public async Task<UserModel> FindWithRoleAsync(Expression<Func<UserModel, bool>> predicate)
+        {
+            var ret = await _db.Users.Include(a => a.UserRoles).Where(predicate).FirstOrDefaultAsync();
+            return ret;
+        }
     }
 }

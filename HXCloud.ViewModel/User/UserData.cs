@@ -21,5 +21,15 @@ namespace HXCloud.ViewModel
         public int Status { get; set; }//用户状态,未激活、有效用户、无效用户
         public string Remark { get; set; }//用户备注
         public int UserType { get; set; } = 0;//用户类型，0表示公司内部人员，1表示客户
+
+        /// <summary>
+        /// 用户分类，用来区分是巡检和维修人员,0为一般人员，2，3为运维人员
+        /// </summary>
+        public int Category { get; set; } = 0;
+        /// <summary>
+        /// 用户是否有上级，只要用来获取运维人员
+        /// </summary>
+        public int? ParentId { get; set; }
+        public string Roles { get; set; }
     }
 }

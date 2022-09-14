@@ -357,6 +357,25 @@ namespace HXCloud.APIV2.Controllers
             var rm = await _ps.GetChildProjectByIdAsync(Id, req);
             return rm;
         }
+
+        /// <summary>
+        /// 获取项目或者场站下设备的simboss数据，注：simboss只支持100个数据的查询
+        /// </summary>
+        /// <param name="GroupId"></param>
+        /// <param name="Id">项目或者场站标识</param>
+        /// <returns>返回所有设备对应的simboss数据</returns>
+        [HttpGet("Simboss/{Id}")]
+        [TypeFilter(typeof(AdminActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> GetProjectSimbossInfoAsync(string GroupId, int Id)
+        {
+            var data = await _ps.GetProjectCheckAsync(Id);
+            if (!data.IsExist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的项目或者场站标识不存在" };
+            }
+            var ret = await _ps.GetProjectSimbossAsync(Id, data.IsSite);
+            return ret;
+        }
     }
 
 }

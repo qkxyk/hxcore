@@ -125,7 +125,8 @@ namespace HXCloud.APIV2.Controllers
                 new Claim("GroupId",u.GroupId),
                 new Claim("IsAdmin",u.IsAdmin.ToString()),
                 new Claim("Id",u.Id.ToString()),
-                new Claim("Key",$"{u.Account}+{u.Id}")
+                new Claim("Key",$"{u.Account}+{u.Id}"),
+                new Claim("Category",u.Category.ToString())
             };
             //ClaimsIdentity id =  
             var now = DateTime.Now;
@@ -196,6 +197,23 @@ namespace HXCloud.APIV2.Controllers
             var Id = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             return await _us.UpdateUserInfoAsync(Account, req, Id);
+        }
+        [HttpPut("Ops")]
+        public async Task<ActionResult<BaseResponse>> UpdateUserOpsAsync([FromBody]UserOpsUpdateDto req)
+        {
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            //该组织管理员有权限
+            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //获取用户所在的组标示
+            string GId = await _us.GetUserGroupAsync(req.Id);
+            if (!(isAdmin && (GroupId == GId || Code == _config["Group"])))
+            {
+                return new BaseResponse { Success = false, Message = "用户没有权限" };
+            }
+            var ret = await _us.UpdateUserOpsAsync(Account, req);
+            return ret;
         }
 
         [RequestSizeLimit(1024 * 1024 * 2)]

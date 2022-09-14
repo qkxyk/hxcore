@@ -29,5 +29,6 @@ namespace HXCloud.Service
 
         Task<int> GetTopProjectIdAsync(int projectId);
         Task<bool> CheckProjectIdIsTopProjectAsync(int projectId);
+        Task<BaseResponse> GetProjectSimbossAsync(int projectId, bool isSite = false);
     }
 }

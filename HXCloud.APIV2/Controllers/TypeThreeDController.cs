@@ -45,7 +45,7 @@ namespace HXCloud.APIV2.Controllers
             //文件后缀
             var fileExtension = Path.GetExtension(req.file.FileName);
             //判断后缀是否是图片
-            const string fileFilt = ".gltf|.fbx|.gltf|.glb|.FBX|.GLTF|.GLB";
+            const string fileFilt = ".gltf|.fbx|.gltf|.glb|.FBX|.GLTF|.GLB|.json";
             if (fileExtension == null)
             {
                 return new BaseResponse { Success = false, Message = "上传的文件没有后缀" };

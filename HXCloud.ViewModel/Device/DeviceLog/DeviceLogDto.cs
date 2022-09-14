@@ -17,5 +17,6 @@ namespace HXCloud.ViewModel
         public string NewValue { get; set; }                  //返回值
         public string DeviceSn { get; set; }
         public string Account { get; set; }
+        public string UserName { get; set; }
     }
 }

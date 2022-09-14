@@ -19,12 +19,14 @@ namespace HXCloud.Service
         private readonly IDeviceLogRepository _dlr;
         private readonly IMapper _mapper;
         private readonly ILogger<DeviceLogService> _log;
+        private readonly ITypeDataDefineRepository _tdd;//类型数据定义数据
 
-        public DeviceLogService(IDeviceLogRepository dlr, IMapper mapper, ILogger<DeviceLogService> log)
+        public DeviceLogService(IDeviceLogRepository dlr, IMapper mapper, ILogger<DeviceLogService> log, ITypeDataDefineRepository tdd)
         {
             this._dlr = dlr;
             this._mapper = mapper;
             this._log = log;
+            this._tdd = tdd;
         }
         /// <summary>
         /// 写入设备控制日志
@@ -33,7 +35,7 @@ namespace HXCloud.Service
         /// <param name="DeviceSn">设备序列号</param>
         /// <param name="req">设备操作日志</param>
         /// <returns>返回写入设备日志是否成功</returns>
-        public async Task<BaseResponse> AddDeviceLogAsync(string Account, string DeviceSn, DeviceLogAddDto req)
+        public async Task<BaseResponse> AddDeviceLogAsync(string Account, string DeviceSn, int TypeId, DeviceLogAddDto req)
         {
             try
             {
@@ -41,6 +43,9 @@ namespace HXCloud.Service
                 entity.Create = Account;//注，创建者和操作者重复
                 entity.Account = Account;
                 entity.DeviceSn = DeviceSn;
+                //获取数据key对应的keyname
+                var name = (await _tdd.Find(a => a.DataKey == req.Key && a.TypeId == TypeId).FirstOrDefaultAsync()).DataName;
+                entity.KeyName = name;
                 await _dlr.AddAsync(entity);
                 _log.LogInformation($"{Account}写入设备{DeviceSn}控制日志成功");
                 return new HandleResponse<int> { Success = true, Message = "写入日志成功", Key = entity.Id };
@@ -113,22 +118,31 @@ namespace HXCloud.Service
             {
                 OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
             }
-            var ret = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
-            var dtos = _mapper.Map<List<DeviceLogDto>>(ret);
-            var br = new BasePageResponse<List<DeviceLogDto>>();
+            //var ret = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var retData = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var dy = _dlr.GetWithUserNameAsync(retData);
+            //List<DeviceLogData> list = new List<DeviceLogData>();
+            var br = new BasePageResponse<IEnumerable<DeviceLogData>>();
+            br.Data = dy;
             br.Success = true;
             br.Message = "获取数据成功";
             br.PageSize = req.PageSize;
             br.CurrentPage = req.PageNo;
             br.Count = count;
             br.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
-            br.Data = dtos;
+            //br.Data = dtos;
             return br;
         }
 
         public Task<bool> IsExist(Expression<Func<DeviceLogModel, bool>> predicate)
         {
             throw new NotImplementedException();
+        }
+
+        public class TestData
+        {
+            public string UserName { get; set; }
+            public DeviceLogModel Log { get; set; }
         }
     }
 }

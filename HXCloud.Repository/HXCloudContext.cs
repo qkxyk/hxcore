@@ -111,6 +111,26 @@ namespace HXCloud.Repository
         //数据定义关联报警编码
         public DbSet<DataDefineWarnCodeModel> DataDefineWarnCodes { get; set; }
 
+        //simboss
+        public DbSet<SimbossModel> Simbosses { get; set; }
+
+        //2022-3-22新增合续盒子
+        public DbSet<BoxModel> Boxes { get; set; }
+
+        #region 2022-8-8新增运维数据
+        public DbSet<IssueModel> Issues { get; set; }
+        public DbSet<OpsItemModel> OpsItems { get; set; }
+        public DbSet<TypeOpsItemModel> TypeOpsItems { get; set; }
+        public DbSet<RepairModel> Repairs { get; set; }
+
+        public DbSet<PatrolDataModel> PatrolDatas { get; set; }
+        public DbSet<PatrolImageModel> PatrolImages { get; set; }
+        public DbSet<ProductDataModel> ProductDatas { get; set; }
+        public DbSet<WaterAnalysisModel> WaterAnalyses { get; set; }
+        public DbSet<DevicePatrolModel> DevicePatrols { get; set; }
+        public DbSet<TechniquePatrolModel> TechniquePatrols { get; set; }
+        #endregion
+
 
 
         /*
@@ -195,6 +215,12 @@ namespace HXCloud.Repository
             //数据定义关联报警编码
             modelBuilder.ApplyConfiguration(new DataDefineWarnCodeModelMap());
 
+            //simboss
+            modelBuilder.ApplyConfiguration(new SimbossModelMap());
+
+            //2022-3-22新增合续盒子
+            modelBuilder.ApplyConfiguration(new BoxModelMap());
+
             #region 初始化种子数据
             /*
             modelBuilder.Entity<GroupModel>().HasData(new GroupModel() { GroupCode = "hx", GroupName = "合续", Id = groupid, Create = "test" });
@@ -257,6 +283,16 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new RoleMenuModelMap());
             modelBuilder.ApplyConfiguration(new RoleProjectModelMap());
                        */
+            #region 2022-8-8新增运维数据
+            modelBuilder.ApplyConfiguration(new IssueModelMap());
+            modelBuilder.ApplyConfiguration(new RepairModelMap());
+            modelBuilder.ApplyConfiguration(new PatrolDataModelMap());
+            modelBuilder.ApplyConfiguration(new PatrolImageModelMap());
+            modelBuilder.ApplyConfiguration(new ProductDataModelMap());
+            modelBuilder.ApplyConfiguration(new WaterAnalysisModelMap());
+            modelBuilder.ApplyConfiguration(new DevicePatrolModelMap());
+            modelBuilder.ApplyConfiguration(new TechniquePatrolModelMap());
+            #endregion
         }
     }
 }

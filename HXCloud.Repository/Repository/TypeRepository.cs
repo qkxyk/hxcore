@@ -336,6 +336,28 @@ namespace HXCloud.Repository
                     }
                     await _db.TypeHardwareConfigs.AddRangeAsync(typeHardwareList);
                     #endregion
+                    #region 类型运维巡检项目 2022-8-22
+                    List<TypeOpsItemModel> typeOpsItemList = new List<TypeOpsItemModel>();
+                    var typeOpsItems = await _db.TypeOpsItems.Where(a => a.TypeId == sourceId).ToListAsync();
+                    foreach (var item in typeOpsItems)
+                    {
+                        typeOpsItemList.Add(new TypeOpsItemModel
+                        {
+                            Create = target.Create,
+                            CreateTime = target.CreateTime,
+                            Type = target,
+                            Key = item.Key,
+                            Name = item.Name,
+                            DataType = item.DataType,
+                            OpsType = item.OpsType,
+                            Unit = item.Unit,
+                            Max = item.Max,
+                            Min = item.Min
+                        });
+                    }
+                    await _db.TypeOpsItems.AddRangeAsync(typeOpsItemList);
+                    #endregion
+
                     /*
                     #region 处理类型更新文件
                     //获取类型更新文件,注：不做文件拷贝，复制后的文件路径指向原路径，可能会导致，原文件删除后找不到文件

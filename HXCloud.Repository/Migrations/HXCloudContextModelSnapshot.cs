@@ -60,6 +60,41 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("AppVersion");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.BoxModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<bool>("Activate")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Num")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UUId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HXBox");
+                });
+
             modelBuilder.Entity("HXCloud.Model.CategoryModel", b =>
                 {
                     b.Property<int>("Id")
@@ -868,6 +903,19 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("DeviceOnline");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.DevicePatrolModel", b =>
+                {
+                    b.Property<string>("PatrolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PatrolId");
+
+                    b.ToTable("DevicePatrol");
+                });
+
             modelBuilder.Entity("HXCloud.Model.DeviceStatisticsDataModel", b =>
                 {
                     b.Property<string>("Id")
@@ -989,6 +1037,150 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("Group");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.IssueModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceSn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Dt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Opinion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Issue");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.OpsItemModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DataType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Max")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Min")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OpsType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OpsItems");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.PatrolDataModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceSn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Dt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Position")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PositionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PatrolData");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.PatrolImageModel", b =>
+                {
+                    b.Property<string>("PatrolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PatrolId");
+
+                    b.ToTable("PatrolImage");
+                });
+
             modelBuilder.Entity("HXCloud.Model.PlcSecurityModel", b =>
                 {
                     b.Property<int>("Id")
@@ -1013,6 +1205,19 @@ namespace HXCloud.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PlcSecurity");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ProductDataModel", b =>
+                {
+                    b.Property<string>("PatrolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PatrolId");
+
+                    b.ToTable("ProductData");
                 });
 
             modelBuilder.Entity("HXCloud.Model.ProjectImageModel", b =>
@@ -1195,6 +1400,78 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("Region");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.RepairModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CheckDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CheckTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CompleteTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceSn")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("EmergenceStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IssueId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ReceivePhone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ReceiveTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Receiver")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RepairStatus")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RepairType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WaitDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("WaitTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Repairs");
+                });
+
             modelBuilder.Entity("HXCloud.Model.RoleModel", b =>
                 {
                     b.Property<int>("Id")
@@ -1261,6 +1538,57 @@ namespace HXCloud.Repository.Migrations
                     b.HasIndex("ProjectId");
 
                     b.ToTable("RoleProject");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.SimbossModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("AppId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppSecret")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("SimAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SimPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Simboss");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TechniquePatrolModel", b =>
+                {
+                    b.Property<string>("PatrolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PatrolId");
+
+                    b.ToTable("TechniquePatrol");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeArgumentModel", b =>
@@ -1890,6 +2218,56 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("TypeModule");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeOpsItemModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("DataType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Max")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Min")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OpsType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("TypeOpsItems");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeOverviewModel", b =>
                 {
                     b.Property<int>("Id")
@@ -2128,6 +2506,9 @@ namespace HXCloud.Repository.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
 
@@ -2151,6 +2532,9 @@ namespace HXCloud.Repository.Migrations
 
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -2315,6 +2699,19 @@ namespace HXCloud.Repository.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("WarnType");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.WaterAnalysisModel", b =>
+                {
+                    b.Property<string>("PatrolId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PatrolId");
+
+                    b.ToTable("WaterAnalysis");
                 });
 
             modelBuilder.Entity("HXCloud.Model.DepartmentModel", b =>
@@ -2490,6 +2887,17 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.DevicePatrolModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.PatrolDataModel", "PatrolData")
+                        .WithOne("DevicePatrol")
+                        .HasForeignKey("HXCloud.Model.DevicePatrolModel", "PatrolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatrolData");
+                });
+
             modelBuilder.Entity("HXCloud.Model.DeviceStatisticsDataModel", b =>
                 {
                     b.HasOne("HXCloud.Model.DeviceModel", "Device")
@@ -2508,6 +2916,28 @@ namespace HXCloud.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Device");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.PatrolImageModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.PatrolDataModel", "PatrolData")
+                        .WithOne("PatrolImage")
+                        .HasForeignKey("HXCloud.Model.PatrolImageModel", "PatrolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatrolData");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ProductDataModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.PatrolDataModel", "PatrolData")
+                        .WithOne("ProductData")
+                        .HasForeignKey("HXCloud.Model.ProductDataModel", "PatrolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatrolData");
                 });
 
             modelBuilder.Entity("HXCloud.Model.ProjectImageModel", b =>
@@ -2591,6 +3021,17 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.TechniquePatrolModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.PatrolDataModel", "PatrolData")
+                        .WithOne("TechniquePatrol")
+                        .HasForeignKey("HXCloud.Model.TechniquePatrolModel", "PatrolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatrolData");
                 });
 
             modelBuilder.Entity("HXCloud.Model.TypeArgumentModel", b =>
@@ -2782,6 +3223,17 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Type");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.TypeOpsItemModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.TypeModel", "Type")
+                        .WithMany("TypeOpsItems")
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Type");
+                });
+
             modelBuilder.Entity("HXCloud.Model.TypeOverviewModel", b =>
                 {
                     b.HasOne("HXCloud.Model.TypeDataDefineModel", "TypeDataDefine")
@@ -2913,6 +3365,17 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("WarnCode");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.WaterAnalysisModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.PatrolDataModel", "PatrolData")
+                        .WithOne("WaterAnalysis")
+                        .HasForeignKey("HXCloud.Model.WaterAnalysisModel", "PatrolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PatrolData");
+                });
+
             modelBuilder.Entity("HXCloud.Model.DepartmentModel", b =>
                 {
                     b.Navigation("Child");
@@ -2968,6 +3431,19 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Types");
 
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.PatrolDataModel", b =>
+                {
+                    b.Navigation("DevicePatrol");
+
+                    b.Navigation("PatrolImage");
+
+                    b.Navigation("ProductData");
+
+                    b.Navigation("TechniquePatrol");
+
+                    b.Navigation("WaterAnalysis");
                 });
 
             modelBuilder.Entity("HXCloud.Model.ProjectModel", b =>
@@ -3040,6 +3516,8 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("TypeImages");
 
                     b.Navigation("TypeModules");
+
+                    b.Navigation("TypeOpsItems");
 
                     b.Navigation("TypeOverviews");
 

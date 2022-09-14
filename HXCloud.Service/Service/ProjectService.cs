@@ -11,6 +11,8 @@ using HXCloud.Repository;
 using HXCloud.ViewModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace HXCloud.Service
 {
@@ -22,8 +24,11 @@ namespace HXCloud.Service
         private readonly IDeviceRepository _dr;
         private readonly IRoleProjectRepository _rp;//获取用户分配的项目
         private readonly IRegionRepository _rr;
+        private readonly ISimbossRepository _simboss;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public ProjectService(IProjectRepository pr, ILogger<ProjectService> log, IMapper mapper, IDeviceRepository dr, IRoleProjectRepository rp, IRegionRepository rr)
+        public ProjectService(IProjectRepository pr, ILogger<ProjectService> log, IMapper mapper, IDeviceRepository dr,
+            IRoleProjectRepository rp, IRegionRepository rr, ISimbossRepository simboss, IHttpClientFactory clientFactory)
         {
             this._pr = pr;
             this._log = log;
@@ -31,15 +36,17 @@ namespace HXCloud.Service
             this._dr = dr;
             this._rp = rp;
             this._rr = rr;
+            this._simboss = simboss;
+            this._clientFactory = clientFactory;
         }
         public async Task<bool> CheckProjectIdIsTopProjectAsync(int projectId)
         {
             var data = await _pr.FindAsync(projectId);
-            if (data==null)//判断是否存在
+            if (data == null)//判断是否存在
             {
                 return false;
             }
-            if (data.ParentId==null)//是否存在父项目
+            if (data.ParentId == null)//是否存在父项目
             {
                 return true;
             }
@@ -53,17 +60,17 @@ namespace HXCloud.Service
         public async Task<int> GetTopProjectIdAsync(int projectId)
         {
             var data = await _pr.FindAsync(projectId);
-            if (data==null)
+            if (data == null)
             {
                 return 0;
             }
-            if (data.ParentId==null)
+            if (data.ParentId == null)
             {
                 return projectId;
             }
             else
             {
-              return  await GetTopProjectIdAsync(data.ParentId.Value);
+                return await GetTopProjectIdAsync(data.ParentId.Value);
             }
         }
 
@@ -172,7 +179,7 @@ namespace HXCloud.Service
                     PathName = $"{parent.PathName}/{parent.Name}";
                 }
             }
-          
+
             try
             {
                 var entity = _mapper.Map<ProjectModel>(req);
@@ -577,7 +584,7 @@ namespace HXCloud.Service
         public async Task<List<int>> GetMySitesIdAsync(string GroupId, string roles, bool isAdmin)
         {
             var pids = await GetMyProjectIdSync(GroupId, roles, isAdmin);
-            
+
             var sites = await _pr.Find(a => pids.Contains(a.ParentId.Value) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
             //获取用户直属的场站标识
             if (!isAdmin)//管理员在项目编号中获取所有的场站
@@ -601,6 +608,109 @@ namespace HXCloud.Service
             var pids = await _rp.Find(a => rs.Contains(a.RoleId) && (int)a.Operate >= 0).Select(a => a.ProjectId).ToListAsync();
             var s = await _pr.Find(a => pids.Contains(a.Id) && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
             return s;
+        }
+
+        public async Task<BaseResponse> GetProjectSimbossAsync(int projectId, bool isSite = false)
+        {
+            List<int> sites = new List<int>();
+            if (!isSite)//项目
+            {
+                //获取项目下的所有场站
+                var site = await _pr.Find(a => a.ParentId == projectId && a.ProjectType == ProjectType.Site).Select(a => a.Id).ToListAsync();
+                sites.AddRange(site);
+            }
+            else //场站
+            {
+                sites.Add(projectId);
+            }
+            var ret = await _pr.FindWithDeviceCardsAsync(sites);
+            if (ret.Count <= 0)
+            {
+                return new BaseResponse { Success = true, Message = "该项目或者场站下没有关联的数据" };
+            }
+            //获取simboss配置信息
+            var simboss = await _simboss.Find(a => true).FirstOrDefaultAsync();
+            if (simboss == null)
+            {
+                return new BaseResponse { Success = false, Message = "系统没有录入simboss数据，请通知管理员录入该数据" };
+            }
+            //simboss一次只能处理100个数据
+            List<CardResponse> cards = new List<CardResponse>();
+            List<string> list = ret.Keys.ToList();
+            for (int i = 0; i < list.Count; i += 100)
+            {
+                List<string> temp = new List<string>();
+                if (list.Count > 100 * (i + 1))
+                {
+                    for (int j = i; j < 100; j++)
+                    {
+                        temp.Add(list[j]);
+                    }
+                }
+                else
+                {
+                    for (int j = 0; j < list.Count - i * 100; j++)
+                    {
+                        temp.Add(list[j + i * 100]);
+                    }
+                }
+                string s = string.Join(',', temp);
+                //组装simboss数据
+                string apiUrl = "https://api.simboss.com/2.0/device/detail/batch";
+                if (string.IsNullOrEmpty(simboss.AppId) || string.IsNullOrEmpty(simboss.AppSecret))
+                {
+                    return new BaseResponse { Success = false, Message = "录入simboss数据有误，请通知管理员录入该数据" };
+                }
+                string appid = simboss.AppId;// "102420143446";
+                string AppSeret = simboss.AppSecret;// "283ebfc1ed3461512393ca35fe214e60";
+                string timestamp = SimBossInfo.GetTimeStamp(DateTime.Now).ToString();
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("appid", appid);
+                dic.Add("timestamp", timestamp);
+                dic.Add("iccids", s);
+                string hex = SimBossInfo.CreateSign(dic, AppSeret);
+                string sign = SimBossInfo.sha256(hex);
+
+                Dictionary<string, string> dicParams = new Dictionary<string, string>();
+                dicParams.Add("appid", appid);
+                dicParams.Add("timestamp", timestamp);
+                dicParams.Add("sign", sign);
+                dicParams.Add("iccids", s);
+                var client = _clientFactory.CreateClient();
+                string data = SimBossInfo.CreateParams(dicParams);
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
+                using (var httpResponse = await client.PostAsync(apiUrl, content))
+                {
+                    var message = httpResponse.EnsureSuccessStatusCode();
+                    var ms = await message.Content.ReadAsByteArrayAsync();
+                    string mes = Encoding.UTF8.GetString(ms);
+                    var cardData = JsonConvert.DeserializeObject<BatchCardResponse>(mes);
+                    //数据进行填充
+                    cards.AddRange(cardData.data);
+                    //return new BResponse<CardResponse> { Success = true, Message = "获取数据成功", Data = cardData.data };
+                }
+            }
+            //对数据进行匹配
+            List<DeviceCardInfo> listCardInfo = new List<DeviceCardInfo>();
+            foreach (var item in ret)
+            {
+                DeviceCardInfo dci = new DeviceCardInfo()
+                {
+                    DeviceName = item.Value.DeviceName,
+                    DeviceSn = item.Value.DeviceSn,
+                    FullName = item.Value.FullName,
+                    FullId = item.Value.FullId,
+                    ProjectId = item.Value.ProjectId,
+                    DeviceNo = item.Value.DeviceNo
+                };
+                var data = cards.Find(a => a.iccid == item.Key);
+                if (data != null)
+                {
+                    dci.CardResponse = data;
+                }
+                listCardInfo.Add(dci);
+            }
+            return new BResponse<List<DeviceCardInfo>>() { Success = true, Message = "获取数据成功", Data = listCardInfo };
         }
     }
 }
