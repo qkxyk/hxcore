@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
@@ -399,6 +400,27 @@ namespace HXCloud.APIV2.Controllers
             }
             var rm = await _us.AddUserAsync(Account, GroupId, req);
             return rm;
+        }
+
+        /// <summary>
+        /// 根据运维经理账户名获取用户下级运维用户
+        /// </summary>
+        [HttpGet("OpsUser")]
+        public async Task<ActionResult<BaseResponse>> GetOpsUsers()
+        {
+            var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            //验证用户是否运维账号
+            var user = await _us.GetUserByAccountAsync(Account);
+            if (user==null)
+            {
+                return new BaseResponse { Success = false, Message = "用户不存在" };
+            }
+            if (user.Category<3)
+            {
+                return new BaseResponse { Success = false, Message = "只有运维经理有权限获取运维人员信息" };
+            }
+            var data = await _us.GetOpsUserAsync(Account);
+            return new BResponse<List<OpsUserDto>> { Success = true, Message = "获取数据成功", Data = data };
         }
     }
 }

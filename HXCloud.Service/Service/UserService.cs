@@ -496,26 +496,86 @@ namespace HXCloud.Service
             }
             if (data != null)
             {
-                Users = await GetUserChildAsync(Users, data.Id);
-                //添加自己
                 Users.Add(Account, data.Category);
-                //return Users;
+                await GetUserChildAsync(Users, data.Id);
             }
             return Users;
         }
-        private async Task<Dictionary<string, UserCategory>> GetUserChildAsync(Dictionary<string, UserCategory> users, int Id)
+        private async Task GetUserChildAsync(Dictionary<string, UserCategory> users, int Id)
         {
             var data = await _user.Find(a => a.ParentId == Id).ToListAsync();
             if (data.Count > 0)
             {
                 foreach (var item in data)
                 {
-                    users.Add(item.UserName, item.Category);
+                    users.Add(item.Account, item.Category);
                     //递归
-                    return await GetUserChildAsync(users, item.Id);
+                    await GetUserChildAsync(users, item.Id);
                 }
             }
-            return users;
+        }
+        /// <summary>
+        /// 根据运维经理账户名获取用户下级运维用户
+        /// </summary>
+        /// <param name="Account">运维经理账户名</param>
+        /// <returns></returns>
+        public async Task<List<OpsUserDto>> GetOpsUserAsync(string Account)
+        {
+            List<OpsUserDto> opsUser = new List<OpsUserDto>();
+            var data = await _user.Find(a => a.Account == Account).FirstOrDefaultAsync();
+            string UserType = "";
+            switch (data.Category)
+            {
+                case UserCategory.Normal:
+                    UserType = "一般人员";
+                    break;
+                case UserCategory.Patrol:
+                    UserType = "巡检人员";
+                    break;
+                case UserCategory.Repair:
+                    UserType = "维修/调试人员";
+                    break;
+                case UserCategory.Manager:
+                    UserType = "运维管理者";
+                    break;
+                default:
+                    break;
+            }
+            opsUser.Add(new OpsUserDto { Account = data.Account, UserName = $"{data.UserName}-{UserType}" });
+            await GetOpsUserChildAsync(opsUser, data.Id);
+            return opsUser;
+        }
+
+        private async Task GetOpsUserChildAsync(List<OpsUserDto> users, int Id)
+        {
+            string UserType = "";
+            var data = await _user.Find(a => a.ParentId == Id).ToListAsync();
+            if (data.Count > 0)
+            {
+                foreach (var item in data)
+                {
+                    switch (item.Category)
+                    {
+                        case UserCategory.Normal:
+                            UserType = "一般人员";
+                            break;
+                        case UserCategory.Patrol:
+                            UserType = "巡检人员";
+                            break;
+                        case UserCategory.Repair:
+                            UserType = "维修/调试人员";
+                            break;
+                        case UserCategory.Manager:
+                            UserType = "运维管理者";
+                            break;
+                        default:
+                            break;
+                    }
+                    users.Add(new OpsUserDto { Account = item.Account, UserName = $"{item.UserName}-{UserType}" });
+                    //递归
+                    await GetOpsUserChildAsync(users, item.Id);
+                }
+            }
         }
         /// <summary>
         /// 修改用户的运维信息

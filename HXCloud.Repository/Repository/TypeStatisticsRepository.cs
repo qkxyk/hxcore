@@ -16,5 +16,11 @@ namespace HXCloud.Repository
             var data = await _db.TypeStatisticsInfos.Include(a => a.Type).Where(predicate).FirstOrDefaultAsync();
             return data;
         }
+
+        public async Task<IEnumerable<TypeStatisticsInfoModel>> FindGlobalStaticsBySql(int showState)
+        {
+            var d = await _db.TypeStatisticsInfos.FromSqlRaw($"select * from TypeStatisticsInfo where id in(SELECT   max(id)    FROM [hxnetcore].[dbo].[TypeStatisticsInfo] where ShowState={showState} group by DataKey) order by DataKey").ToListAsync();
+            return d;
+        }
     }
 }

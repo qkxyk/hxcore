@@ -88,6 +88,7 @@ namespace HXCloud.APIV2.Controllers
             dto.EmergenceStatus = req.EmergenceStatus;
             dto.DeviceSn = req.DeviceSn;
             dto.DeviceName = deviceData.DeviceName;
+            dto.Description = req.Description;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
@@ -388,6 +389,27 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             var ret = await _repair.DeleteRepairAsync(Account, Id);
+            return ret;
+        }
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<BaseResponse>> GetRepairByIdAsync(string Id)
+        {
+            //只有项目管理者能删除,并且对设备有权限
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            //var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            //var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            ////运维人员
+            //var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
+            //int category = 0;
+            //int.TryParse(ops, out category);
+            ////管理员和运维人员可以通过
+            //if (!isAdmin && category < 3)
+            //{
+            //    return new BaseResponse { Message = "用户没有权限删除运维单", Success = false };
+            //}
+            var ret = await _repair.GetRepairByIdAsync(Account, Id);
             return ret;
         }
 

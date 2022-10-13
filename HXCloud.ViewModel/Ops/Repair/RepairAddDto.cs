@@ -20,5 +20,7 @@ namespace HXCloud.ViewModel
         /// 接单人电话
         /// </summary>
         public string ReceivePhone { get; set; }
+        //派单时问题的描述
+        public string Description { get; set; }
     }
 }

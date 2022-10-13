@@ -18,12 +18,14 @@ namespace HXCloud.Service
         private readonly ILogger<RepairService> _logger;
         private readonly IMapper _mapper;
         private readonly IRepairRepository _repair;
+        private readonly IIssueRepository _issue;
 
-        public RepairService(ILogger<RepairService> logger, IMapper mapper, IRepairRepository repair)
+        public RepairService(ILogger<RepairService> logger, IMapper mapper, IRepairRepository repair, IIssueRepository issue)
         {
             this._logger = logger;
             this._mapper = mapper;
             this._repair = repair;
+            this._issue = issue;
         }
         public Task<bool> IsExist(Expression<Func<RepairModel, bool>> predicate)
         {
@@ -57,6 +59,7 @@ namespace HXCloud.Service
                 var entity = _mapper.Map<RepairModel>(req);
                 entity.Id = RepairlId;
                 entity.Create = account;
+                entity.Description = req.Description;
                 await _repair.AddAsync(entity);
 
                 _logger.LogInformation($"{account}创建标识为{entity.Id}的{repairType}单成功");
@@ -314,6 +317,40 @@ namespace HXCloud.Service
             ret.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
             ret.Data = dtos;
             return ret;
+        }
+
+        /// <summary>
+        /// 获取维修单或者调试单和关联的问题单信息
+        /// </summary>
+        /// <param name="account">用户，只有维修单的下发人和接单人有权限查看</param>
+        /// <param name="Id">单据编号</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetRepairByIdAsync(string account, string Id)
+        {
+            var data = await _repair.FindAsync(Id);
+            if (data == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的维修或者调试单编号不存在" };
+            }
+            if (data.Create == account || data.Receiver == account)
+            {
+                var ret = _mapper.Map<RepairAndIssueDto>(data);
+                if (data.IssueId != 0)
+                {
+                    var iss = await _issue.FindAsync(data.IssueId);
+                    if (iss != null)
+                    {
+                        ret.IssueUrl = iss.Url;
+                        ret.IssueDescription = iss.Description;
+                        ret.IssueDt = iss.Dt;
+                    }
+                }
+                return new BResponse<RepairAndIssueDto> { Success = true, Message = "获取数据成功", Data = ret };
+            }
+            else
+            {
+                return new BaseResponse { Success = false, Message = "用户没有权限查看单据信息" };
+            }
         }
     }
 }

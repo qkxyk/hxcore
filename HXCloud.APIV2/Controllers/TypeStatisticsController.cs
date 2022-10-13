@@ -60,7 +60,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpPut]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> Update(int typeId, [FromBody]TypeStatisticsUpdateViewModel req)
+        public async Task<ActionResult<BaseResponse>> Update(int typeId, [FromBody] TypeStatisticsUpdateViewModel req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             //string user = User.Identity.Name;
@@ -133,7 +133,7 @@ namespace HXCloud.APIV2.Controllers
         }
         [HttpGet]
         [TypeFilter(typeof(TypeActionFilter))]
-        public async Task<ActionResult<BaseResponse>> GetTypeStatistics(int typeId, [FromQuery]TypeStatisticsPageRequestViewModel req)
+        public async Task<ActionResult<BaseResponse>> GetTypeStatistics(int typeId, [FromQuery] TypeStatisticsPageRequestViewModel req)
         {
             //string user = User.Identity.Name;
             //if (string.IsNullOrWhiteSpace(user))
@@ -155,6 +155,17 @@ namespace HXCloud.APIV2.Controllers
             //}
             var rm = await _tss.FindByTypeAsync(typeId, req);
             return rm;
+        }
+        //[AllowAnonymous]
+        [HttpGet("/api/statistics")]
+        public async Task<ActionResult<BaseResponse>> GetGlobalStatistics()
+        {
+            var data = await _tss.GetGlobalStatisticsAsync();
+            //await Task.Run(()=>
+            //{
+
+            //});
+            return data;
         }
     }
 }

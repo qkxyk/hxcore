@@ -50,5 +50,12 @@ namespace HXCloud.Service
         /// <param name="account">用户名称</param>
         /// <returns>用户数据</returns>
         Task<UserData> GetUserByAccountAsync(string account);
+
+        /// <summary>
+        /// 根据运维经理账户名获取用户下级运维用户
+        /// </summary>
+        /// <param name="Account">运维经理账户名</param>
+        /// <returns></returns>
+        Task<List<OpsUserDto>> GetOpsUserAsync(string Account);
     }
 }

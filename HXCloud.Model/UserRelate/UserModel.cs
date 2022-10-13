@@ -57,4 +57,6 @@ namespace HXCloud.Model
     {
         Normal, Patrol, Repair,Manager
     }
+
+
 }

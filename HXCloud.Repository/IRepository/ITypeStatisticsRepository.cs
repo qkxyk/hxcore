@@ -10,5 +10,6 @@ namespace HXCloud.Repository
     public interface ITypeStatisticsRepository : IBaseRepository<TypeStatisticsInfoModel>
     {
         Task<TypeStatisticsInfoModel> FindWithType(Expression<Func<TypeStatisticsInfoModel, bool>> predicate);
+        Task<IEnumerable<TypeStatisticsInfoModel>> FindGlobalStaticsBySql(int showState);
     }
 }

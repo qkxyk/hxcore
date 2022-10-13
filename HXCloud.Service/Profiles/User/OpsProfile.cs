@@ -38,6 +38,7 @@ namespace HXCloud.Service
             CreateMap<RepairAddDto, RepairModel>().ForMember(dest => dest.RepairType, opt => opt.MapFrom(src => (RepairType)src.RepairType)).ForMember(
                 dest=>dest.EmergenceStatus,opt=>opt.MapFrom(src=>(EmergenceStatus)src.EmergenceStatus));
             CreateMap<RepairModel, RepairDto>();
+            CreateMap<RepairModel, RepairAndIssueDto>();
         }
     }
 }

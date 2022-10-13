@@ -72,5 +72,12 @@ namespace HXCloud.Service
         /// <param name="req">运维单状态和类型</param>
         /// <returns></returns>
         Task<BaseResponse> GetPageRepairAsync(RepairPageRequest req);
+        /// <summary>
+        /// 获取维修单或者调试单和关联的问题单信息
+        /// </summary>
+        /// <param name="account">用户，只有维修单的下发人和接单人有权限查看</param>
+        /// <param name="Id">单据编号</param>
+        /// <returns></returns>
+        Task<BaseResponse> GetRepairByIdAsync(string account, string Id);
     }
 }

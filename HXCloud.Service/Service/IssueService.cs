@@ -201,5 +201,25 @@ namespace HXCloud.Service
             ret.Data = dtos;
             return ret;
         }
+        /// <summary>
+        /// 根据问题单编号获取问题单信息
+        /// </summary>
+        /// <param name="Id">问题单编号</param>
+        /// <param name="users">用户列表</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetIssueByIdAsync(int Id,List<string> users)
+        {
+            var data = await _ir.FindAsync(Id);
+            if (data==null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的问题单编号不存在" };
+            }
+            if (!users.Contains(data.Create))
+            {
+                return new BaseResponse { Success = false, Message = "用户没有权限查看该问题单" };
+            }
+            var dto = _mapper.Map<IssueDto>(data);
+            return new BResponse<IssueDto> { Success = true, Message = "获取数据成功", Data = dto };
+        }
     }
 }

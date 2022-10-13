@@ -163,6 +163,23 @@ namespace HXCloud.APIV2.Controllers
             }
         }
 
+        [HttpGet("{Id}")]
+        public async Task<ActionResult<BaseResponse>> GetIssueByIdAsync(int Id)
+        {
+            //用户可以看到自己填写的，上级用户可以看到下级用户的填写的
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var data = await _user.GetUserAndChildAsync(Account, IsAdmin);
+            List<string> users = data.Keys.ToList();
+            //bool exist = await _issue.IsExist(a => a.Id == Id && users.Contains(a.Create));
+            //if (!exist)
+            //{
+            //    return new BaseResponse { Success = false, Message = "问题单不存在或者用户没有权限查看该问题单" };
+            //}
+            var ret = await _issue.GetIssueByIdAsync(Id, users);
+            return ret;
+        }
+
         /// <summary>
         /// 获取用户的问题单，分页数据（可以获取到包含用户下级的问题单）
         /// </summary>

@@ -19,5 +19,7 @@ namespace HXCloud.ViewModel
         ///// 接单人
         ///// </summary>      
         public string Receiver { get; set; }
-        }
+        //派单时问题的描述
+        public string Description { get; set; }
+    }
 }

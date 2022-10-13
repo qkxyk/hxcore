@@ -47,5 +47,12 @@ namespace HXCloud.Service
         /// <param name="Id">问题单编号</param>
         /// <returns></returns>
         Task<IssueDto> GetIssueByIdAsync(int Id);
+        /// <summary>
+        /// 根据问题单编号获取问题单信息
+        /// </summary>
+        /// <param name="Id">问题单编号</param>
+        /// <param name="users">用户列表</param>
+        /// <returns></returns>
+        Task<BaseResponse> GetIssueByIdAsync(int Id, List<string> users);
     }
 }

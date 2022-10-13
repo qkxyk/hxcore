@@ -479,6 +479,11 @@
             <param name="req">密码信息</param>
             <returns></returns>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.UserController.GetOpsUsers">
+            <summary>
+            根据运维经理账户名获取用户下级运维用户
+            </summary>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.UserRoleController">
             <summary>
             1、获取用户角色.2、更新用户角色.3、删除用户单个角色

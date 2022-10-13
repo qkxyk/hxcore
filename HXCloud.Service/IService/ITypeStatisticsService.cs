@@ -16,5 +16,9 @@ namespace HXCloud.Service
         Task<BaseResponse> DeleteAsync(int Id, string account);
         Task<BaseResponse> GetStatisticsAsync(int Id);
         Task<BaseResponse> FindByTypeAsync(int typeId, TypeStatisticsPageRequestViewModel req);
+        /// <summary>
+        /// 获取所有首页级的统计项目
+        /// </summary>
+        Task<BaseResponse> GetGlobalStatisticsAsync();
     }
 }

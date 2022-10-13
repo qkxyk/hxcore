@@ -175,5 +175,21 @@ namespace HXCloud.Service
                 Data = dtos
             };
         }
+
+        /// <summary>
+        /// 获取所有首页级的统计项目
+        /// </summary>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetGlobalStatisticsAsync()
+        {
+            var data = await _tsr.FindGlobalStaticsBySql(1);
+            var dtos = _mapper.Map<List<TypeStatisticsData>>(data);
+            return new BResponse<List<TypeStatisticsData>>
+            {
+                Success = true,
+                Message = "获取数据成功",
+                Data = dtos
+            };
+        }
     }
 }
