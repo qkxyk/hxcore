@@ -11,6 +11,7 @@ namespace HXCloud.ViewModel
     {
         public string DeviceSn { get; set; }
         public string DeviceName { get; set; }
+        public string ProjectName { get; set; }
         /// <summary>
         /// 问题描述
         /// </summary>
@@ -19,5 +20,6 @@ namespace HXCloud.ViewModel
         /// 问题图片，支持多张图片
         /// </summary>
         public string Url { get; set; }
+        public string CreateName { get; set; }
     }
 }

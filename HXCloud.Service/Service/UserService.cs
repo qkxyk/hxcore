@@ -490,6 +490,10 @@ namespace HXCloud.Service
                 Users.Add(Account, data.Category);
                 foreach (var item in list)
                 {
+                    if (Users.ContainsKey(item.Account))
+                    {
+                        continue;
+                    }
                     Users.Add(item.Account, item.Category);
                 }
                 return Users;
@@ -514,6 +518,54 @@ namespace HXCloud.Service
                 }
             }
         }
+
+        /// <summary>
+        /// 获取用户名称列表（用户的下级，用于运维平台）
+        /// </summary>
+        /// <param name="Account">用户名</param>
+        /// <returns>返回用户列表,如果用户不存在返回空数据</returns>
+        public async Task<List<string>> GetUserAndChildNameAsync(string Account, bool isAdmin)
+        {
+            List<string> Users = new List<string>();
+            //Users.Add(Account);
+            var data = await _user.Find(a => a.Account == Account).FirstOrDefaultAsync();
+            //管理员可以查看所有运维人员
+            if (isAdmin)
+            {
+                var list = await _user.Find(a => a.Category > 0).ToListAsync();
+                //添加自己
+                Users.Add(data.UserName);
+                foreach (var item in list)
+                {
+                    if (Users.Contains(item.UserName))
+                    {
+                        continue;
+                    }
+                    Users.Add(item.UserName);
+                }
+                return Users;
+            }
+            if (data != null)
+            {
+                Users.Add(data.UserName);
+                await GetUserChildNameAsync(Users, data.Id);
+            }
+            return Users;
+        }
+        private async Task GetUserChildNameAsync(List<string> users, int Id)
+        {
+            var data = await _user.Find(a => a.ParentId == Id).ToListAsync();
+            if (data.Count > 0)
+            {
+                foreach (var item in data)
+                {
+                    users.Add(item.UserName);
+                    //递归
+                    await GetUserChildNameAsync(users, item.Id);
+                }
+            }
+        }
+
         /// <summary>
         /// 根据运维经理账户名获取用户下级运维用户
         /// </summary>

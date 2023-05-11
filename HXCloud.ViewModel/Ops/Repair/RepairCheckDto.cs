@@ -10,9 +10,10 @@ namespace HXCloud.ViewModel
     /// </summary>
     public class RepairCheckDto
     {
-        [Required(ErrorMessage = "运维单号不能为空")]
         public string Id { get; set; }
         public bool Check { get; set; } = true;
         public string Description { get; set; }
+        public string CheckAccount { get; set; }//核验人
+        public string CheckAccountName { get; set; }//冗余审核人员
     }
 }

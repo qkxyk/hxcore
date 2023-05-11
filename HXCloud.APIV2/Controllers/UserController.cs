@@ -422,5 +422,14 @@ namespace HXCloud.APIV2.Controllers
             var data = await _us.GetOpsUserAsync(Account);
             return new BResponse<List<OpsUserDto>> { Success = true, Message = "获取数据成功", Data = data };
         }
+
+        [HttpGet("OpsName")]
+        public async Task<List<string>> GetUserNameAsync()
+        {
+            var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var ret = await _us.GetUserAndChildNameAsync(Account,isAdmin);
+            return ret;
+        }
     }
 }

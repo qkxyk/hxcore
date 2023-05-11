@@ -18,5 +18,6 @@ namespace HXCloud.ViewModel
         public int FilterType { get; set; } //过滤方案，0为不过滤，1为最大值最小值过滤，2为其他方案
         public string Description { get; set; }
         public int TypeId { get; set; }//类型表示
+        public string Format { get; set; }
     }
 }

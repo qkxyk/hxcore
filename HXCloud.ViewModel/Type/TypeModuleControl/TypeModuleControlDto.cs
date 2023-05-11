@@ -32,4 +32,16 @@ namespace HXCloud.ViewModel
 
 
     }
+
+    public class TypeModuleControlMockDto
+    {
+        public int Id { get; set; }
+        public string ControlName { get; set; }
+        public string Formula { get; set; }   //公式，用于反馈项的设置
+        public string Format { get; set; }
+        public string Unit { get; set; }
+        //20201106更改为showType
+        public string ShowType { get; set; }
+        public string ClassName { get; set; }//分组名称
+    }
 }

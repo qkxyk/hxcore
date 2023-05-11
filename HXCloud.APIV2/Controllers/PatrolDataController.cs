@@ -71,6 +71,9 @@ namespace HXCloud.APIV2.Controllers
                 }
             }
             PatrolDataAddDto dto = new PatrolDataAddDto() { DeviceSn = req.DeviceSn, DeviceName = data.DeviceName, Position = req.Position, PositionName = req.PositionName };
+            dto.ProjectName = data.FullName;
+            var op = await _user.GetUserByAccountAsync(Account);
+            dto.CreateName = op.UserName;
             var ret = await _patrolData.AddPatrolDataAsync(Account, Id, dto);
             return ret;
         }
@@ -188,7 +191,15 @@ namespace HXCloud.APIV2.Controllers
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var data = await _patrolData.IsExist(a => a.Create == Account && a.Id == Id);
+            //本人或者下级都可以删除
+            var pd = await _patrolData.IsExist(a => a.Id == Id);
+            if (pd == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的运维单编号不存在" };
+            }
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var users = await _user.GetUserAndChildAsync(Account, IsAdmin);
+            var data = await _patrolData.IsExist(a => users.Keys.Contains(a.Create));
             if (!data)
             {
                 return new BaseResponse { Success = false, Message = "输入的巡检单不存在或者用户不是该巡检单的创建者" };
@@ -212,6 +223,27 @@ namespace HXCloud.APIV2.Controllers
             var ret = await _patrolData.GetPatrolItemAsync(req, data.TypeId);
             return ret;
         }
+        /// <summary>
+        /// 根据巡检单号获取巡检数据
+        /// </summary>
+        /// <param name="Id">巡检单号</param>
+        /// <returns></returns>
+        [HttpGet("{Id}")]
+        [TypeFilter(typeof(OpsUserFilterAttribute))]
+        public async Task<BaseResponse> GetPatrolDataByIdAsync(string Id)
+        {
+            //用户可以看到自己填写的，上级用户可以看到下级用户的填写的
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var users = await _user.GetUserAndChildAsync(Account, IsAdmin);
+            var data = await _patrolData.IsExist(a => a.Id == Id && users.Keys.Contains(a.Create));
+            if (!data)
+            {
+                return new BaseResponse { Success = false, Message = "输入的巡检单不存在或者用户没有权限查看该巡检单" };
+            }
+            var ret = await _patrolData.GetPatrolDataByIdAsync(Id);
+            return ret;
+        }
         [HttpGet("Page")]
         [TypeFilter(typeof(OpsUserFilterAttribute))]
         public async Task<BaseResponse> GetPatrolDataPageAsync([FromQuery] PatrolDataRequest req)
@@ -220,6 +252,17 @@ namespace HXCloud.APIV2.Controllers
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             var data = await _user.GetUserAndChildAsync(Account, IsAdmin);
+
+            //验证输入的用户是否是有权限查看的用户
+            if (!string.IsNullOrEmpty(req.UserName))
+            {
+                var users = await _user.GetUserAndChildNameAsync(Account, IsAdmin);
+                if (!users.Contains(req.UserName))
+                {
+                    return new BaseResponse { Success = false, Message = "用户没有权限查看该用户的巡检数据" };
+                }
+            }
+          
             if (data.Count <= 0)
             {
                 return new BaseResponse { Success = false, Message = "输入的用户不存在" };

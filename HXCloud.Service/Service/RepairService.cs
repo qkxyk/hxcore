@@ -60,8 +60,13 @@ namespace HXCloud.Service
                 entity.Id = RepairlId;
                 entity.Create = account;
                 entity.Description = req.Description;
-                await _repair.AddAsync(entity);
-
+                RepairDataModel rdm = new RepairDataModel();
+                rdm.Id = Guid.NewGuid().ToString("N");
+                rdm.Repair = entity;
+                rdm.Operator = entity.CreateName;
+                rdm.RepairStatus = RepairStatus.Send;
+                rdm.OperDate = DateTime.Now;
+                await _repair.AddAsync(entity, rdm);
                 _logger.LogInformation($"{account}创建标识为{entity.Id}的{repairType}单成功");
                 return new HandleResponse<string>() { Key = entity.Id, Success = true, Message = $"创建{repairType}单成功" };
             }
@@ -71,6 +76,7 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = $"用户创建{repairType}单失败" };
             }
         }
+        [Obsolete]
         /// <summary>
         /// 运维单接单
         /// </summary>
@@ -87,7 +93,7 @@ namespace HXCloud.Service
                 if (status == 1)
                 {
                     data.Receiver = Account;
-                    data.ReceiveTime = DateTime.Now;
+                    //data.ReceiveTime = DateTime.Now;
                 }
                 else
                 {
@@ -104,6 +110,7 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = $"用户接单失败" };
             }
         }
+        [Obsolete]
         /// 设置运维单为等待配件状态
         /// </summary>
         /// <param name="Id">运维单编号</param>
@@ -115,17 +122,17 @@ namespace HXCloud.Service
             try
             {
                 var data = await _repair.FindAsync(Id);
-                data.RepairStatus = RepairStatus.Way;
-                if (status == 2)
-                {
-                    //data.Receiver = Account;
-                    data.WaitTime = DateTime.Now;
-                }
-                else
-                {
-                    data.Modify = Account;
-                    data.ModifyTime = DateTime.Now;
-                }
+                data.RepairStatus = RepairStatus.Wait;
+                //if (status == 2)
+                //{
+                //data.Receiver = Account;
+                //data.WaitTime = DateTime.Now;
+                //}
+                //else
+                //{
+                //    data.Modify = Account;
+                //    data.ModifyTime = DateTime.Now;
+                //}
                 await _repair.SaveAsync(data);
                 _logger.LogInformation($"{Account}设置编号为{Id}的运维单成功");
                 return new BaseResponse { Success = true, Message = "设置成功" };
@@ -137,6 +144,7 @@ namespace HXCloud.Service
             }
         }
 
+        [Obsolete]
         /// <summary>
         /// 上传调试或者维修数据
         /// </summary>
@@ -159,8 +167,8 @@ namespace HXCloud.Service
                 }
                 entity.RepairStatus = RepairStatus.Check;
                 entity.Description = req.Description;
-                entity.CheckTime = DateTime.Now;
-                entity.Url = req.Url;
+                //entity.CheckTime = DateTime.Now;
+                //entity.Url = req.Url;
                 await _repair.SaveAsync(entity);
                 _logger.LogInformation($"{account}上传标示为{entity.Id}的{repairType}数据成功");
                 return new BaseResponse { Success = true, Message = $"上传{repairType}数据成功" };
@@ -171,6 +179,7 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = $"上传{repairType}数据失败" };
             }
         }
+        [Obsolete]
         /// <summary>
         /// 审核运维单
         /// </summary>
@@ -191,6 +200,8 @@ namespace HXCloud.Service
                 {
                     repairType = "调试";
                 }
+                //entity.CheckAccount = req.CheckAccount;
+                //entity.CheckAccountName = req.CheckAccountName;
                 if (req.Check)
                 {
                     entity.RepairStatus = RepairStatus.Complete;
@@ -202,7 +213,7 @@ namespace HXCloud.Service
                     entity.ModifyTime = DateTime.Now;
                 }
 
-                entity.CheckDescription = req.Description;
+                //entity.CheckDescription = req.Description;
                 entity.Modify = account;
 
                 //entity.CheckTime = DateTime.Now;
@@ -260,9 +271,10 @@ namespace HXCloud.Service
         /// </summary>
         /// <param name="req">运维单状态和类型</param>
         /// <returns></returns>
-        public async Task<BaseResponse> GetRepairAsync(RepairRequest req)
+        public async Task<BaseResponse> GetRepairAsync(RepairRequestDto req)
         {
-            var data = _repair.Find(a => a.Receiver == req.Account);
+            //var data = _repair.GetWithRepairData(a => a.Receiver == req.Account);
+            var data = _repair.GetWithRepairData(a => req.Accounts.Contains(a.Receiver));
             data = data.Where(a => a.RepairType == (RepairType)req.RepairType);
             data = data.Where(a => a.RepairStatus == (RepairStatus)req.RepairStatus);
             if (!string.IsNullOrWhiteSpace(req.Search))
@@ -280,6 +292,7 @@ namespace HXCloud.Service
             }
             var list = await data.OrderBy(OrderExpression).ToListAsync();
             var dtos = _mapper.Map<List<RepairDto>>(list);
+
             return new BResponse<List<RepairDto>> { Success = true, Message = "获取数据成功", Data = dtos };
         }
         /// <summary>
@@ -287,9 +300,10 @@ namespace HXCloud.Service
         /// </summary>
         /// <param name="req">运维单状态和类型</param>
         /// <returns></returns>
-        public async Task<BaseResponse> GetPageRepairAsync(RepairPageRequest req)
+        public async Task<BaseResponse> GetPageRepairAsync(RepairPageRequestDto req)
         {
-            var data = _repair.Find(a => a.Receiver == req.Account);
+            //var data = _repair.GetWithRepairData(a => a.Receiver == req.Account);
+            var data = _repair.GetWithRepairData(a => req.Accounts.Contains(a.Receiver));
             data = data.Where(a => a.RepairType == (RepairType)req.RepairType);
             data = data.Where(a => a.RepairStatus == (RepairStatus)req.RepairStatus);
             if (!string.IsNullOrWhiteSpace(req.Search))
@@ -316,6 +330,10 @@ namespace HXCloud.Service
             ret.Count = count;
             ret.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
             ret.Data = dtos;
+            //if (true)
+            //{
+
+            //}
             return ret;
         }
 
@@ -327,7 +345,7 @@ namespace HXCloud.Service
         /// <returns></returns>
         public async Task<BaseResponse> GetRepairByIdAsync(string account, string Id)
         {
-            var data = await _repair.FindAsync(Id);
+            var data = await _repair.GetWithRepairDataAsync(Id);
             if (data == null)
             {
                 return new BaseResponse { Success = false, Message = "输入的维修或者调试单编号不存在" };
@@ -342,9 +360,12 @@ namespace HXCloud.Service
                     {
                         ret.IssueUrl = iss.Url;
                         ret.IssueDescription = iss.Description;
-                        ret.IssueDt = iss.Dt;
+                        ret.IssueDt = iss.CreateTime;
+                        ret.Submitter = iss.CreateName;
                     }
                 }
+                var repairData = _mapper.Map<List<RepairDataDto>>(data.RepairDatas);
+                ret.RepairData = repairData;
                 return new BResponse<RepairAndIssueDto> { Success = true, Message = "获取数据成功", Data = ret };
             }
             else

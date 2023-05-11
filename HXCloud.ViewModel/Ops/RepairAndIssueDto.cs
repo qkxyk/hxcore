@@ -15,5 +15,9 @@ namespace HXCloud.ViewModel
         /// </summary>
         public string IssueUrl { get; set; }
         public DateTime IssueDt { get; set; }
+        /// <summary>
+        /// 提交人
+        /// </summary>
+        public string Submitter { get; set; }
     }
 }

@@ -53,5 +53,12 @@ namespace HXCloud.Service
         /// <param name="req">查询条件</param>
         /// <returns>返回用户巡检数据</returns>
         Task<BaseResponse> GetPatrolDataPageAsync(List<string> users, PatrolDataRequest req);
+
+        /// <summary>
+        /// 根据巡检单号获取巡检数据
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        Task<BaseResponse> GetPatrolDataByIdAsync(string Id);
     }
 }

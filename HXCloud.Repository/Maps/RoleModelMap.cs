@@ -14,6 +14,7 @@ namespace HXCloud.Repository.Maps
             builder.ToTable("Role").HasKey(a => a.Id);
             builder.Property(a => a.IsAdmin).HasDefaultValue(false);
             builder.HasOne(a => a.Group).WithMany(a => a.Roles).HasForeignKey(a => a.GroupId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Module).WithMany(a => a.Roles).HasForeignKey(a => a.ModuleId).IsRequired(false).OnDelete(DeleteBehavior.ClientSetNull);
             base.Configure(builder);
             //builder.HasOne(a => a.Department).WithMany(a => a.Roles).HasForeignKey(a => a.DepartmentId).OnDelete(DeleteBehavior.Cascade);
         }

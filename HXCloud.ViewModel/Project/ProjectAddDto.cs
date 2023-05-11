@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
+using HXCloud.Common;
 
 namespace HXCloud.ViewModel
 {
@@ -15,5 +16,13 @@ namespace HXCloud.ViewModel
         public string RegionId { get; set; }//项目区域编号
         public string Position { get; set; }//项目位置（经纬度）
         public int? ParentId { get; set; }//父项目编号
+        #region 20230324运维增加项目
+        public ProjectScale ProjectScale { get; set; }//项目规模
+        public string Crafts { get; set; }//生产工艺
+        public string WaterIndex { get; set; }//出水指标
+        public string DeviceType { get; set; }//设备型号，手工输入场站中设备型号和个数，如：贝斯100T-20台
+        public string Address { get; set; }//项目地址或者场站地址
+        public string Description { get; set; }//项目描述
+        #endregion
     }
 }

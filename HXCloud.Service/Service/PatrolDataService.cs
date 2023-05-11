@@ -77,6 +77,7 @@ namespace HXCloud.Service
                 var entity = _mapper.Map<PatrolDataModel>(req);
                 entity.Id = patrolId;
                 entity.Create = account;
+                entity.Dt = DateTime.Now;
                 await _patrolData.AddAsync(entity);
                 _logger.LogInformation($"{account}创建标识为{entity.Id}的巡检单成功");
                 return new HandleResponse<string>() { Key = entity.Id, Success = true, Message = "创建巡检单成功" };
@@ -219,6 +220,22 @@ namespace HXCloud.Service
         }
 
         /// <summary>
+        /// 根据巡检单号获取巡检数据
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetPatrolDataByIdAsync(string Id)
+        {
+            var data =await _patrolData.FindWithPatrolData(a => a.Id==Id).FirstOrDefaultAsync();
+            if (data==null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的巡检单不存在" };
+            }                
+            var patrolData = _mapper.Map<PatrolDataDto>(data);
+            var ret = new BResponse<PatrolDataDto>() { Success=true,Message="获取数据成功",Data=patrolData};
+            return ret;
+        }
+        /// <summary>
         /// 获取巡检数据
         /// </summary>
         /// <param name="users">用户列表</param>
@@ -228,9 +245,9 @@ namespace HXCloud.Service
         {
             var data = _patrolData.FindWithPatrolData(a => a.CreateTime >= req.BeginTime && a.CreateTime <= req.EndTime);
             data = data.Where(a => users.Contains(a.Create));
-            if (!string.IsNullOrWhiteSpace(req.Search))
+            if (!string.IsNullOrWhiteSpace(req.UserName))
             {
-                data = data.Where(a => a.DeviceName.Contains(req.Search));
+                data = data.Where(a => a.CreateName==req.UserName);
             }
             int count = data.Count();
             string OrderExpression = "";

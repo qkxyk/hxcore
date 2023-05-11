@@ -67,7 +67,7 @@ namespace HXCloud.APIV2.Controllers
                 const string fileFilt = ".gif|.jpg|.jpeg|.png";
                 if (fileExtension == null)
                 {
-                    return new BResponse<string> { Success = false, Message = "上传的文件没有后缀", Data=$"{item.FileName}没有后缀名" };
+                    return new BResponse<string> { Success = false, Message = "上传的文件没有后缀", Data = $"{item.FileName}没有后缀名" };
                 }
                 if (fileFilt.IndexOf(fileExtension.ToLower(), StringComparison.Ordinal) <= -1)
                 {
@@ -85,13 +85,15 @@ namespace HXCloud.APIV2.Controllers
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             IssueAddDto dto = new IssueAddDto();
-
+            var op = await _user.GetUserByAccountAsync(Account);
+            dto.CreateName = op.UserName;
             //检测关联的设备是否存在
             var data = await _ds.CheckDeviceAsync(req.DeviceSn);
             if (!data.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "输入的设备不存在，请确认" };
             }
+            dto.ProjectName = data.FullName;
             //检查是否有设备查看权限
             if (!IsAdmin)        //非管理员验证权限
             {
@@ -203,19 +205,25 @@ namespace HXCloud.APIV2.Controllers
 
         [HttpPut]
         [TypeFilter(typeof(OpsManagerFilterAttribute))]
-        public async Task<ActionResult<BaseResponse>> UpdateIssueAsync([FromBody] IssueUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateIssueAsync([FromBody] IssueUpdateRequest req)
         {
-            //更改问题单状态
-            //获取用户登录信息,运维管理员以上可以处理问题单
-            //var u = context.HttpContext.User;
-            var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            IssueUpdateDto dto = new IssueUpdateDto();
+                        //更改问题单状态
+                        //获取用户登录信息,运维管理员以上可以处理问题单
+                        //var u = context.HttpContext.User;
+                        var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             //var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
             //int category = 0;
             //int.TryParse(ops, out category);
             //if (IsAdmin | category == 4)
             //{
-            var ret = await _issue.UpdateIssueAsync(account, req);
+            dto.Id = req.Id;
+            dto.Opinion = req.Opinion;
+            dto.Status = req.Status;
+            var op = await _user.GetUserByAccountAsync(account);
+            dto.HandleName = op.UserName;
+            var ret = await _issue.UpdateIssueAsync(account, dto);
             return ret;
             //}
             //else

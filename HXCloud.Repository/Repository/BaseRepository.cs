@@ -22,7 +22,7 @@ namespace HXCloud.Repository
             _db.SaveChanges();
         }
 
-        public async Task AddAsync(T entity)
+        public async virtual Task AddAsync(T entity)
         {
             _db.Set<T>().Add(entity);
             await _db.SaveChangesAsync();
@@ -57,7 +57,7 @@ namespace HXCloud.Repository
             _db.SaveChanges();
         }
 
-        public async Task RemoveAsync(T entity)
+        public async virtual Task RemoveAsync(T entity)
         {
             _db.Set<T>().Remove(entity);
             await _db.SaveChangesAsync();

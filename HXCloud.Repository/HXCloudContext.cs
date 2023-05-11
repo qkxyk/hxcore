@@ -129,8 +129,16 @@ namespace HXCloud.Repository
         public DbSet<WaterAnalysisModel> WaterAnalyses { get; set; }
         public DbSet<DevicePatrolModel> DevicePatrols { get; set; }
         public DbSet<TechniquePatrolModel> TechniquePatrols { get; set; }
-        #endregion
 
+        //2023-2-14新增运维流程表
+        public DbSet<RepairDataModel> RepairDatas { get; set; }
+        public DbSet<RepairPartModel> RepairParts { get; set; }
+        #endregion
+        #region 2023-58新增模块功能
+        public DbSet<ModuleModel> Modules { get; set; }
+        public DbSet<ModuleOperateModel> ModuleOperates { get; set; }
+        public DbSet<RoleModuleOperateModel> RoleModuleOperates { get; set; }
+        #endregion
 
 
         /*
@@ -292,6 +300,14 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new WaterAnalysisModelMap());
             modelBuilder.ApplyConfiguration(new DevicePatrolModelMap());
             modelBuilder.ApplyConfiguration(new TechniquePatrolModelMap());
+            //2023-2-17
+            modelBuilder.ApplyConfiguration(new RepairDataModelMap());
+            modelBuilder.ApplyConfiguration(new RepairPartModelMap());
+            #endregion
+            #region 2023-58新增模块功能
+            modelBuilder.ApplyConfiguration(new ModuleModelMap());
+            modelBuilder.ApplyConfiguration(new ModuleOperateModelMap());
+            modelBuilder.ApplyConfiguration(new RoleModuleOperateModelMap());
             #endregion
         }
     }

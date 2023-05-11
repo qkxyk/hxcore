@@ -10,34 +10,40 @@ namespace HXCloud.ViewModel
         public string Id { get; set; }
         public string DeviceSn { get; set; }
         public string DeviceName { get; set; }
+        public string ProjectName { get; set; }
         /// <summary>
         /// 关联的问题单编号
         /// </summary>
         public int? IssueId { get; set; }
-        public int? RepairType { get; set; }
-        public int? RepairStatus { get; set; }
+        //public string IssueDescription { get; set; }
+        //public DateTime IssueDate { get; set; }
+        public string RepairType { get; set; }
+        public string RepairStatus { get; set; }
         ///// <summary>
         ///// 接单人
         ///// </summary>      
         public string Receiver { get; set; }
         /// <summary>
-        /// 接单时间
+        /// 创建时间
         /// </summary>
-        public DateTime? ReceiveTime { get; set; }
+        public DateTime CreateTime { get; set; }
+        /// <summary>
+        /// 完成时间
+        /// </summary>
+        public DateTime? CompleteTime { get; set; }
+
         /// <summary>
         /// 接单人电话
         /// </summary>
         public string ReceivePhone { get; set; }
-        public int? EmergenceStatus { get; set; }
-        public string Url { get; set; }
-        /// <summary>
-        /// 完成时间
-        /// </summary>
-        public DateTime CompleteTime { get; set; }
-        public DateTime? WaitTime { get; set; }//配件等待开始时间
-        public DateTime? CheckTime { get; set; }//核验时间
-        public string CheckDescription { get; set; }//核验描述
+        public string EmergenceStatus { get; set; }
         public string Description { get; set; }//提交描述
-        public string WaitDescription { get; set; }//等待配件描述
+        public string CreateName { get; set; }//冗余创建者
+        public string ReceiverName { get; set; }//冗余接单人
+        public List<RepairDataDto> RepairData { get; set; }
+        /// <summary>
+        /// 关联问题单数据
+        /// </summary>
+        //public IssueData IssueData { get; set; }
     }
 }

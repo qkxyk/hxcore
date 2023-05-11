@@ -1047,6 +1047,9 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreateName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1064,6 +1067,9 @@ namespace HXCloud.Repository.Migrations
                     b.Property<DateTime>("Dt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("HandleName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Modify")
                         .HasColumnType("nvarchar(max)");
 
@@ -1073,6 +1079,12 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("Opinion")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ProjectName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RepairId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
 
@@ -1081,7 +1093,75 @@ namespace HXCloud.Repository.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RepairId");
+
                     b.ToTable("Issue");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ModuleModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ModuleName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Module");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ModuleOperateModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Modify")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ModifyTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("OperateName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleOperate");
                 });
 
             modelBuilder.Entity("HXCloud.Model.OpsItemModel", b =>
@@ -1137,6 +1217,9 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreateName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreateTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
@@ -1161,6 +1244,9 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PositionName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1267,6 +1353,12 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Crafts")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Create")
                         .HasColumnType("nvarchar(max)");
 
@@ -1274,6 +1366,12 @@ namespace HXCloud.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeviceType")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("GroupId")
                         .HasColumnType("nvarchar(450)");
@@ -1303,6 +1401,9 @@ namespace HXCloud.Repository.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RegionId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("WaterIndex")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -1400,21 +1501,52 @@ namespace HXCloud.Repository.Migrations
                     b.ToTable("Region");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.RepairDataModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OperDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Operator")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RepairId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RepairStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Sn")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepairId");
+
+                    b.ToTable("RepairData");
+                });
+
             modelBuilder.Entity("HXCloud.Model.RepairModel", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("CheckDescription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("CheckTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CompleteTime")
+                    b.Property<DateTime?>("CompleteTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CreateName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateTime")
@@ -1431,8 +1563,15 @@ namespace HXCloud.Repository.Migrations
                     b.Property<string>("DeviceSn")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EmergenceStatus")
-                        .HasColumnType("int");
+                    b.Property<string>("EmergenceStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsComplete")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsParts")
+                        .HasColumnType("bit");
 
                     b.Property<int>("IssueId")
                         .HasColumnType("int");
@@ -1443,33 +1582,58 @@ namespace HXCloud.Repository.Migrations
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ReceivePhone")
+                    b.Property<string>("ProjectName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ReceiveTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ReceivePhone")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Receiver")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RepairStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RepairType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Url")
+                    b.Property<string>("ReceiverName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WaitDescription")
+                    b.Property<string>("RepairStatus")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("WaitTime")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("RepairType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Repairs");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.RepairPartModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<string>("Data")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Num")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Operate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("OperateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("RepairId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepairId");
+
+                    b.ToTable("RepairPart");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RoleModel", b =>
@@ -1504,6 +1668,9 @@ namespace HXCloud.Repository.Migrations
                     b.Property<DateTime?>("ModifyTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("ModuleId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RoleName")
                         .HasColumnType("nvarchar(max)");
 
@@ -1511,7 +1678,32 @@ namespace HXCloud.Repository.Migrations
 
                     b.HasIndex("GroupId");
 
+                    b.HasIndex("ModuleId");
+
                     b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.RoleModuleOperateModel", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OperateId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Create")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreateTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.HasKey("RoleId", "OperateId");
+
+                    b.HasIndex("OperateId");
+
+                    b.ToTable("RoleModuleOperate");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RoleProjectModel", b =>
@@ -2918,6 +3110,26 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Device");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.IssueModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.RepairModel", "Repair")
+                        .WithMany()
+                        .HasForeignKey("RepairId");
+
+                    b.Navigation("Repair");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ModuleOperateModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.ModuleModel", "Module")
+                        .WithMany("Operates")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Module");
+                });
+
             modelBuilder.Entity("HXCloud.Model.PatrolImageModel", b =>
                 {
                     b.HasOne("HXCloud.Model.PatrolDataModel", "PatrolData")
@@ -2962,9 +3174,32 @@ namespace HXCloud.Repository.Migrations
                         .WithMany("Child")
                         .HasForeignKey("ParentId");
 
+                    b.OwnsOne("HXCloud.Common.ProjectScale", "ProjectScale", b1 =>
+                        {
+                            b1.Property<int>("ProjectModelId")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("int")
+                                .UseIdentityColumn();
+
+                            b1.Property<decimal>("Num")
+                                .HasColumnType("decimal(18,2)");
+
+                            b1.Property<string>("Unit")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("ProjectModelId");
+
+                            b1.ToTable("Project");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectModelId");
+                        });
+
                     b.Navigation("Group");
 
                     b.Navigation("Parent");
+
+                    b.Navigation("ProjectScale");
                 });
 
             modelBuilder.Entity("HXCloud.Model.ProjectPrincipalsModel", b =>
@@ -2995,6 +3230,26 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Parent");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.RepairDataModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.RepairModel", "Repair")
+                        .WithMany("RepairDatas")
+                        .HasForeignKey("RepairId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Repair");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.RepairPartModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.RepairModel", "Repair")
+                        .WithMany("RepairParts")
+                        .HasForeignKey("RepairId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Repair");
+                });
+
             modelBuilder.Entity("HXCloud.Model.RoleModel", b =>
                 {
                     b.HasOne("HXCloud.Model.GroupModel", "Group")
@@ -3002,7 +3257,32 @@ namespace HXCloud.Repository.Migrations
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade);
 
+                    b.HasOne("HXCloud.Model.ModuleModel", "Module")
+                        .WithMany("Roles")
+                        .HasForeignKey("ModuleId");
+
                     b.Navigation("Group");
+
+                    b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.RoleModuleOperateModel", b =>
+                {
+                    b.HasOne("HXCloud.Model.ModuleOperateModel", "ModuleOperate")
+                        .WithMany("RoleModuleOperates")
+                        .HasForeignKey("OperateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HXCloud.Model.RoleModel", "Role")
+                        .WithMany("RoleModuleOperates")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ModuleOperate");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("HXCloud.Model.RoleProjectModel", b =>
@@ -3433,6 +3713,18 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.ModuleModel", b =>
+                {
+                    b.Navigation("Operates");
+
+                    b.Navigation("Roles");
+                });
+
+            modelBuilder.Entity("HXCloud.Model.ModuleOperateModel", b =>
+                {
+                    b.Navigation("RoleModuleOperates");
+                });
+
             modelBuilder.Entity("HXCloud.Model.PatrolDataModel", b =>
                 {
                     b.Navigation("DevicePatrol");
@@ -3464,8 +3756,17 @@ namespace HXCloud.Repository.Migrations
                     b.Navigation("Child");
                 });
 
+            modelBuilder.Entity("HXCloud.Model.RepairModel", b =>
+                {
+                    b.Navigation("RepairDatas");
+
+                    b.Navigation("RepairParts");
+                });
+
             modelBuilder.Entity("HXCloud.Model.RoleModel", b =>
                 {
+                    b.Navigation("RoleModuleOperates");
+
                     b.Navigation("RoleProjects");
 
                     b.Navigation("UserRoles");

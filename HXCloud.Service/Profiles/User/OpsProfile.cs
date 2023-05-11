@@ -28,17 +28,25 @@ namespace HXCloud.Service
             CreateMap<TypeOpsItemModel, TypeOpsItemDto>();
             CreateMap<PatrolDataModel, PatrolDataDto>().ForMember(dest => dest.PatrolImage, opt => opt.MapFrom(src => src.PatrolImage.Url))
                 .ForMember(dest => dest.ProductData, opt => opt.MapFrom(src => src.ProductData.Content)).ForMember(dest => dest.WaterAnalysis,
-                opt =>opt.MapFrom(src => src.WaterAnalysis.Content)).ForMember(dest => dest.DevicePatrol, opt => opt.MapFrom(src => src.DevicePatrol.Content))
+                opt => opt.MapFrom(src => src.WaterAnalysis.Content)).ForMember(dest => dest.DevicePatrol, opt => opt.MapFrom(src => src.DevicePatrol.Content))
                 .ForMember(dest => dest.TechniquePatrol, opt => opt.MapFrom(src => src.TechniquePatrol.Content));
             //问题单
             CreateMap<IssueAddDto, IssueModel>();
             CreateMap<IssueUpdateDto, IssueModel>();
-            CreateMap<IssueModel, IssueDto>();
+            CreateMap<IssueModel, IssueDto>().ForMember(dest => dest.Handle, opt => opt.MapFrom(src => src.Modify));
             //维修
             CreateMap<RepairAddDto, RepairModel>().ForMember(dest => dest.RepairType, opt => opt.MapFrom(src => (RepairType)src.RepairType)).ForMember(
-                dest=>dest.EmergenceStatus,opt=>opt.MapFrom(src=>(EmergenceStatus)src.EmergenceStatus));
-            CreateMap<RepairModel, RepairDto>();
+                dest => dest.EmergenceStatus, opt => opt.MapFrom(src => (EmergenceStatus)src.EmergenceStatus));
+            CreateMap<RepairModel, RepairDto>().ForMember(dest=>dest.RepairData,opt=>opt.MapFrom(src=>src.RepairDatas));
             CreateMap<RepairModel, RepairAndIssueDto>();
+
+            CreateMap<RepairDataModel, RepairDataDto>();
+            CreateMap<AddRepairDataBaseDto, RepairDataModel>();
+            CreateMap<AddRepairDataMessageDto, RepairDataModel>();
+            CreateMap<AddRepairCheckDto, RepairDataModel>();
+            CreateMap<AddRepairDataDto, RepairDataModel>();
+
+            CreateMap<RepairPartModel, RepairPartDto>();
         }
     }
 }

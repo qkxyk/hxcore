@@ -13,6 +13,7 @@ namespace HXCloud.Model
         public DateTime Dt { get; set; }
         public string DeviceSn { get; set; }
         public string DeviceName { get; set; }
+        public string ProjectName { get; set; }
         //public string Account { get; set; }
         public string Position { get; set; }
         public string PositionName { get; set; }
@@ -21,6 +22,8 @@ namespace HXCloud.Model
         public WaterAnalysisModel WaterAnalysis { get; set; }
         public DevicePatrolModel DevicePatrol { get; set; }
         public TechniquePatrolModel TechniquePatrol { get; set; }
+
+        public string CreateName { get; set; }
     }
     public class PatrolImageModel : IAggregateRoot
     {

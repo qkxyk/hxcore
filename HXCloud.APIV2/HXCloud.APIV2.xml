@@ -254,6 +254,13 @@
             巡检数据
             </summary>
         </member>
+        <member name="M:HXCloud.APIV2.Controllers.PatrolDataController.GetPatrolDataByIdAsync(System.String)">
+            <summary>
+            根据巡检单号获取巡检数据
+            </summary>
+            <param name="Id">巡检单号</param>
+            <returns></returns>
+        </member>
         <member name="T:HXCloud.APIV2.Controllers.PlcSecurityController">
             <summary>
             plc鉴权
@@ -295,32 +302,25 @@
             <param name="req">运维单数据</param>
             <returns></returns>
         </member>
-        <member name="M:HXCloud.APIV2.Controllers.RepairController.ReceiveRepairAsync(HXCloud.ViewModel.RepairStatusUpdateDto)">
-            <summary>
-            接单
-            </summary>
-            <param name="req">运维单编号</param>
-            <returns></returns>
-        </member>
-        <member name="M:HXCloud.APIV2.Controllers.RepairController.WaitRepairAsync(HXCloud.ViewModel.RepairStatusUpdateDto)">
-            <summary>
-            设置运维单为等待配件
-            </summary>
-            <param name="req">运维单状态信息</param>
-            <returns></returns>
-        </member>
-        <member name="M:HXCloud.APIV2.Controllers.RepairController.UpLoadRepairImageAsync(HXCloud.ViewModel.RepairAddImageRequest)">
-            <summary>
-            上传运维结果
-            </summary>
-            <param name="req">运维结果</param>
-            <returns></returns>
-        </member>
         <member name="M:HXCloud.APIV2.Controllers.RepairController.DeleteRepairAsync(System.String)">
             <summary>
             删除运维单,只能删除为接单的运维单
             </summary>
             <param name="Id">运维单</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairDataController.ReceiveRepairAsync(System.String)">
+            <summary>
+            接收运维单
+            </summary>
+            <param name="Id">运维单编号</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.RepairDataController.ThirdRepairAsync(HXCloud.ViewModel.AddRepairDataMessageDto)">
+            <summary>
+            等待第三方维修
+            </summary>
+            <param name="req">运维单编号和备注信息</param>
             <returns></returns>
         </member>
         <member name="T:HXCloud.APIV2.Controllers.RoleController">
@@ -518,6 +518,21 @@
             </summary>
             <param name="context"></param>
             <returns></returns>
+        </member>
+        <member name="P:HXCloud.APIV2.MiddleWares.ResourceData.ProjectId">
+            <summary>
+            项目或者场站标识
+            </summary>
+        </member>
+        <member name="P:HXCloud.APIV2.MiddleWares.ResourceData.Operate">
+            <summary>
+            验证的操作
+            </summary>
+        </member>
+        <member name="P:HXCloud.APIV2.MiddleWares.ResourceData.Compare">
+            <summary>
+            验证权限如何比较
+            </summary>
         </member>
     </members>
 </doc>

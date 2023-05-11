@@ -48,6 +48,7 @@ namespace HXCloud.Service
             try
             {
                 var entity = _mapper.Map<IssueModel>(req);
+                entity.Dt = DateTime.Now;
                 entity.Create = account;
                 await _ir.AddAsync(entity);
                 _log.LogInformation($"{account}添加标示为{entity.Id}上报数据成功");

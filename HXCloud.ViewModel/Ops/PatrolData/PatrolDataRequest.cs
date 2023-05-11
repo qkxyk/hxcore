@@ -8,6 +8,7 @@ namespace HXCloud.ViewModel
     {
         public DateTime BeginTime { get; set; } = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd 00:00:00"));
         public DateTime EndTime { get; set; } = Convert.ToDateTime(DateTime.Now.ToString("yyyy-MM-dd 23:59:59"));
+        public string UserName { get; set; }
 
     }
 }

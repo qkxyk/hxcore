@@ -137,7 +137,8 @@ namespace HXCloud.Service
 
         public async Task<BaseResponse> GetStatisticsAsync(int Id)
         {
-            var data = await _tsr.FindAsync(Id);
+            //var data = await _tsr.FindAsync(Id);
+            var data = await _tsr.FindWithFormat(a => a.Id == Id).FirstOrDefaultAsync();
             if (data == null)
             {
                 return new BaseResponse { Success = false, Message = "输入的类型统计编号不存在" };
@@ -147,7 +148,8 @@ namespace HXCloud.Service
         }
         public async Task<BaseResponse> FindByTypeAsync(int typeId, TypeStatisticsPageRequestViewModel req)
         {
-            var query = _tsr.Find(a => a.TypeId == typeId);
+            //var query = _tsr.Find(a => a.TypeId == typeId);
+            var query = _tsr.FindWithFormat(a => a.TypeId == typeId);
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
                 query = query.Where(a => a.Name.Contains(req.Search) || a.DataKey.Contains(req.Search));

@@ -2,14 +2,10 @@
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -50,6 +46,7 @@ namespace HXCloud.APIV2.Controllers
         public async Task<ActionResult<BaseResponse>> AddRepairAsync([FromBody] RepairAddRequest req)
         {
             RepairAddDto dto = new RepairAddDto();
+
             if (req.IssueId.HasValue)
             {
                 var issueData = await _issue.IsExist(a => a.Id == req.IssueId.Value);
@@ -73,6 +70,7 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "输入的设备不存在，请确认" };
             }
+            dto.ProjectName = deviceData.FullName;
             if (string.IsNullOrEmpty(deviceData.PathId))
             {
                 return new BaseResponse { Success = false, Message = "该设备没有分配场站，不能操作" };
@@ -83,6 +81,7 @@ namespace HXCloud.APIV2.Controllers
                 return new BaseResponse { Success = false, Message = "接收人对该设备没有权限" };
             }
             dto.Receiver = req.Receiver;
+            dto.ReceiverName = userData.UserName;
             dto.ReceivePhone = userData.Phone;
             dto.RepairType = req.RepairType;
             dto.EmergenceStatus = req.EmergenceStatus;
@@ -103,7 +102,7 @@ namespace HXCloud.APIV2.Controllers
             //管理员和运维人员可以通过
             if (!IsAdmin && category < 3)
             {
-                return new BaseResponse { Message = "用户没有权限审核运维单", Success = false };
+                return new BaseResponse { Message = "用户没有权限派发运维单", Success = false };
             }
             //验证用户是否对该运维单有权限
             //检测关联的设备是否存在
@@ -117,9 +116,12 @@ namespace HXCloud.APIV2.Controllers
                     return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
                 }
             }
+            var op = await _user.GetUserByAccountAsync(Account);
+            dto.CreateName = op.UserName;
             var ret = await _repair.AddRepairAsync(Account, Id, dto);
             return ret;
         }
+        /*
         /// <summary>
         /// 接单
         /// </summary>
@@ -150,153 +152,150 @@ namespace HXCloud.APIV2.Controllers
             var ret = await _repair.ReceiveRepairAsync(req.Id, Account, req.RepairStatus);
             return ret;
         }
-        /// <summary>
-        /// 设置运维单为等待配件
-        /// </summary>
-        /// <param name="req">运维单状态信息</param>
-        /// <returns></returns>
-        [HttpPut("Wait")]
-        public async Task<ActionResult<BaseResponse>> WaitRepairAsync(RepairStatusUpdateDto req)
-        {
-            var data = await _repair.IsExistAsync(a => a.Id == req.Id);
-            if (data == null)
-            {
-                return new BaseResponse { Success = false, Message = "输入的运维单不存在" };
-            }
-            if (req.RepairStatus != 2)
-            {
-                return new BaseResponse { Success = false, Message = "等待配件状态为2" };
-            }
-            if ((int)data.RepairStatus != 1)
-            {
-                return new BaseResponse { Success = false, Message = "运维单没有接单或者状态不正确，请联系管理员" };
-            }
-            //检查用户是否是接单员,隐含接单人员已有接单权限（派单时已检查）
-            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            if (Account != data.Receiver)
-            {
-                return new BaseResponse { Success = false, Message = "用户和接单用户不一致" };
-            }
-            var ret = await _repair.WaitRepairAsync(req.Id, Account, req.RepairStatus);
-            return ret;
-        }
-
-        /// <summary>
-        /// 上传运维结果
-        /// </summary>
-        /// <param name="req">运维结果</param>
-        /// <returns></returns>
-        [HttpPost("UpLoad")]
-        public async Task<ActionResult<BaseResponse>> UpLoadRepairImageAsync([FromForm] RepairAddImageRequest req)
-        {
-            var data = await _repair.IsExistAsync(a => a.Id == req.Id);
-            if (data == null)
-            {
-                return new BaseResponse { Success = false, Message = "输入的运维单不存在" };
-            }
-            /*   if ((int)data.RepairStatus != 1)
+        */
+        /*
+           /// <summary>
+           /// 设置运维单为等待配件
+           /// </summary>
+           /// <param name="req">运维单状态信息</param>
+           /// <returns></returns>
+           [HttpPut("Wait")]
+           public async Task<ActionResult<BaseResponse>> WaitRepairAsync(RepairStatusUpdateDto req)
+           {
+               var data = await _repair.IsExistAsync(a => a.Id == req.Id);
+               if (data == null)
+               {
+                   return new BaseResponse { Success = false, Message = "输入的运维单不存在" };
+               }
+               if (req.RepairStatus != 2)
+               {
+                   return new BaseResponse { Success = false, Message = "等待配件状态为2" };
+               }
+               if ((int)data.RepairStatus != 1)
                {
                    return new BaseResponse { Success = false, Message = "运维单没有接单或者状态不正确，请联系管理员" };
                }
-               if ((int)data.RepairStatus == 4)
+               //检查用户是否是接单员,隐含接单人员已有接单权限（派单时已检查）
+               string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+               if (Account != data.Receiver)
                {
-                   return new BaseResponse { Success = false, Message = "该运维单已结束" };
-               }*/
-            //只能是已接单或者等待配件状态下才能处理
-            if (!((int)data.RepairStatus == 1 || (int)data.RepairStatus == 2))
-            {
-                return new BaseResponse { Success = false, Message = "运维单没有接单或者状态不正确，请联系管理员" };
-            }
-            //检测图片类型和图片大小
-            foreach (var item in req.file)
-            {
-                //文件后缀
-                var fileExtension = Path.GetExtension(item.FileName);
-                //判断后缀是否是图片
-                const string fileFilt = ".gif|.jpg|.jpeg|.png";
-                if (fileExtension == null)
+                   return new BaseResponse { Success = false, Message = "用户和接单用户不一致" };
+               }
+               var ret = await _repair.WaitRepairAsync(req.Id, Account, req.RepairStatus);
+               return ret;
+           }
+   */
+        /*
+                /// <summary>
+                /// 上传运维结果
+                /// </summary>
+                /// <param name="req">运维结果</param>
+                /// <returns></returns>
+                [HttpPost("UpLoad")]
+                public async Task<ActionResult<BaseResponse>> UpLoadRepairImageAsync([FromForm] RepairAddImageRequest req)
                 {
-                    return new BResponse<string> { Success = false, Message = "上传的文件没有后缀", Data = $"{item.FileName}没有后缀名" };
-                }
-                if (fileFilt.IndexOf(fileExtension.ToLower(), StringComparison.Ordinal) <= -1)
-                {
-                    return new BResponse<string> { Success = false, Message = "请上传jpg、png、gif格式的图片", Data = $"{item.FileName}格式不正确" };
-                }
-                //判断文件大小    
-                long length = item.Length;
-                if (length > 1024 * 1024 * 5) //5M
-                {
-                    return new BResponse<string> { Success = false, Message = "上传的图片不能大于5M", Data = $"{item.FileName}太大" };
-                }
-            }
-            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-            RepairAddImageDto dto = new RepairAddImageDto();
-            dto.Id = req.Id;
-            dto.Description = req.Description;
-            //图片保存的相对路径：image+组织编号+ops+图片名称
-            string webRootPath = _webHostEnvironment.WebRootPath;//wwwroot文件夹
-            string userPath = Path.Combine(GroupId, "Ops", "RepairImage");//保存位置    
-            userPath = Path.Combine(_config["StoredImagesPath"], userPath);
-            var filePath = Path.Combine(webRootPath, userPath);//物理路径,不包含文件名称
-            //如果路径不存在，创建路径
-            if (!Directory.Exists(filePath))
-                Directory.CreateDirectory(filePath);
-            List<string> imageUrl = new List<string>();
-            try
-            {
-                foreach (var formFile in req.file)
-                {
-                    if (formFile.Length > 0)
+                    var data = await _repair.IsExistAsync(a => a.Id == req.Id);
+                    if (data == null)
                     {
-                        //var fileExtension = Path.GetExtension(formFile.FileName);
-                        string ext = DateTime.Now.ToString("yyyyMMddhhmmss") + formFile.FileName;//图片名称修改为日期加图片名称
-                        var imagePath = Path.Combine(filePath, ext);//文件的物理路径
-                        imageUrl.Add(Path.Combine(userPath, ext));//图片的相对保存路径
-                        using (var stream = System.IO.File.Create(imagePath))
+                        return new BaseResponse { Success = false, Message = "输入的运维单不存在" };
+                    }
+                    //只能是已接单或者等待配件状态下才能处理
+                    if (!((int)data.RepairStatus == 1 || (int)data.RepairStatus == 2))
+                    {
+                        return new BaseResponse { Success = false, Message = "运维单没有接单或者状态不正确，请联系管理员" };
+                    }
+                    //检测图片类型和图片大小
+                    foreach (var item in req.file)
+                    {
+                        //文件后缀
+                        var fileExtension = Path.GetExtension(item.FileName);
+                        //判断后缀是否是图片
+                        const string fileFilt = ".gif|.jpg|.jpeg|.png";
+                        if (fileExtension == null)
                         {
-                            await formFile.CopyToAsync(stream);
+                            return new BResponse<string> { Success = false, Message = "上传的文件没有后缀", Data = $"{item.FileName}没有后缀名" };
+                        }
+                        if (fileFilt.IndexOf(fileExtension.ToLower(), StringComparison.Ordinal) <= -1)
+                        {
+                            return new BResponse<string> { Success = false, Message = "请上传jpg、png、gif格式的图片", Data = $"{item.FileName}格式不正确" };
+                        }
+                        //判断文件大小    
+                        long length = item.Length;
+                        if (length > 1024 * 1024 * 5) //5M
+                        {
+                            return new BResponse<string> { Success = false, Message = "上传的图片不能大于5M", Data = $"{item.FileName}太大" };
                         }
                     }
-                }
-                //文件传入数据库
-                dto.Url = JsonConvert.SerializeObject(imageUrl);
-                var ret = await _repair.UploadRepairImageAsync(Account, dto);
-                if (!ret.Success)//删除已上传的文件
-                {
-                    //删除已上传的文件
-                    foreach (var item in imageUrl)
+                    string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+                    var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+                    var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+                    var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+                    RepairAddImageDto dto = new RepairAddImageDto();
+                    dto.Id = req.Id;
+                    dto.Description = req.Description;
+                    //图片保存的相对路径：image+组织编号+ops+图片名称
+                    string webRootPath = _webHostEnvironment.WebRootPath;//wwwroot文件夹
+                    string userPath = Path.Combine(GroupId, "Ops", "RepairImage");//保存位置    
+                    userPath = Path.Combine(_config["StoredImagesPath"], userPath);
+                    var filePath = Path.Combine(webRootPath, userPath);//物理路径,不包含文件名称
+                    //如果路径不存在，创建路径
+                    if (!Directory.Exists(filePath))
+                        Directory.CreateDirectory(filePath);
+                    List<string> imageUrl = new List<string>();
+                    try
                     {
-                        string url = Path.Combine(filePath, item);
-                        if (System.IO.File.Exists(url))
+                        foreach (var formFile in req.file)
                         {
-                            System.IO.File.Delete(url);
+                            if (formFile.Length > 0)
+                            {
+                                //var fileExtension = Path.GetExtension(formFile.FileName);
+                                string ext = DateTime.Now.ToString("yyyyMMddhhmmss") + formFile.FileName;//图片名称修改为日期加图片名称
+                                var imagePath = Path.Combine(filePath, ext);//文件的物理路径
+                                imageUrl.Add(Path.Combine(userPath, ext));//图片的相对保存路径
+                                using (var stream = System.IO.File.Create(imagePath))
+                                {
+                                    await formFile.CopyToAsync(stream);
+                                }
+                            }
                         }
+                        //文件传入数据库
+                        dto.Url = JsonConvert.SerializeObject(imageUrl);
+                        var ret = await _repair.UploadRepairImageAsync(Account, dto);
+                        if (!ret.Success)//删除已上传的文件
+                        {
+                            //删除已上传的文件
+                            foreach (var item in imageUrl)
+                            {
+                                string url = Path.Combine(filePath, item);
+                                if (System.IO.File.Exists(url))
+                                {
+                                    System.IO.File.Delete(url);
+                                }
+                            }
+                        }
+                        return ret;
                     }
-                }
-                return ret;
-            }
-            catch (Exception ex)
-            {
-                foreach (var item in imageUrl)
-                {
-                    string url = Path.Combine(filePath, item);
-                    if (System.IO.File.Exists(url))
+                    catch (Exception ex)
                     {
-                        System.IO.File.Delete(url);
+                        foreach (var item in imageUrl)
+                        {
+                            string url = Path.Combine(filePath, item);
+                            if (System.IO.File.Exists(url))
+                            {
+                                System.IO.File.Delete(url);
+                            }
+
+                        }
+                        _log.LogError($"{Account}上传运维文件出错，失败原因{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
+                        return new BaseResponse { Success = false, Message = "上传运维数据出错，请联系管理员" };
                     }
-
                 }
-                _log.LogError($"{Account}上传运维文件出错，失败原因{ex.Message}->{ex.StackTrace}->{ex.InnerException}");
-                return new BaseResponse { Success = false, Message = "上传运维数据出错，请联系管理员" };
-            }
-        }
-
+        */
+        /*
         [HttpPut("Check")]
-        public async Task<ActionResult<BaseResponse>> CheckRepairAsync([FromBody] RepairCheckDto req)
+        public async Task<ActionResult<BaseResponse>> CheckRepairAsync([FromBody] RepairCheckRequest req)
         {
+            RepairCheckDto dto = new RepairCheckDto();
             //验证运维单是否是核验状态
             var data = await _repair.IsExistAsync(a => a.Id == req.Id);
             if (data == null)
@@ -339,10 +338,16 @@ namespace HXCloud.APIV2.Controllers
                     return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
                 }
             }
-            var ret = await _repair.CheckRepairAsync(Account, req);
+            var op = await _user.GetUserByAccountAsync(Account);
+            dto.CheckAccount = op.Account;
+            dto.CheckAccountName = op.UserName;
+            dto.Description = req.Description;
+            dto.Check = req.Check;
+            dto.Id = req.Id;
+            var ret = await _repair.CheckRepairAsync(Account, dto);
             return ret;
         }
-
+*/
         /// <summary>
         /// 删除运维单,只能删除为接单的运维单
         /// </summary>
@@ -417,68 +422,92 @@ namespace HXCloud.APIV2.Controllers
         public async Task<BaseResponse> GetRepairAsync([FromQuery] RepairRequest req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            if (string.IsNullOrWhiteSpace(req.Account))//如果不输入默认是看自己的
+            RepairRequestDto dto = new RepairRequestDto
             {
-                req.Account = Account;
+                OrderBy = req.OrderBy,
+                OrderType = req.OrderType,
+                RepairStatus = req.RepairStatus,
+                RepairType = req.RepairType,
+                Search = req.Search
+            };
+
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //运维人员
+            var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
+            int category = 0;
+            int.TryParse(ops, out category);
+            var users = await _user.GetUserAndChildAsync(Account, isAdmin);
+            if (string.IsNullOrWhiteSpace(req.Account))//如果不输入默认是看自己的或者全部自用户
+            {
+                //req.Account = Account;
+                dto.Accounts = users.Keys.ToList();
             }
             else
             {
-                var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-                var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-                var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
-                var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-                //运维人员
-                var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
-                int category = 0;
-                int.TryParse(ops, out category);
                 if (req.Account.Trim().ToLower() != Account.ToLower())
                 {
                     //验证用户是否是该用户的上级
                     if (!isAdmin)
                     {
-                        var users = await _user.GetUserAndChildAsync(Account, isAdmin);
                         if (!users.ContainsKey(req.Account))
                         {
                             return new BaseResponse { Success = false, Message = "用户没有查看该用户运维单的权限" };
                         }
                     }
                 }
+                dto.Accounts = new List<string>() { req.Account };
             }
-            var ret = await _repair.GetRepairAsync(req);
+            var ret = await _repair.GetRepairAsync(dto);
             return ret;
         }
         [HttpGet("Page")]
         public async Task<BaseResponse> GetPageRepairAsync([FromQuery] RepairPageRequest req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            if (string.IsNullOrWhiteSpace(req.Account))//如果不输入默认是看自己的
+            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //运维人员
+            var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
+            int category = 0;
+            int.TryParse(ops, out category);
+            RepairPageRequestDto dto = new RepairPageRequestDto
             {
-                req.Account = Account;
+                OrderBy = req.OrderBy,
+                OrderType = req.OrderType,
+                RepairStatus = req.RepairStatus,
+                RepairType = req.RepairType,
+                Search = req.Search,
+                PageNo = req.PageNo,
+                PageSize = req.PageSize
+            };
+            var users = await _user.GetUserAndChildAsync(Account, isAdmin);
+            if (string.IsNullOrWhiteSpace(req.Account))//如果不输入默认是看自己的或者全部自用户
+            {
+                //req.Account = Account;
+                dto.Accounts = users.Keys.ToList();
             }
             else
             {
-                var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-                var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-                var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
-                var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-                //运维人员
-                var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
-                int category = 0;
-                int.TryParse(ops, out category);
+
                 if (req.Account.Trim().ToLower() != Account.ToLower())
                 {
                     //验证用户是否是该用户的上级
                     if (!isAdmin)
                     {
-                        var users = await _user.GetUserAndChildAsync(Account, isAdmin);
                         if (!users.ContainsKey(req.Account))
                         {
                             return new BaseResponse { Success = false, Message = "用户没有查看该用户运维单的权限" };
                         }
                     }
                 }
+                dto.Accounts = new List<string>() { req.Account };
             }
-            var ret = await _repair.GetPageRepairAsync(req);
+            var ret = await _repair.GetPageRepairAsync(dto);
             return ret;
         }
     }

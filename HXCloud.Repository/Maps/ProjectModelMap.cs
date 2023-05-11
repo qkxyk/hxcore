@@ -16,6 +16,7 @@ namespace HXCloud.Repository.Maps
             builder.HasOne(a => a.Group).WithMany(a => a.Projects).HasForeignKey(a => a.GroupId).OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(a => a.Parent).WithMany(a => a.Child).HasForeignKey(a => a.ParentId);//.IsRequired(false).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.OwnsOne(a => a.ProjectScale);
             base.Configure(builder);
         }
     }

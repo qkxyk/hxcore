@@ -12,5 +12,7 @@ namespace HXCloud.ViewModel
         //[Required]
         public string Position { get; set; }
         public string PositionName { get; set; }
+        public string ProjectName { get; set; }
+        public string CreateName { get; set; }
     }
 }

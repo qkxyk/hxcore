@@ -31,28 +31,28 @@ namespace HXCloud.Service
         /// <param name="Account">接单人</param>
         /// <param name="status">运维状态</param>
         /// <returns></returns>
-        Task<BaseResponse> ReceiveRepairAsync(string Id, string Account, int status);
+        //Task<BaseResponse> ReceiveRepairAsync(string Id, string Account, int status);
         /// 设置运维单为等待配件状态
         /// </summary>
         /// <param name="Id">运维单编号</param>
         /// <param name="Account">接单人</param>
         /// <param name="status">运维状态</param>
         /// <returns></returns>
-        Task<BaseResponse> WaitRepairAsync(string Id, string Account, int status);
+        //Task<BaseResponse> WaitRepairAsync(string Id, string Account, int status);
         /// <summary>
         /// 上传调试或者维修数据
         /// </summary>
         /// <param name="account">操作人</param>
         /// <param name="req">调试或者维修数据</param>
         /// <returns></returns>
-        Task<BaseResponse> UploadRepairImageAsync(string account, RepairAddImageDto req);
+        //Task<BaseResponse> UploadRepairImageAsync(string account, RepairAddImageDto req);
         /// <summary>
         /// 审核运维单
         /// </summary>
         /// <param name="account">操作人</param>
         /// <param name="req">审核数据</param>
         /// <returns></returns>
-        Task<BaseResponse> CheckRepairAsync(string account, RepairCheckDto req);
+        //Task<BaseResponse> CheckRepairAsync(string account, RepairCheckDto req);
         /// <summary>
         /// 删除运维单，只能删除状态为未接单的
         /// </summary>
@@ -65,13 +65,13 @@ namespace HXCloud.Service
         /// </summary>
         /// <param name="req">运维单状态和类型</param>
         /// <returns></returns>
-        Task<BaseResponse> GetRepairAsync(RepairRequest req);
+        Task<BaseResponse> GetRepairAsync(RepairRequestDto req);
         /// <summary>
         /// 获取用户的分页运维单
         /// </summary>
         /// <param name="req">运维单状态和类型</param>
         /// <returns></returns>
-        Task<BaseResponse> GetPageRepairAsync(RepairPageRequest req);
+        Task<BaseResponse> GetPageRepairAsync(RepairPageRequestDto req);
         /// <summary>
         /// 获取维修单或者调试单和关联的问题单信息
         /// </summary>

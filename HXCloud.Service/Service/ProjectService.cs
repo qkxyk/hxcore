@@ -320,7 +320,7 @@ namespace HXCloud.Service
         //获取单个项目（会递归获取项目下的所有项目或者场站）
         public async Task<BaseResponse> GetProjectWithChildAsync(int Id)
         {
-            var data = await _pr.FindProjectsWithImageByParentAsync(a => a.Id == Id).ToListAsync();
+            var data = await _pr.FindProjectsWithImageByParentAsync(a => a.ParentId == Id).ToListAsync();
             //if (data == null)
             //{
             //    return new BaseResponse { Success = false, Message = "输入的项目或者场站不存在" };

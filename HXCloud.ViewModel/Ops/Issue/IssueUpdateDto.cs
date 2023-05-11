@@ -10,9 +10,9 @@ namespace HXCloud.ViewModel
     /// </summary>
     public class IssueUpdateDto
     {
-        [Required]
         public int Id { get; set; }
         public bool Status { get; set; } = true;
         public string Opinion { get; set; }
+        public string HandleName { get; set; }//问题单处理人姓名
     }
 }

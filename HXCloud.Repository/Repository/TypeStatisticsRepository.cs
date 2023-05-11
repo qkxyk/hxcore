@@ -17,6 +17,17 @@ namespace HXCloud.Repository
             return data;
         }
 
+        /// <summary>
+        /// 关联类型数据定义的计算公式
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public IQueryable<TypeStatisticsInfoModel> FindWithFormat(Expression<Func<TypeStatisticsInfoModel, bool>> predicate)
+        {
+            var data = _db.TypeStatisticsInfos.Include(a => a.Type).ThenInclude(a => a.TypeDataDefine).Where(predicate);
+            return data;
+        }
+
         public async Task<IEnumerable<TypeStatisticsInfoModel>> FindGlobalStaticsBySql(int showState)
         {
             var d = await _db.TypeStatisticsInfos.FromSqlRaw($"select * from TypeStatisticsInfo where id in(SELECT   max(id)    FROM [hxnetcore].[dbo].[TypeStatisticsInfo] where ShowState={showState} group by DataKey) order by DataKey").ToListAsync();

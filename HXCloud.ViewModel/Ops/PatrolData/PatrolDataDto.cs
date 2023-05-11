@@ -18,5 +18,7 @@ namespace HXCloud.ViewModel
         public string WaterAnalysis { get; set; }
         public string DevicePatrol { get; set; }
         public string TechniquePatrol { get; set; }
+        public string ProjectName { get; set; }
+        public string CreateName { get; set; }
     }
 }

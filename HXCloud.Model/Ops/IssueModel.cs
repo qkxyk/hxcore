@@ -4,7 +4,7 @@ using System.Text;
 
 namespace HXCloud.Model
 {
-    public class IssueModel :BaseModel, IAggregateRoot
+    public class IssueModel : BaseModel, IAggregateRoot
     {
         public int Id { get; set; }
         public string DeviceSn { get; set; }
@@ -27,6 +27,12 @@ namespace HXCloud.Model
         /// 处理意见
         /// </summary>
         public string Opinion { get; set; }
+        public string ProjectName { get; set; }
+        public string CreateName { get; set; }
+        public string HandleName { get; set; }
+
+        //public string RepairId { get; set; }
+        public RepairModel Repair { get; set; }
 
     }
 }

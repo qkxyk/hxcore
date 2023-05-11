@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using AutoMapper;
 using HXCloud.Model;
@@ -42,7 +43,8 @@ namespace HXCloud.Service
                  src => (StatisticsType)src.StaticsType));
             CreateMap<TypeStatisticsUpdateViewModel, TypeStatisticsInfoModel>().ForMember(dest => dest.StaticsType, opt => opt.MapFrom(
                    src => (StatisticsType)src.StaticsType));
-            CreateMap<TypeStatisticsInfoModel, TypeStatisticsData>().ForMember(opt => opt.StaticsType, opt => opt.MapFrom(src => (int)src.StaticsType));
+            CreateMap<TypeStatisticsInfoModel, TypeStatisticsData>().ForMember(opt => opt.StaticsType, opt => opt.MapFrom(src => (int)src.StaticsType))
+                .ForMember(dest=>dest.Format,opt=>opt.MapFrom(src=>src.Type.TypeDataDefine.Where(a=>a.DataKey==src.DataKey).FirstOrDefault().Format));
             /*
             //类型配件
             CreateMap<TypeAccessoryAddViewModel, TypeAccessoryModel>();
@@ -99,6 +101,9 @@ namespace HXCloud.Service
             CreateMap<TypeModuleUpdateDto, TypeModuleModel>().ForMember(dest => dest.ModuleType, opt => opt.MapFrom(src => (ModuleType)src.ModuleType));
             CreateMap<TypeModuleModel, TypeModuleDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls)).ForMember(dest => dest.Arguments,
                 opt => opt.MapFrom(src => src.ModeleArguments));
+            //类型模块只获取控制项
+            //CreateMap<TypeModuleModel, TypeModuleMockDto>().ForMember(dest => dest.Controls, opt => opt.MapFrom(src => src.ModuleControls)).ForMember(dest => dest.Arguments,
+            //          opt => opt.MapFrom(src => src.ModeleArguments));
 
             //类型控制项
             CreateMap<TypeModuleControlAddDto, TypeModuleControlModel>();

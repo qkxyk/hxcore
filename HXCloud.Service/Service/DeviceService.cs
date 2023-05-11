@@ -78,6 +78,7 @@ namespace HXCloud.Service
                 dto.DeviceSn = DeviceSn;
                 dto.TypeId = data.TypeId;
                 dto.PathId = data.FullId;
+                dto.FullName = data.FullName;
             }
             return dto;
         }

@@ -1,8 +1,10 @@
 ﻿using Autofac;
 using AutoMapper;
 using HXCloud.APIV2.Filters;
+using HXCloud.APIV2.MiddleWares;
 using HXCloud.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -89,9 +91,16 @@ namespace HXCloud.APIV2
             });
             #endregion
             //添加授权策略
-            //services.AddAuthorization(opt=> {
-            //    //opt.AddPolicy("")
-            //});
+            services.AddAuthorization(opt =>
+            {
+                //opt.AddPolicy("")
+                opt.AddPolicy("Admin", policy => {
+                    //基于声明的认证
+                    policy.RequireClaim("isAdmin", "true");
+                });
+            });
+            //添加基于资源的认证(添加注入)
+            services.AddSingleton<IAuthorizationHandler, ModuleAuthorizationHandler>();
             //配置数据库
             var connection = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<HXCloudContext>(a => a.UseSqlServer(connection, b => b.MigrationsAssembly("HXCloud.Repository"))

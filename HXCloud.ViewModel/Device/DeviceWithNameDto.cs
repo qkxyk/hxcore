@@ -15,5 +15,6 @@ namespace HXCloud.ViewModel
         public string DeviceName { get; set; }//设备名称
         public int TypeId { get; set; }
         public string PathId { get; set; }//用来验证用户权限
+        public string FullName { get; set; }
     }
 }

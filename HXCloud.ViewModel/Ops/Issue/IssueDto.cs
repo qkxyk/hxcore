@@ -34,5 +34,8 @@ namespace HXCloud.ViewModel
         /// 问题单处理人
         /// </summary>
         public string Handle { get; set; }
+        public string HandleName { get; set; }//问题单处理人姓名
+        public string ProjectName { get; set; }
+        public string CreateName { get; set; }
     }
 }

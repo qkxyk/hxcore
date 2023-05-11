@@ -18,5 +18,9 @@ namespace HXCloud.Model
         public virtual ICollection<UserRoleModel> UserRoles { get; set; }//角色用户
         //public virtual ICollection<RoleMenuModel> RoleMenus { get; set; }//角色菜单权限
         public virtual ICollection<RoleProjectModel> RoleProjects { get; set; }//角色项目权限
+
+        public int? ModuleId { get; set; }
+        public virtual ModuleModel Module { get; set; }
+        public ICollection<RoleModuleOperateModel> RoleModuleOperates { get; set; }//角色模块的权限
     }
 }
