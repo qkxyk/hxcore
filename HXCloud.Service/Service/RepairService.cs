@@ -27,9 +27,14 @@ namespace HXCloud.Service
             this._repair = repair;
             this._issue = issue;
         }
-        public Task<bool> IsExist(Expression<Func<RepairModel, bool>> predicate)
+        public async Task<bool> IsExist(Expression<Func<RepairModel, bool>> predicate)
         {
-            throw new NotImplementedException();
+            var data = await _repair.Find(predicate).FirstOrDefaultAsync();
+            if (data == null)
+            {
+                return false;
+            }
+            return true;
         }
         /// <summary>
         /// 查找维修信息
@@ -267,6 +272,57 @@ namespace HXCloud.Service
         }
 
         /// <summary>
+        /// 查询三种类型，管理员权限，查询个人的，根据用户角色查询的
+        /// </summary>
+        /// <param name="req">查询条件</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <param name="account">非管理员没有查询权限的查找自己</param>
+        /// <param name="DeviceSn">非管理员有查询权限查看的设备列表</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetRepairAsync(RepairRequest req, bool isAdmin, string account, List<string> DeviceSn)
+        {
+            var data = _repair.GetWithRepairData(a => a.RepairType == (RepairType)req.RepairType && a.RepairStatus == (RepairStatus)req.RepairStatus);
+            if (!string.IsNullOrWhiteSpace(req.Search))
+            {
+                data = data.Where(a => a.DeviceName.Contains(req.Search));
+            }
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "CreateTime Desc";
+            }
+            else
+            {
+                OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            if (isAdmin)//管理员查询所有
+            {
+                if (req.Account != null && !string.IsNullOrEmpty(req.Account))
+                {
+                    data = data.Where(a => a.Receiver == req.Account);
+                }
+            }
+            else
+            {
+                if (account != null)//查询自己的
+                {
+                    data = data.Where(a => a.Receiver == account);
+                }
+                else//有查询权限的角色查看有权限设备的数据
+                {
+                    if (req.Account != null && !string.IsNullOrEmpty(req.Account))
+                    {
+                        data = data.Where(a => a.Receiver == req.Account);
+                    }
+                    data = data.Where(a => DeviceSn.Contains(a.DeviceSn));
+                }
+            }
+            var list = await data.OrderBy(OrderExpression).ToListAsync();
+            var dtos = _mapper.Map<List<RepairDto>>(list);
+            return new BResponse<List<RepairDto>> { Success = true, Message = "获取数据成功", Data = dtos };
+        }
+
+        /// <summary>
         /// 获取用户的运维单
         /// </summary>
         /// <param name="req">运维单状态和类型</param>
@@ -294,6 +350,67 @@ namespace HXCloud.Service
             var dtos = _mapper.Map<List<RepairDto>>(list);
 
             return new BResponse<List<RepairDto>> { Success = true, Message = "获取数据成功", Data = dtos };
+        }
+
+        /// <summary>
+        ///获取用户的分页运维单, 查询三种类型，管理员权限，查询个人的，根据用户角色查询的
+        /// </summary>
+        /// <param name="req">查询条件</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <param name="account">非管理员没有查询权限的查找自己</param>
+        /// <param name="DeviceSn">非管理员有查询权限查看的设备列表</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetPageRepairAsync(RepairPageRequest req, bool isAdmin, string account, List<string> DeviceSn)
+        {
+            var data = _repair.GetWithRepairData(a => a.RepairType == (RepairType)req.RepairType && a.RepairStatus == (RepairStatus)req.RepairStatus);
+            if (!string.IsNullOrWhiteSpace(req.Search))
+            {
+                data = data.Where(a => a.DeviceName.Contains(req.Search));
+            }
+           
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "CreateTime Desc";
+            }
+            else
+            {
+                OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            if (isAdmin)//管理员查询所有
+            {
+                if (req.Account != null && !string.IsNullOrEmpty(req.Account))
+                {
+                    data = data.Where(a => a.Receiver == req.Account);
+                }
+            }
+            else
+            {
+                if (account != null)//查询自己的
+                {
+                    data = data.Where(a => a.Receiver == account);
+                }
+                else//有查询权限的角色查看有权限设备的数据
+                {
+                    if (req.Account != null && !string.IsNullOrEmpty(req.Account))
+                    {
+                        data = data.Where(a => a.Receiver == req.Account);
+                    }
+                    data = data.Where(a => DeviceSn.Contains(a.DeviceSn));
+                }
+            }
+            int count = data.Count();
+            var list = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var dtos = _mapper.Map<List<RepairDto>>(list);
+            var ret = new BasePageResponse<List<RepairDto>>();
+            ret.Success = true;
+            ret.Message = "获取数据成功";
+            ret.PageSize = req.PageSize;
+            ret.CurrentPage = req.PageNo;
+            ret.Count = count;
+            ret.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            ret.Data = dtos;
+            return ret;
         }
         /// <summary>
         /// 获取用户的分页运维单
@@ -373,5 +490,31 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "用户没有权限查看单据信息" };
             }
         }
+        /// <summary>
+        /// 获取维修单或者调试单和关联的问题单信息
+        /// </summary>
+        /// <param name="Id">单据编号</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetRepairByIdAsync(string Id)
+        {
+            var data = await _repair.GetWithRepairDataAsync(Id);
+            var ret = _mapper.Map<RepairAndIssueDto>(data);
+            if (data.IssueId != 0)
+            {
+                var iss = await _issue.FindAsync(data.IssueId);
+                if (iss != null)
+                {
+                    ret.IssueUrl = iss.Url;
+                    ret.IssueDescription = iss.Description;
+                    ret.IssueDt = iss.CreateTime;
+                    ret.Submitter = iss.CreateName;
+                }
+            }
+            var repairData = _mapper.Map<List<RepairDataDto>>(data.RepairDatas);
+            ret.RepairData = repairData;
+            return new BResponse<RepairAndIssueDto> { Success = true, Message = "获取数据成功", Data = ret };
+        }
+
+
     }
 }

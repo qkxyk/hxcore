@@ -56,6 +56,7 @@ namespace HXCloud.Model
         public virtual ICollection<RepairDataModel> RepairDatas { get; set; }
 
         public bool IsComplete { get; set; } = false;//流程是否结束
+        public string FaultCode { get; set; }//故障代码，此功能主要用来统计故障数据和故障代码弱关联
 
     }
     /// <summary>

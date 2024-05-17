@@ -22,14 +22,16 @@ namespace HXCloud.APIV2.Controllers
         private readonly IConfiguration _config;
         private readonly IRoleProjectService _rp;
         private readonly IDeviceService _ds;
+        private readonly IUserRoleService _userRole;
 
-        public WarnController(IWarnService ws, IProjectService ps, IConfiguration config, IRoleProjectService rp, IDeviceService ds)
+        public WarnController(IWarnService ws, IProjectService ps, IConfiguration config, IRoleProjectService rp, IDeviceService ds, IUserRoleService userRole)
         {
             this._ws = ws;
             this._ps = ps;
             this._config = config;
             this._rp = rp;
             this._ds = ds;
+            this._userRole = userRole;
         }
 
         //获取单个报警信息
@@ -90,7 +92,10 @@ namespace HXCloud.APIV2.Controllers
             {
                 state = true;
             }
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
@@ -146,11 +151,14 @@ namespace HXCloud.APIV2.Controllers
         [HttpGet("/api/[controller]/statistics")]
         public async Task<ActionResult<BaseResponse>> GetMyWarnStatistics([FromQuery] WarnStatisticsDto req)
         {
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             List<string> Devices = new List<string>();
             if (req.IsDevice)   //统计设备
             {
@@ -235,7 +243,10 @@ namespace HXCloud.APIV2.Controllers
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             List<string> Devices = new List<string>();
             //获取我的设备编号
             Devices = await _ds.GetMyDeviceSnAsync(GId, Roles, IsAdmin);

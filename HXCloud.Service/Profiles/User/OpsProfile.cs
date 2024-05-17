@@ -44,9 +44,22 @@ namespace HXCloud.Service
             CreateMap<AddRepairDataBaseDto, RepairDataModel>();
             CreateMap<AddRepairDataMessageDto, RepairDataModel>();
             CreateMap<AddRepairCheckDto, RepairDataModel>();
-            CreateMap<AddRepairDataDto, RepairDataModel>();
+            CreateMap<RepairSubmitDto, RepairDataModel>();
 
             CreateMap<RepairPartModel, RepairPartDto>();
+            //故障类型
+            CreateMap<OpsFaultTypeAddDto, OpsFaultTypeModel>();
+            //CreateMap<OpsFaultTypeEditDto, OpsFaultTypeModel>();
+            CreateMap<OpsFaultTypeModel, OpsFaultTypeDto>()
+                //.ForMember(dest=>dest.Child,opt=>opt.MapFrom(src=>src.Child))
+                .ForMember(dest => dest.OpsFaults, opt => opt.MapFrom(src => src.OpsFalt));
+            CreateMap<OpsFaultTypeModel, OpsFaultTypeParentDto>().ForMember(dest => dest.Child, opt => opt.MapFrom(src => src.Child));
+            //故障数据
+            CreateMap<OpsFaultAddDto, OpsFaultModel>();
+            CreateMap<OpsFaultEditDto, OpsFaultModel>();
+            CreateMap<OpsFaultModel, OpsFaultDto>().ForMember(dest => dest.OpsFaultTypeName, opt => opt.MapFrom(src =>
+            src.OpsFaultType.FaultTypeName));
+            //CreateMap<OpsFaultTypeModel, OpsFaultTypeChildDto>();
         }
     }
 }

@@ -53,6 +53,8 @@ namespace HXCloud.Service
             CreateMap<DeviceConfigAddDto, DeviceConfigModel>();
             CreateMap<DeviceConfigUpdateDto, DeviceConfigModel>();
             CreateMap<DeviceConfigModel, DeviceConfigDto>();
+            //httpptch
+            CreateMap<DeviceConfigDto, DeviceConfigModel>();
             //设备PLC配置数据
             CreateMap<DeviceHardwareConfigAddDto, DeviceHardwareConfigModel>();
             CreateMap<DeviceHardwareConfigUpdateDto, DeviceHardwareConfigModel>();

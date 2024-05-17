@@ -48,9 +48,21 @@ namespace HXCloud.Service
             GroupId = data.Type.GroupId;
             return true;
         }
-
+        /// <summary>
+        /// 用于httppath部分修改数据
+        /// </summary>
+        /// <param name="Id">类型配置数据标识</param>
+        /// <returns></returns>
+        public async Task<TypeConfigData> GetTypeConfigByIdAsync(int Id)
+        {
+            var data = await _tc.FindAsync(Id);
+            var dto = _mapper.Map<TypeConfigData>(data);
+            return dto;
+        }
         public async Task<BaseResponse> AddAsync(int typeId, TypeConfigAddViewModel req, string account)
         {
+            req.Category = 0;
+
             //验证类型是否可以添加
             var t = await _tr.FindAsync(typeId);
             if (t.Status == TypeStatus.Root)
@@ -81,6 +93,8 @@ namespace HXCloud.Service
 
         public async Task<BaseResponse> UpdateAsync(TypeConfigUpdateViewModel req, string account)
         {
+            req.Category = 0;
+
             var data = await _tc.FindAsync(req.Id);
             if (data == null)
             {
@@ -126,6 +140,32 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "删除类型配置数据失败" };
             }
         }
+        /// <summary>
+        /// 修改类型配置数据
+        /// </summary>
+        /// <param name="Account">操作人</param>
+        /// <param name="req">修改数据</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> PatchTypeConfigAsync(string Account, TypeConfigData req)
+        {
+            try
+            {
+                var data = await _tc.FindAsync(req.Id);
+                _mapper.Map(req, data);
+                data.Modify = Account;
+                data.ModifyTime = DateTime.Now;
+                await _tc.SaveAsync(data);
+                _log.LogInformation($"{Account}修改标识为{req.Id}的类型配置数据成功");
+                return new BResponse<int> { Success = true, Message = "修改数据成功", Data = req.Id };
+            }
+            catch (Exception ex)
+            {
+                _log.LogError($"{Account}修改类型配置数据失败，失败原因{ex.Message}->{ex.InnerException}->{ex.StackTrace}");
+                return new BaseResponse { Success = false, Message = "修改类型配置数据失败，请联系管理员" };
+            }
+
+        }
+
 
         public async Task<BaseResponse> FindById(int Id)
         {

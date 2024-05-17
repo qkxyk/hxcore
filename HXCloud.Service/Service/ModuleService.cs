@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
@@ -149,6 +150,16 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "修改模块数据失败，请联系管理员" };
             }
         
+        }
+        /// <summary>
+        /// 根据模块Code获取模块编号
+        /// </summary>
+        /// <param name="Code">模块编码</param>
+        /// <returns></returns>
+        public async Task<int> GetModuleIdByCodeAsync(string Code)
+        {
+            var Id = await _moduleRepository.Find(a => a.Code == Code).Select(a => a.Id).FirstOrDefaultAsync();
+            return Id;
         }
     }
 }

@@ -138,8 +138,16 @@ namespace HXCloud.Repository
         public DbSet<ModuleModel> Modules { get; set; }
         public DbSet<ModuleOperateModel> ModuleOperates { get; set; }
         public DbSet<RoleModuleOperateModel> RoleModuleOperates { get; set; }
+        //2023-7-4新增运维故障功能
+        public DbSet<OpsFaultModel> OpsFaults { get; set; }
+        public DbSet<OpsFaultTypeModel> OpsFaultTypes { get; set; }
+        #endregion
+        #region 20230905新增工艺组件功能
+        public DbSet<CraftComponentCatalogModle> CraftComponentCatelogs { get; set; }
+        public DbSet<CraftElementModle> CraftElements { get; set; }
         #endregion
 
+        public DbSet<TypeCraftTopModel> TypeCraftTops { get; set; }
 
         /*
       public DbSet<MenuModel> Menus { get; set; }
@@ -308,6 +316,16 @@ namespace HXCloud.Repository
             modelBuilder.ApplyConfiguration(new ModuleModelMap());
             modelBuilder.ApplyConfiguration(new ModuleOperateModelMap());
             modelBuilder.ApplyConfiguration(new RoleModuleOperateModelMap());
+            //2023-7-4新增运维故障功能
+            modelBuilder.ApplyConfiguration(new OpsFaultTypeModelMap());
+            modelBuilder.ApplyConfiguration(new OpsFaultModelMap());
+            #endregion
+            #region 20230905新增工艺组件功能
+            modelBuilder.ApplyConfiguration(new CraftComponentCatelogModelMap());
+            modelBuilder.ApplyConfiguration(new CraftElementModleMap());
+            #endregion
+            #region 20231108新增类型拓扑数据
+            modelBuilder.ApplyConfiguration(new TypeCraftTopModelMap());
             #endregion
         }
     }

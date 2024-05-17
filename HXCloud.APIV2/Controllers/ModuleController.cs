@@ -23,7 +23,7 @@ namespace HXCloud.APIV2.Controllers
             this._moduleService = moduleService;
         }
 
-        [HttpGet("Id")]
+        [HttpGet("{Id}")]
         public async Task<BaseResponse> GetModuleByIdAsync(int Id)
         {
             var data = await _moduleService.GetModuleDataByIdAsync(Id);
@@ -54,7 +54,7 @@ namespace HXCloud.APIV2.Controllers
         /// </summary>
         /// <param name="req">模块信息</param>
         /// <returns></returns>
-        [HttpPut("Id")]
+        [HttpPut("{Id}")]
         [Authorize(Policy = "Admin")]
         public async Task<BaseResponse> UpdateModuleAsync(int Id, [FromBody] ModuleAddDto req)
         {
@@ -68,7 +68,7 @@ namespace HXCloud.APIV2.Controllers
         /// </summary>
         /// <param name="req">模块信息</param>
         /// <returns></returns>
-        [HttpDelete("Id")]
+        [HttpDelete("{Id}")]
         [Authorize(Policy = "Admin")]
         public async Task<BaseResponse> DeleteModuleAsync(int Id)
         {
@@ -77,7 +77,7 @@ namespace HXCloud.APIV2.Controllers
             var data = await _moduleService.DeleteModuleAsync(account, Id);
             return data;
         }
-        [HttpPatch]
+        [HttpPatch("{Id}")]
         [Authorize(Policy ="Admin")]
         public async Task<ActionResult<BaseResponse>> PatchModuleAsync(int Id, [FromBody]JsonPatchDocument<ModuleDto> req)
         {
@@ -89,6 +89,14 @@ namespace HXCloud.APIV2.Controllers
                 return BadRequest(ModelState);
             }
             var ret = await _moduleService.PatchModuleAsync(account, data);
+            return ret;
+        }
+
+        [Obsolete]
+        [HttpGet("Code")]
+        public async Task<int> GetModuleIdAsync(string Code)
+        {
+            var ret = await _moduleService.GetModuleIdByCodeAsync(Code);
             return ret;
         }
 

@@ -33,5 +33,11 @@ namespace HXCloud.Service
         /// <param name="req">修改数据</param>
         /// <returns></returns>
         Task<BaseResponse> PatchModuleAsync(string Account, ModuleDto req);
+        /// <summary>
+        /// 根据模块Code获取模块编号
+        /// </summary>
+        /// <param name="Code">模块编码</param>
+        /// <returns></returns>
+        Task<int> GetModuleIdByCodeAsync(string Code);
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HXCloud.Service
 {
-    public interface IModuleOperateService:IBaseService<ModuleOperateModel>
+    public interface IModuleOperateService : IBaseService<ModuleOperateModel>
     {
         /// <summary>
         /// 添加模块操作
@@ -15,25 +15,32 @@ namespace HXCloud.Service
         /// <param name="Account">操作人</param>
         /// <param name="req">模块操作数据</param>
         /// <returns></returns>
-        Task<BaseResponse> AddModuleOperateAsync(string Account, ModuleOperateAddDto req);
-              /// <summary>
-              /// 根据模块操作标识获取模块操作数据
-              /// </summary>
-              /// <param name="Id">模块操作标识</param>
-              /// <returns></returns>
+        Task<BaseResponse> AddModuleOperateAsync(string Account, int ModuleId, ModuleOperateAddDto req);
+        /// <summary>
+        /// 根据模块操作标识获取模块操作数据
+        /// </summary>
+        /// <param name="Id">模块操作标识</param>
+        /// <returns></returns>
         Task<BaseResponse> GetModuleOperateByIdAsync(int Id);
-              /// <summary>
-              /// 获取模块操作
-              /// </summary>
-              /// <param name="ModuleId">模块标识</param>
-              /// <returns></returns>
+        /// <summary>
+        /// 获取模块操作
+        /// </summary>
+        /// <param name="ModuleId">模块标识</param>
+        /// <returns></returns>
         Task<BaseResponse> GetModuleOperatesAsync(int ModuleId);
-          /// <summary>
-          /// 删除模块操作数据
-          /// </summary>
-          /// <param name="Account">操作人</param>
-          /// <param name="Id">模块操作标识</param>
-          /// <returns></returns>
+        /// <summary>
+        /// 删除模块操作数据
+        /// </summary>
+        /// <param name="Account">操作人</param>
+        /// <param name="Id">模块操作标识</param>
+        /// <returns></returns>
         Task<BaseResponse> DeleteModuleOperateByIdAsync(string Account, int Id);
+        /// <summary>
+        /// 根据模块码和操作码获取模块操作标识
+        /// </summary>
+        /// <param name="ModuleCode">模块码</param>
+        /// <param name="Code">操作码</param>
+        /// <returns></returns>
+        Task<int> GetModuleOperateIdByModuleCodeAndOperateCodeAsync(string ModuleCode, string Code);
     }
 }

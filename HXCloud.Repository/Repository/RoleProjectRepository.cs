@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HXCloud.Model;
@@ -31,6 +32,12 @@ namespace HXCloud.Repository
                 }
 
             }
+        }
+
+        public  IQueryable<RoleProjectModel> FindWithProject(Expression<Func<RoleProjectModel, bool>> predicate)
+        {
+            var data = _db.RoleProjects.Include(a => a.Project).Where(predicate);
+            return data;
         }
     }
 }

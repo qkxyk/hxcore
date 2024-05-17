@@ -16,5 +16,6 @@ namespace HXCloud.ViewModel
         public string Description { get; set; }//角色描述
         //public string GroupId { get; set; }//所属部门编号
         public bool IsAdmin { get; set; } = false;
+        public int? ModuleId { get; set; }//模块标识，标识角色属于那个模块
     }
 }

@@ -1,4 +1,5 @@
-﻿using HXCloud.Service;
+﻿using HXCloud.APIV2.MiddleWares;
+using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -20,21 +21,33 @@ namespace HXCloud.APIV2.Controllers
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepairService _repair;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IModuleOperateService _moduleOperateService;
+        private readonly IRoleModuleOperateService _roleModuleOperateService;
         private readonly IIssueService _issue;
         private readonly IUserService _user;
         private readonly IDeviceService _device;
         private readonly IRoleProjectService _rps;
+        private readonly IModuleService _moduleService;
+        private readonly IRoleService _role;
 
-        public RepairController(ILogger<RepairController> log, IConfiguration config, IWebHostEnvironment webHostEnvironment, IRepairService repair, IIssueService issue, IUserService user, IDeviceService device, IRoleProjectService rps)
+        public RepairController(ILogger<RepairController> log, IConfiguration config, IWebHostEnvironment webHostEnvironment, IRepairService repair,
+                  IAuthorizationService authorizationService, IModuleOperateService moduleOperateService, IRoleModuleOperateService roleModuleOperateService,
+            IIssueService issue, IUserService user, IDeviceService device, IRoleProjectService rps, IModuleService moduleService, IRoleService role)
         {
             this._log = log;
             this._config = config;
             this._webHostEnvironment = webHostEnvironment;
             this._repair = repair;
+            this._authorizationService = authorizationService;
+            this._moduleOperateService = moduleOperateService;
+            this._roleModuleOperateService = roleModuleOperateService;
             this._issue = issue;
             this._user = user;
             this._device = device;
             this._rps = rps;
+            this._moduleService = moduleService;
+            this._role = role;
         }
 
         /// <summary>
@@ -45,8 +58,19 @@ namespace HXCloud.APIV2.Controllers
         [HttpPost]
         public async Task<ActionResult<BaseResponse>> AddRepairAsync([FromBody] RepairAddRequest req)
         {
-            RepairAddDto dto = new RepairAddDto();
+            //检测关联的设备是否存在
+            var data = await _device.CheckDeviceAsync(req.DeviceSn);
+            if (!data.IsExist)
+            {
+                return new BaseResponse { Success = false, Message = "输入的设备不存在，请确认" };
+            }
+            if (string.IsNullOrEmpty(data.PathId))
+            {
+                return new BaseResponse { Success = false, Message = "该设备没有分配场站，不能操作" };
+            }
 
+            RepairAddDto dto = new RepairAddDto();
+            dto.ProjectName = data.FullName;
             if (req.IssueId.HasValue)
             {
                 var issueData = await _issue.IsExist(a => a.Id == req.IssueId.Value);
@@ -56,6 +80,7 @@ namespace HXCloud.APIV2.Controllers
                 }
                 dto.IssueId = req.IssueId.Value;
             }
+            #region 验证接单人权限
             var userData = await _user.GetUserByAccountAsync(req.Receiver);
             if (userData == null)
             {
@@ -65,57 +90,57 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "接收人没有分配角色，不能分配" };
             }
-            var deviceData = await _device.CheckDeviceAsync(req.DeviceSn);
-            if (deviceData == null)
-            {
-                return new BaseResponse { Success = false, Message = "输入的设备不存在，请确认" };
-            }
-            dto.ProjectName = deviceData.FullName;
-            if (string.IsNullOrEmpty(deviceData.PathId))
-            {
-                return new BaseResponse { Success = false, Message = "该设备没有分配场站，不能操作" };
-            }
-            bool bAuthUser = await _rps.IsAuth(userData.Roles, deviceData.PathId, 0);
+
+            //此处应检测接单人的模块权限和项目权限匹配
+            bool bAuthUser = await _rps.IsAuth(userData.Roles, data.PathId, 0);
             if (!bAuthUser)
             {
                 return new BaseResponse { Success = false, Message = "接收人对该设备没有权限" };
             }
+            #endregion
+            #region 验证操作人权限
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            if (!IsAdmin)        //非管理员验证权限
+            {
+                //根据模块code和操作code获取操作标识
+                var operateId = await _moduleOperateService.GetModuleOperateIdByModuleCodeAndOperateCodeAsync("DeviceOps", "SendRepair");
+                if (operateId == 0)
+                {
+                    return new BaseResponse { Success = false, Message = "出现错误，请联系管理员" };
+                }
+                //获取模块分配的角色操作
+                var rp = await _roleModuleOperateService.GetModuleOperatesAsync(operateId);
+                var mr = new ModuleRequirement(2, "export", rp);//目前前两个参数无意义
+                ResourceData resource = new ResourceData { Compare = CompareData.Equal, Operate = 1, ProjectId = 1024 };
+                var t = await _authorizationService.AuthorizeAsync(User, resource, mr);
+                if (t.Succeeded)
+                {
+                    //验证用户在该模块中的角色是否对该设备有查看权限
+                    var role = string.Join(',', mr.ModuleRoles);
+                    bool bAuth = await _rps.IsAuth(role, data.PathId, 0);
+                    if (!bAuth)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
+                    }
+                }
+                else
+                {
+                    return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                }
+            }
+            #endregion
+
             dto.Receiver = req.Receiver;
             dto.ReceiverName = userData.UserName;
             dto.ReceivePhone = userData.Phone;
             dto.RepairType = req.RepairType;
             dto.EmergenceStatus = req.EmergenceStatus;
             dto.DeviceSn = req.DeviceSn;
-            dto.DeviceName = deviceData.DeviceName;
+            dto.DeviceName = data.DeviceName;
             dto.Description = req.Description;
-            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
             int Id = 0;
             int.TryParse(User.Claims.FirstOrDefault(a => a.Type == "Id").Value, out Id);
-            //验证用户对设备是否有权限，并且用户是否是运维管理者
-            //运维人员
-            var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
-            int category = 0;
-            int.TryParse(ops, out category);
-            //管理员和运维人员可以通过
-            if (!IsAdmin && category < 3)
-            {
-                return new BaseResponse { Message = "用户没有权限派发运维单", Success = false };
-            }
-            //验证用户是否对该运维单有权限
-            //检测关联的设备是否存在
-            //检查是否有设备查看权限
-            if (!IsAdmin)        //非管理员验证权限
-            {
-                //是否有设备的查看权限
-                bool bAuth = await _rps.IsAuth(Roles, deviceData.PathId, 0);
-                if (!bAuth)
-                {
-                    return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
-                }
-            }
             var op = await _user.GetUserByAccountAsync(Account);
             dto.CreateName = op.UserName;
             var ret = await _repair.AddRepairAsync(Account, Id, dto);
@@ -349,7 +374,7 @@ namespace HXCloud.APIV2.Controllers
         }
 */
         /// <summary>
-        /// 删除运维单,只能删除为接单的运维单
+        /// 删除运维单,只能删除未接单的运维单
         /// </summary>
         /// <param name="Id">运维单</param>
         /// <returns></returns>
@@ -361,66 +386,162 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "输入的运维单号不存在" };
             }
-            //只有项目管理者能删除,并且对设备有权限
-            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-            //运维人员
-            var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
-            int category = 0;
-            int.TryParse(ops, out category);
-            //管理员和运维人员可以通过
-            if (!isAdmin && category < 3)
-            {
-                return new BaseResponse { Message = "用户没有权限删除运维单", Success = false };
-            }
-            //验证用户是否对该运维单有权限
-            //检测关联的设备是否存在
+            //检测关联的设备是否存在,用来验证用户是否对该设备是否有权限
             var device = await _device.CheckDeviceAsync(data.DeviceSn);
             if (!device.IsExist)
             {
                 return new BaseResponse { Success = false, Message = "输入的设备不存在，请确认" };
             }
-            //检查是否有设备查看权限
-            if (!isAdmin)        //非管理员验证权限
+            if (string.IsNullOrEmpty(device.PathId))
             {
-                //是否有设备的查看权限
-                bool bAuth = await _rps.IsAuth(Roles, device.PathId, 0);
-                if (!bAuth)
+                return new BaseResponse { Success = false, Message = "该设备没有分配场站，不能操作" };
+            }
+            #region 验证用户权限
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //检查是否有设备查看权限
+            if (!IsAdmin)        //非管理员验证权限
+            {
+                //根据模块code和操作code获取操作标识
+                var operateId = await _moduleOperateService.GetModuleOperateIdByModuleCodeAndOperateCodeAsync("DeviceOps", "DeleteRepair");
+                if (operateId == 0)
                 {
-                    return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
+                    return new BaseResponse { Success = false, Message = "出现错误，请联系管理员" };
+                }
+                //获取模块分配的角色操作
+                var rp = await _roleModuleOperateService.GetModuleOperatesAsync(operateId);
+                var mr = new ModuleRequirement(2, "export", rp);//目前前两个参数无意义
+                ResourceData resource = new ResourceData { Compare = CompareData.Equal, Operate = 1, ProjectId = 1024 };
+                var t = await _authorizationService.AuthorizeAsync(User, resource, mr);
+                if (t.Succeeded)
+                {
+                    //验证用户在该模块中的角色是否对该设备有查看权限
+                    var role = string.Join(',', mr.ModuleRoles);
+                    bool bAuth = await _rps.IsAuth(role, device.PathId, 0);
+                    if (!bAuth)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
+                    }
+                }
+                else
+                {
+                    return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
                 }
             }
+            #endregion
             var ret = await _repair.DeleteRepairAsync(Account, Id);
             return ret;
         }
         [HttpGet("{Id}")]
         public async Task<ActionResult<BaseResponse>> GetRepairByIdAsync(string Id)
         {
-            //只有项目管理者能删除,并且对设备有权限
+            BaseResponse br = new BaseResponse();
+            var repairExist = await _repair.IsExistAsync(a => a.Id == Id);
+            //var isExist = await _repair.IsExist(a => a.Id == Id);
+            if (repairExist == null)
+            {
+                return new BaseResponse { Success = false, Message = "输入的运维单不存在，请确认" };
+            }
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            //var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            //var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            //var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
-            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-            ////运维人员
-            //var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
-            //int category = 0;
-            //int.TryParse(ops, out category);
-            ////管理员和运维人员可以通过
-            //if (!isAdmin && category < 3)
-            //{
-            //    return new BaseResponse { Message = "用户没有权限删除运维单", Success = false };
-            //}
-            var ret = await _repair.GetRepairByIdAsync(Account, Id);
-            return ret;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            if (IsAdmin)//管理员可以查看
+            {
+                br = await _repair.GetRepairByIdAsync(Id);
+            }
+            else
+            {
+                //自己可以查看自己的数据
+                if (repairExist.Receiver == Account || repairExist.Create == Account)
+                {
+                    br = await _repair.GetRepairByIdAsync(Id);
+                }
+                else
+                {
+                    //有查看权限的用户可以查看
+                    var device = await _device.CheckDeviceAsync(repairExist.DeviceSn);
+                    //根据模块code和操作code获取操作标识
+                    var operateId = await _moduleOperateService.GetModuleOperateIdByModuleCodeAndOperateCodeAsync("DeviceOps", "ViewRepair");
+                    if (operateId == 0)
+                    {
+                        return new BaseResponse { Success = false, Message = "出现错误，请联系管理员" };
+                    }
+                    //获取模块分配的角色操作
+                    var rp = await _roleModuleOperateService.GetModuleOperatesAsync(operateId);
+                    var mr = new ModuleRequirement(2, "export", rp);//目前前两个参数无意义
+                    ResourceData resource = new ResourceData { Compare = CompareData.Equal, Operate = 1, ProjectId = 1024 };
+                    var t = await _authorizationService.AuthorizeAsync(User, resource, mr);
+                    if (t.Succeeded)
+                    {
+                        //验证用户在该模块中的角色是否对该设备有查看权限
+                        var role = string.Join(',', mr.ModuleRoles);
+                        bool bAuth = await _rps.IsAuth(role, device.PathId, 0);
+                        if (!bAuth)
+                        {
+                            return new BaseResponse { Success = false, Message = "用户没有权限查看该运维单的功能" };
+                        }
+                    }
+                    else
+                    {
+                        return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                    }
+                    br = await _repair.GetRepairByIdAsync(Id);
+                }
+            }
+            return br;
+            ////只有项目管理者能删除,并且对设备有权限
+            //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            //var ret = await _repair.GetRepairByIdAsync(Account, Id);
+            //return ret;
         }
 
         [HttpGet]
-        public async Task<BaseResponse> GetRepairAsync([FromQuery] RepairRequest req)
+        public async Task<ActionResult<BaseResponse>> GetRepairAsync([FromQuery] RepairRequest req)
         {
+            BaseResponse br = new BaseResponse();
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //验证是否管理员
+            if (IsAdmin)
+            {
+                //管理员可以查看所有
+                br = await _repair.GetRepairAsync(req, true, null, null);
+            }
+            else
+            {
+                //1、查看用户在运维模块中的角色，没有分配查看的用户则获取自己接单的数据
+                var moduleId = await _moduleService.GetModuleIdByCodeAsync("DeviceOps");
+                var role = await _role.GetRoles(a => a.ModuleId == moduleId);
+                CheckModuleRequirement mr = new CheckModuleRequirement(role);
+                var t = await _authorizationService.AuthorizeAsync(User, null, mr);
+                if (t.Succeeded)
+                {
+                    var moduleRoles = mr.ModuleRoles;
+                    //检测用户角色时候有该模块的查看权限
+                    var operateId = await _moduleOperateService.GetModuleOperateIdByModuleCodeAndOperateCodeAsync("DeviceOps", "ViewRepair");
+                    var RoleOps = await _roleModuleOperateService.GetModuleOperatesAsync(operateId);
+                    var ro = RoleOps.FindAll(a => moduleRoles.Contains(a));
+                    if (ro == null || ro.Count == 0)
+                    {
+                        //只查看分配给自己的或者自己派单的数据
+                        string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+                        br = await _repair.GetRepairAsync(req, false, Account, null);
+                    }
+                    else
+                    {
+                        //获取角色分配的项目，以及项目管理的设备
+                        var projects = await _rps.GetRoleSitesAsync(ro);
+                        //获取设备列表
+                        var devices = await _device.GetDeviceSnBySitesAsync(projects);
+                        br = await _repair.GetRepairAsync(req, false, null, devices);
+                    }
+                }
+                else
+                {
+                    return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                }
+            }
+            return br;
+            #region 过时的方法
+            /*
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             RepairRequestDto dto = new RepairRequestDto
             {
@@ -462,12 +583,56 @@ namespace HXCloud.APIV2.Controllers
             }
             var ret = await _repair.GetRepairAsync(dto);
             return ret;
+            */
+            #endregion
         }
         [HttpGet("Page")]
-        public async Task<BaseResponse> GetPageRepairAsync([FromQuery] RepairPageRequest req)
+        public async Task<ActionResult<BaseResponse>> GetPageRepairAsync([FromQuery] RepairPageRequest req)
         {
+            BaseResponse br = new BaseResponse();
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            if (isAdmin)//管理员可以查看所有
+            {
+                br = await _repair.GetPageRepairAsync(req, true, null, null);
+            }
+            else
+            {
+                //验证是否有查看权限
+                //1、查看用户在运维模块中的角色，没有分配查看的用户则获取自己接单的数据
+                var moduleId = await _moduleService.GetModuleIdByCodeAsync("DeviceOps");
+                var role = await _role.GetRoles(a => a.ModuleId == moduleId);
+                CheckModuleRequirement mr = new CheckModuleRequirement(role);
+                var t = await _authorizationService.AuthorizeAsync(User, null, mr);
+                if (t.Succeeded)
+                {
+                    var moduleRoles = mr.ModuleRoles;
+                    //检测用户角色时候有该模块的查看权限
+                    var operateId = await _moduleOperateService.GetModuleOperateIdByModuleCodeAndOperateCodeAsync("DeviceOps", "ViewRepair");
+                    var RoleOps = await _roleModuleOperateService.GetModuleOperatesAsync(operateId);
+                    var ro = RoleOps.FindAll(a => moduleRoles.Contains(a));
+                    if (ro == null || ro.Count == 0)
+                    {
+                        br = await _repair.GetPageRepairAsync(req, false, Account, null);
+                    }
+                    else
+                    {
+                        //获取角色分配的项目，以及项目管理的设备
+                        var projects = await _rps.GetRoleSitesAsync(ro);
+                        //获取设备列表
+                        var devices = await _device.GetDeviceSnBySitesAsync(projects);
+                        br = await _repair.GetPageRepairAsync(req, false, null, devices);
+                    }
+                }
+                else
+                {
+                    return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                }
+            }
+            return br;
+
+            #region obslete
+            /*
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
@@ -509,6 +674,8 @@ namespace HXCloud.APIV2.Controllers
             }
             var ret = await _repair.GetPageRepairAsync(dto);
             return ret;
+            */
+            #endregion
         }
     }
 }

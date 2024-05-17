@@ -101,7 +101,7 @@
             <param name="patchDoc">设备部分修改的数据</param>
             <returns></returns>
         </member>
-        <member name="M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.#ctor(HXCloud.Service.IDeviceDiscreteStatisticsService,HXCloud.Service.IGroupService,HXCloud.Service.IProjectService,HXCloud.Service.IDeviceService,Microsoft.Extensions.Configuration.IConfiguration,HXCloud.Service.IRoleProjectService)">
+        <member name="M:HXCloud.APIV2.Controllers.DeviceDiscreteStatisticsController.#ctor(HXCloud.Service.IDeviceDiscreteStatisticsService,HXCloud.Service.IGroupService,HXCloud.Service.IProjectService,HXCloud.Service.IDeviceService,Microsoft.Extensions.Configuration.IConfiguration,HXCloud.Service.IRoleProjectService,HXCloud.Service.IUserRoleService)">
             <summary>
             
             </summary>
@@ -189,7 +189,7 @@
             <param name="req"></param>
             <returns></returns>
         </member>
-        <member name="M:HXCloud.APIV2.Controllers.IssueController.#ctor(HXCloud.Service.IIssueService,Microsoft.Extensions.Logging.ILogger{HXCloud.APIV2.Controllers.IssueController},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,HXCloud.Service.IDeviceService,HXCloud.Service.IUserService,HXCloud.Service.IRoleProjectService)">
+        <member name="M:HXCloud.APIV2.Controllers.IssueController.#ctor(HXCloud.Service.IIssueService,Microsoft.Extensions.Logging.ILogger{HXCloud.APIV2.Controllers.IssueController},Microsoft.Extensions.Configuration.IConfiguration,Microsoft.AspNetCore.Hosting.IWebHostEnvironment,Microsoft.AspNetCore.Authorization.IAuthorizationService,HXCloud.Service.IModuleOperateService,HXCloud.Service.IRoleModuleOperateService,HXCloud.Service.IDeviceService,HXCloud.Service.IUserService,HXCloud.Service.IRoleProjectService,HXCloud.Service.IModuleService,HXCloud.Service.IRoleService)">
             <summary>
             问题单
             </summary>
@@ -197,8 +197,14 @@
             <param name="log"></param>
             <param name="config"></param>
             <param name="webHostEnvironment"></param>
+            <param name="authorizationService"></param>
+            <param name="moduleOperateService"></param>
+            <param name="roleModuleOperateService"></param>
             <param name="ds"></param>
             <param name="user"></param>
+            <param name="rps"></param>
+            <param name="moduleService"></param>
+            <param name="role"></param>
         </member>
         <member name="M:HXCloud.APIV2.Controllers.IssueController.AddIssueAsync(HXCloud.ViewModel.IssueAddRequest)">
             <summary>
@@ -213,6 +219,43 @@
             </summary>
             <param name="req">可根据设备名称模糊搜索</param>
             <returns>返回用户问题单列表</returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.IssueController.UpdateIssueAsync(HXCloud.ViewModel.IssueUpdateRequest)">
+            <summary>
+            处理问题单
+            </summary>
+            <param name="req"></param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.ModuleController.AddModuleAsync(HXCloud.ViewModel.ModuleAddDto)">
+            <summary>
+            添加模块，只有管理员有权限
+            </summary>
+            <param name="req">模块信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.ModuleController.UpdateModuleAsync(System.Int32,HXCloud.ViewModel.ModuleAddDto)">
+            <summary>
+            修改模块，只有管理员有权限
+            </summary>
+            <param name="req">模块信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.ModuleController.DeleteModuleAsync(System.Int32)">
+            <summary>
+            删除模块，只有管理员有权限
+            </summary>
+            <param name="req">模块信息</param>
+            <returns></returns>
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsFaultTypeController.GetOpsFaultTypeAsync(System.Int32)">
+            获取故障类型
+        </member>
+        <member name="M:HXCloud.APIV2.Controllers.OpsFaultTypeController.GetAllOpsTypeAsync">
+            <summary>
+            获取全部故障类型数据
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:HXCloud.APIV2.Controllers.OpsItemController.AddOpsItemAsync(HXCloud.ViewModel.OpsItemAddDto)">
             <summary>
@@ -304,7 +347,7 @@
         </member>
         <member name="M:HXCloud.APIV2.Controllers.RepairController.DeleteRepairAsync(System.String)">
             <summary>
-            删除运维单,只能删除为接单的运维单
+            删除运维单,只能删除未接单的运维单
             </summary>
             <param name="Id">运维单</param>
             <returns></returns>
@@ -518,6 +561,30 @@
             </summary>
             <param name="context"></param>
             <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.MiddleWares.CheckModuleAuthorizationHandler">
+            <summary>
+            分拣出用户属于某一模块的角色列表
+            </summary>
+        </member>
+        <member name="T:HXCloud.APIV2.MiddleWares.ModuleAuthorizationHandler">
+            <summary>
+            验证用户角色模块的权限
+            </summary>
+        </member>
+        <member name="M:HXCloud.APIV2.MiddleWares.ModuleAuthorizationHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,HXCloud.APIV2.MiddleWares.ModuleRequirement,HXCloud.APIV2.MiddleWares.ResourceData)">
+            <summary>
+            验证角色是否有模块的操作权限,可以设置符合条件的用户角色(用户多个角色),并返回有操作权限的角色列表
+            </summary>
+            <param name="context"></param>
+            <param name="requirement"></param>
+            <param name="resource"></param>
+            <returns></returns>
+        </member>
+        <member name="T:HXCloud.APIV2.MiddleWares.ResourceData">
+            <summary>
+            角色项目权限验证，目前暂未使用
+            </summary>
         </member>
         <member name="P:HXCloud.APIV2.MiddleWares.ResourceData.ProjectId">
             <summary>

@@ -70,20 +70,20 @@ namespace HXCloud.APIV2.Controllers
             //文件后缀
             var fileExtension = Path.GetExtension(req.file.FileName);
             //判断后缀是否是图片
-            const string fileFilt = ".gif|.jpg|.jpeg|.png";
+            const string fileFilt = ".gif|.jpg|.jpeg|.png|.mp4|.topo";
             if (fileExtension == null)
             {
                 return new BaseResponse { Success = false, Message = "上传的文件没有后缀" };
             }
             if (fileFilt.IndexOf(fileExtension.ToLower(), StringComparison.Ordinal) <= -1)
             {
-                return new BaseResponse { Success = false, Message = "请上传jpg、png、gif格式的图片" };
+                return new BaseResponse { Success = false, Message = "请上传jpg、png、gif格式的图片或者topo文件" };
             }
             //判断文件大小    
             long length = req.file.Length;
-            if (length > 1024 * 1024 * 2) //2M
+            if (length > 1024 * 1024 * 2000) //20M
             {
-                return new BaseResponse { Success = false, Message = "上传的文件不能大于2M" };
+                return new BaseResponse { Success = false, Message = "上传的文件不能大于20M" };
             }
             //类型图片保存的相对路径：Image+组织编号+TypeImage+TypeId+图片名称
             string webRootPath = _webHostEnvironment.WebRootPath;//wwwroot文件夹

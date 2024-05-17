@@ -45,5 +45,6 @@ namespace HXCloud.ViewModel
         /// 关联问题单数据
         /// </summary>
         //public IssueData IssueData { get; set; }
+        public string FaultCode { get; set; }//故障代码，此功能主要用来统计故障数据和故障代码弱关联
     }
 }

@@ -14,5 +14,6 @@ namespace HXCloud.ViewModel
         public string Name { get; set; }//角色名称
         public string Description { get; set; }//角色描述
         public bool IsAdmin { get; set; } = false;
+        public int? ModuleId { get; set; }
     }
 }

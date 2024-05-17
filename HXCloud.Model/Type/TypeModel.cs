@@ -48,6 +48,9 @@ namespace HXCloud.Model
         #region 2022-8-2新增类型运维项目
         public virtual ICollection<TypeOpsItemModel> TypeOpsItems { get; set; }
         #endregion
+        #region 20231031新增工艺top数据
+        public virtual ICollection<TypeCraftTopModel> TypeCraftTops { get; set; }
+        #endregion
     }
     public enum TypeStatus
     {

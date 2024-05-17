@@ -174,9 +174,9 @@ namespace HXCloud.Service
         /// <returns>返回设备sim卡数据</returns>
         public async Task<BaseResponse> GetDeviceSimbossAsync(string deviceSn)
         {
-            //获取simboss配置信息
-            var simboss = await _simboss.Find(a => true).FirstOrDefaultAsync();
-            if (simboss == null)
+            //获取simboss配置信息，多个simboss账号
+            var simbosses = await _simboss.Find(a => true).ToListAsync();
+            if (simbosses == null)
             {
                 return new BaseResponse { Success = false, Message = "系统没有录入simboss数据，请通知管理员录入该数据" };
             }
@@ -186,48 +186,57 @@ namespace HXCloud.Service
             {
                 return new BaseResponse { Success = false, Message = "系统没有该设备simboss数据，请先获取设备的simboss数据" };
             }
-            //组装simboss数据
-            string apiUrl = "https://api.simboss.com/2.0/device/detail";//simboss获取单卡的地址
-            if (string.IsNullOrEmpty(simboss.AppId) || string.IsNullOrEmpty(simboss.AppSecret))
+            //List<Task> tasks = new List<Task>();
+            SingelCardResponse ret = null;
+            foreach (var simboss in simbosses)
             {
-                return new BaseResponse { Success = false, Message = "录入simboss数据有误，请通知管理员录入该数据" };
-            }
-            string appid = simboss.AppId;// "102420143446";
-            string AppSeret = simboss.AppSecret;// "283ebfc1ed3461512393ca35fe214e60";
-            string timestamp = SimBossInfo.GetTimeStamp(DateTime.Now).ToString();
-            Dictionary<string, string> dic = new Dictionary<string, string>();
-            dic.Add("appid", appid);
-            dic.Add("timestamp", timestamp);
-            if (string.IsNullOrEmpty(deviceSimboss.ICCID))
-            {
-                return new BaseResponse { Success = false, Message = "请该设备的sim卡卡号不存在，请先获取sim卡卡号" };
-            }
-            //dic.Add("iccid", "89860426102071205259");
-            dic.Add("iccid", deviceSimboss.ICCID);
-            string hex = SimBossInfo.CreateSign(dic, AppSeret);
-            string sign = SimBossInfo.sha256(hex);
 
-            Dictionary<string, string> dicParams = new Dictionary<string, string>();
-            dicParams.Add("appid", appid);
-            dicParams.Add("timestamp", timestamp);
-            dicParams.Add("sign", sign);
-            dicParams.Add("iccid", deviceSimboss.ICCID);
-            var client = _clientFactory.CreateClient();
-            string data = SimBossInfo.CreateParams(dicParams);
-            StringContent content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
-            using (var httpResponse = await client.PostAsync(apiUrl, content))
-            {
-                var message = httpResponse.EnsureSuccessStatusCode();
-                var ms = await message.Content.ReadAsByteArrayAsync();
-                string mes = Encoding.UTF8.GetString(ms);
-                var cardData = JsonConvert.DeserializeObject<SingelCardResponse>(mes);
-                return new BResponse<CardResponse> { Success = true, Message = "获取数据成功", Data = cardData.data };
+                //组装simboss数据
+                string apiUrl = "https://api.simboss.com/2.0/device/detail";//simboss获取单卡的地址
+                if (string.IsNullOrEmpty(simboss.AppId) || string.IsNullOrEmpty(simboss.AppSecret))
+                {
+                    continue;
+                    //return new BaseResponse { Success = false, Message = "录入simboss数据有误，请通知管理员录入该数据" };
+                }
+                string appid = simboss.AppId;// "102420143446";
+                string AppSeret = simboss.AppSecret;// "283ebfc1ed3461512393ca35fe214e60";
+                string timestamp = SimBossInfo.GetTimeStamp(DateTime.Now).ToString();
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("appid", appid);
+                dic.Add("timestamp", timestamp);
+                if (string.IsNullOrEmpty(deviceSimboss.ICCID))
+                {
+                    return new BaseResponse { Success = false, Message = "请该设备的sim卡卡号不存在，请先获取sim卡卡号" };
+                }
+                dic.Add("iccid", deviceSimboss.ICCID);
+                string hex = SimBossInfo.CreateSign(dic, AppSeret);
+                string sign = SimBossInfo.sha256(hex);
+
+                Dictionary<string, string> dicParams = new Dictionary<string, string>();
+                dicParams.Add("appid", appid);
+                dicParams.Add("timestamp", timestamp);
+                dicParams.Add("sign", sign);
+                dicParams.Add("iccid", deviceSimboss.ICCID);
+                var client = _clientFactory.CreateClient();
+                string data = SimBossInfo.CreateParams(dicParams);
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/x-www-form-urlencoded");
+
+                using (var httpResponse = await client.PostAsync(apiUrl, content))
+                {
+                    var message = httpResponse.EnsureSuccessStatusCode();
+                    var ms = await message.Content.ReadAsByteArrayAsync();
+                    string mes = Encoding.UTF8.GetString(ms);
+                    var cardData = JsonConvert.DeserializeObject<SingelCardResponse>(mes);
+                    if (cardData!=null&&cardData.code!="404"||cardData.data!=null)
+                    {
+                        ret = cardData;
+                        break;
+                    }
+                    //return new BResponse<CardResponse> { Success = true, Message = "获取数据成功", Data = cardData.data };
+                }
             }
+            return new BResponse<CardResponse> { Success = true, Message = "获取数据成功", Data =ret==null ? null: ret.data };
         }
-
-
-     
-
     }
 
     public static class SimBossInfo

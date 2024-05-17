@@ -38,13 +38,15 @@ namespace HXCloud.Service
             CreateMap<TypeConfigAddViewModel, TypeConfigModel>();
             CreateMap<TypeConfigUpdateViewModel, TypeConfigModel>();
             CreateMap<TypeConfigModel, TypeConfigData>();
+            //httppacht
+            CreateMap<TypeConfigData, TypeConfigModel>();
             //类型统计
             CreateMap<TypeStatisticsAddViewModel, TypeStatisticsInfoModel>().ForMember(dest => dest.StaticsType, opt => opt.MapFrom(
                  src => (StatisticsType)src.StaticsType));
             CreateMap<TypeStatisticsUpdateViewModel, TypeStatisticsInfoModel>().ForMember(dest => dest.StaticsType, opt => opt.MapFrom(
                    src => (StatisticsType)src.StaticsType));
             CreateMap<TypeStatisticsInfoModel, TypeStatisticsData>().ForMember(opt => opt.StaticsType, opt => opt.MapFrom(src => (int)src.StaticsType))
-                .ForMember(dest=>dest.Format,opt=>opt.MapFrom(src=>src.Type.TypeDataDefine.Where(a=>a.DataKey==src.DataKey).FirstOrDefault().Format));
+                .ForMember(dest => dest.Format, opt => opt.MapFrom(src => src.Type.TypeDataDefine.Where(a => a.DataKey == src.DataKey).FirstOrDefault().Format));
             /*
             //类型配件
             CreateMap<TypeAccessoryAddViewModel, TypeAccessoryModel>();
@@ -130,7 +132,23 @@ namespace HXCloud.Service
             //PLC鉴权码
             CreateMap<PlcSecurityAddDto, PlcSecurityModel>();
             //类型图片
-            CreateMap < TypeGltfAddDto, TypeGltfModel>();
+            CreateMap<TypeGltfAddDto, TypeGltfModel>();
+
+            //工艺组件类型
+            CreateMap<CraftComponentCatalogAddDto, CraftComponentCatalogModle>();
+            CreateMap<CraftComponentCatalogEditDto, CraftComponentCatalogModle>();
+            CreateMap<CraftComponentCatalogModle, CraftComponentCatalogDto>().ForMember(dest => dest.Child, opt => opt.MapFrom(
+                   src => src.Child));
+
+            //工艺组件
+            CreateMap<CraftElementAddDto, CraftElementModle>();
+            CreateMap<CraftElementEditDto, CraftElementModle>();
+            CreateMap<CraftElementModle, CraftElementDto>();
+
+            //工艺拓扑图
+            CreateMap<TypeCraftTopAddDto, TypeCraftTopModel>();
+            CreateMap<TypeCraftTopEditDto, TypeCraftTopModel>().ForMember(dest => dest.TypeId, opt => opt.Ignore());//编辑时不能修改typeid
+            CreateMap<TypeCraftTopModel, TypeCraftTopDto>();
         }
     }
 }

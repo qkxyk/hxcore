@@ -43,8 +43,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             //1、判断用户和角色是否是同一个组织
             #region 优化
             /*
@@ -102,8 +104,11 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-            int UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
+            //int UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
             if (Id != UserId)
             {
                 var groupId = await _user.GetUserGroupAsync(UserId);

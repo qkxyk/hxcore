@@ -64,5 +64,11 @@ namespace HXCloud.Service
         /// <param name="Account">用户名</param>
         /// <returns>返回用户列表,如果用户不存在返回空数据</returns>
         Task<List<string>> GetUserAndChildNameAsync(string Account, bool isAdmin);
+        /// <summary>
+        /// 根据用户标识获取用户是否是管理员角色
+        /// </summary>
+        /// <param name="userId">用户标识</param>
+        /// <returns></returns>
+        Task<bool> IsAdminAsync(int userId);
     }
 }

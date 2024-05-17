@@ -7,6 +7,7 @@ using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -66,6 +67,20 @@ namespace HXCloud.APIV2.Controllers
         {
             var rm = await _tc.FindByType(typeId, req);
             return rm;
+        }
+        [HttpPatch("{Id}")]
+        [TypeFilter(typeof(TypeActionFilter))]
+        public async Task<ActionResult<BaseResponse>> PatchDeviceConfigAsync(int Id,int typeId, [FromBody] JsonPatchDocument<TypeConfigData> req)
+        {
+            var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var data = await _tc.GetTypeConfigByIdAsync(Id);
+            req.ApplyTo(data, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var ret = await _tc.PatchTypeConfigAsync(account, data);
+            return ret;
         }
     }
 }

@@ -8,6 +8,11 @@ namespace HXCloud.Repository
 {
     public class UserRoleRepository : BaseRepository<UserRoleModel>, IUserRoleRepository
     {
+        /// <summary>
+        /// 根据用户标识获取用户的角色信息
+        /// </summary>
+        /// <param name="Id">用户标识</param>
+        /// <returns></returns>
         public async Task<IEnumerable<UserRoleModel>> FindWithRole(int Id)
         {
             var rm = await _db.UserRoles.Include(a => a.Role).Where(a => a.UserId == Id).ToListAsync();

@@ -12,5 +12,6 @@ namespace HXCloud.ViewModel
         public DateTime CreateTime { get; set; }//创建时间
         //public bool IsAdmin { get; set; } = false;//是否管理员
         public int DepartmentId { get; set; }//所属部门编号
+        public int? ModuleId { get; set; }
     }
 }

@@ -41,6 +41,17 @@ namespace HXCloud.Service
             }
             return true;
         }
+        /// <summary>
+        /// 查询设备信息
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        public async Task<DeviceModel> IsExistAsync(Expression<Func<DeviceModel, bool>> predicate)
+        {
+            var data = await _dr.Find(predicate).FirstOrDefaultAsync();
+            return data;
+        }
+
         public async Task<DeviceCheckDto> IsExistCheck(Expression<Func<DeviceModel, bool>> predicate)
         {
             DeviceCheckDto dto = new DeviceCheckDto();
@@ -66,7 +77,7 @@ namespace HXCloud.Service
         {
             DeviceWithNameDto dto = new DeviceWithNameDto();
             var data = await _dr.Find(a => a.DeviceSn == DeviceSn).FirstOrDefaultAsync();
-            if (data==null)
+            if (data == null)
             {
                 dto.IsExist = false;
             }
@@ -493,5 +504,10 @@ namespace HXCloud.Service
             }
             return null;
         }
+
+        //public async Task<List<string>> GetProjectDeviceSn(int projectId)
+        //{
+
+        //}
     }
 }

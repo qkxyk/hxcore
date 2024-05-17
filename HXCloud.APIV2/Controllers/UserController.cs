@@ -118,10 +118,9 @@ namespace HXCloud.APIV2.Controllers
                 return login;
             }
             UserLoginDto u = login as UserLoginDto;
-            var claims = new Claim[]
-            {
+            List<Claim> claims = new List<Claim>  {
                 new Claim ("Account", u.Account),
-                new Claim ("Role", u.Roles),
+                //new Claim ("Role", u.Roles),
                 new Claim("Code",u.Code),
                 new Claim("GroupId",u.GroupId),
                 new Claim("IsAdmin",u.IsAdmin.ToString()),
@@ -129,6 +128,10 @@ namespace HXCloud.APIV2.Controllers
                 new Claim("Key",$"{u.Account}+{u.Id}"),
                 new Claim("Category",u.Category.ToString())
             };
+            foreach (var item in u.Roles)
+            {
+                claims.Add(new Claim("Role", item.ToString()));
+            }
             //ClaimsIdentity id =  
             var now = DateTime.Now;
             var expires = now.Add(TimeSpan.FromMinutes(_options.Value.AccessTokenExpiresMinutes));
@@ -200,7 +203,7 @@ namespace HXCloud.APIV2.Controllers
             return await _us.UpdateUserInfoAsync(Account, req, Id);
         }
         [HttpPut("Ops")]
-        public async Task<ActionResult<BaseResponse>> UpdateUserOpsAsync([FromBody]UserOpsUpdateDto req)
+        public async Task<ActionResult<BaseResponse>> UpdateUserOpsAsync([FromBody] UserOpsUpdateDto req)
         {
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             //该组织管理员有权限
@@ -411,11 +414,11 @@ namespace HXCloud.APIV2.Controllers
             var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             //验证用户是否运维账号
             var user = await _us.GetUserByAccountAsync(Account);
-            if (user==null)
+            if (user == null)
             {
                 return new BaseResponse { Success = false, Message = "用户不存在" };
             }
-            if (user.Category<3)
+            if (user.Category < 3)
             {
                 return new BaseResponse { Success = false, Message = "只有运维经理有权限获取运维人员信息" };
             }
@@ -428,7 +431,7 @@ namespace HXCloud.APIV2.Controllers
         {
             var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var ret = await _us.GetUserAndChildNameAsync(Account,isAdmin);
+            var ret = await _us.GetUserAndChildNameAsync(Account, isAdmin);
             return ret;
         }
     }

@@ -60,12 +60,22 @@ namespace HXCloud.Service
         /// <param name="Id">运维单编号</param>
         /// <returns></returns>
         Task<BaseResponse> DeleteRepairAsync(string account, string Id);
+        [Obsolete("该方法已被弃用，请使用重载的GetRepairAsync代替")]
         /// <summary>
         /// 获取用户的运维单
         /// </summary>
         /// <param name="req">运维单状态和类型</param>
         /// <returns></returns>
         Task<BaseResponse> GetRepairAsync(RepairRequestDto req);
+        /// <summary>
+        /// 查询三种类型，管理员权限，查询个人的，根据用户角色查询的
+        /// </summary>
+        /// <param name="req">查询条件</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <param name="account">非管理员没有查询权限的查找自己</param>
+        /// <param name="DeviceSn">非管理员有查询权限查看的设备列表</param>
+        /// <returns></returns>
+        Task<BaseResponse> GetRepairAsync(RepairRequest req, bool isAdmin, string account, List<string> DeviceSn);
         /// <summary>
         /// 获取用户的分页运维单
         /// </summary>
@@ -79,5 +89,21 @@ namespace HXCloud.Service
         /// <param name="Id">单据编号</param>
         /// <returns></returns>
         Task<BaseResponse> GetRepairByIdAsync(string account, string Id);
+
+        /// <summary>
+        /// 获取维修单或者调试单和关联的问题单信息
+        /// </summary>
+        /// <param name="Id">单据编号</param>
+        /// <returns></returns>
+        Task<BaseResponse> GetRepairByIdAsync(string Id);
+        /// <summary>
+        ///获取用户的分页运维单, 查询三种类型，管理员权限，查询个人的，根据用户角色查询的
+        /// </summary>
+        /// <param name="req">查询条件</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <param name="account">非管理员没有查询权限的查找自己</param>
+        /// <param name="DeviceSn">非管理员有查询权限查看的设备列表</param>
+        /// <returns></returns>
+       Task<BaseResponse> GetPageRepairAsync(RepairPageRequest req, bool isAdmin, string account, List<string> DeviceSn);
     }
 }

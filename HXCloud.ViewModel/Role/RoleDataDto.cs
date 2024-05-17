@@ -12,5 +12,7 @@ namespace HXCloud.ViewModel
         public string Edit { get; set; }
         public DateTime EditTime { get; set; }
         public string Admin { get; set; }
+        public int? ModuleId { get; set; }
+        public string ModuleName { get; set; }
     }
 }

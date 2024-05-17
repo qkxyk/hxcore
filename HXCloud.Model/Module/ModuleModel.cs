@@ -20,6 +20,9 @@ namespace HXCloud.Model
         public int Id { get; set; }//操作标识
         public string OperateName { get; set; }//操作名称
         public int ModuleId { get; set; }//所属模块标识
+        public string Code { get; set; }//操作码，用于权限验证
+        public int SerialNumber { get; set; }//编号
+        public string SerialName { get; set; }//编号名称,如设备巡检、问题上报、设备运维
         public virtual ModuleModel Module { get; set; }//关联的模块
         public ICollection<RoleModuleOperateModel> RoleModuleOperates { get; set; }//角色权限
     }

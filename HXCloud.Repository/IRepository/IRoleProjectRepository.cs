@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HXCloud.Model;
@@ -15,5 +17,6 @@ namespace HXCloud.Repository
         /// <param name="rp">角色的项目权限列表</param>
         /// <returns></returns>
         Task SaveAsync(int RoleId, List<RoleProjectModel> rp);
+        IQueryable<RoleProjectModel> FindWithProject(Expression<Func<RoleProjectModel, bool>> predicate);
     }
 }

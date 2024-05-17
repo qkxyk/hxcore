@@ -24,13 +24,15 @@ namespace HXCloud.APIV2.Controllers
         private readonly IDeviceService _ds;
         private readonly IRoleProjectService _rs;
         private readonly IConfiguration _config;
+        private readonly IUserRoleService _userRole;
 
-        public DeviceLogController(IDeviceLogService dls, IDeviceService ds, IRoleProjectService rs, IConfiguration config)
+        public DeviceLogController(IDeviceLogService dls, IDeviceService ds, IRoleProjectService rs, IConfiguration config, IUserRoleService userRole)
         {
             this._dls = dls;
             this._ds = ds;
             this._rs = rs;
             this._config = config;
+            this._userRole = userRole;
         }
 
         [HttpPost]
@@ -38,7 +40,10 @@ namespace HXCloud.APIV2.Controllers
         {
             //有用户控制权限的可以操作
             string account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;

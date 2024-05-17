@@ -13,5 +13,7 @@ namespace HXCloud.Model
         public string DataValue { get; set; }
         public int TypeId { get; set; }
         public virtual TypeModel Type { get; set; }
+        public int Category { get; set; } = 0;//设备默认为1，类型的数据默认为0
+        public string Position { get; set; }//配置数据的坐标
     }
 }

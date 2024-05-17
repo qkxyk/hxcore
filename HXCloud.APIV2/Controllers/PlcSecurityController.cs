@@ -18,11 +18,13 @@ namespace HXCloud.APIV2.Controllers
     {
         private readonly IPlcSecurityService _plc;
         private readonly IRoleService _rs;
+        private readonly IUserRoleService _userRole;
 
-        public PlcSecurityController(IPlcSecurityService plc, IRoleService rs)
+        public PlcSecurityController(IPlcSecurityService plc, IRoleService rs, IUserRoleService userRole)
         {
             this._plc = plc;
             this._rs = rs;
+            this._userRole = userRole;
         }
 
         /// <summary>
@@ -39,7 +41,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             if (string.IsNullOrWhiteSpace(Roles))
             {
                 return Unauthorized("用户没有权限");

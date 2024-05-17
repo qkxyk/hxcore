@@ -1,4 +1,5 @@
-﻿using HXCloud.Service;
+﻿using HXCloud.APIV2.MiddleWares;
+using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -23,15 +24,29 @@ namespace HXCloud.APIV2.Controllers
         private readonly IConfiguration _config;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepairDataService _repairData;
+        private readonly IAuthorizationService _authorizationService;
+        private readonly IModuleOperateService _moduleOperateService;
+        private readonly IRoleModuleOperateService _roleModuleOperateService;
+        private readonly IDeviceService _device;
         private readonly IUserService _user;
+        private readonly IRoleProjectService _rps;
+        private readonly IOpsFaultService _opsFaultService;
 
-        public RepairDataController(IRepairService repair, IConfiguration config, IWebHostEnvironment webHostEnvironment, IRepairDataService repairData, IUserService user)
+        public RepairDataController(IRepairService repair, IConfiguration config, IWebHostEnvironment webHostEnvironment, IRepairDataService repairData,
+              IAuthorizationService authorizationService, IModuleOperateService moduleOperateService, IRoleModuleOperateService roleModuleOperateService,
+             IDeviceService device, IUserService user, IRoleProjectService rps,IOpsFaultService opsFaultService)
         {
             this._repair = repair;
             this._config = config;
             this._webHostEnvironment = webHostEnvironment;
             this._repairData = repairData;
+            this._authorizationService = authorizationService;
+            this._moduleOperateService = moduleOperateService;
+            this._roleModuleOperateService = roleModuleOperateService;
+            this._device = device;
             this._user = user;
+            this._rps = rps;
+            this._opsFaultService = opsFaultService;
         }
         /// <summary>
         /// 接收运维单
@@ -118,6 +133,14 @@ namespace HXCloud.APIV2.Controllers
         [HttpPost("Upload")]
         public async Task<BaseResponse> UploadRepairAsync([FromForm] RepairDataAddImageRequest req)
         {
+            if (!string.IsNullOrEmpty(req.OpsFaultCode))
+            {
+                var codeExist = await _opsFaultService.IsExist(a => a.Code == req.OpsFaultCode);
+                if (!codeExist)
+                {
+                    return new BaseResponse { Success = false, Message = "输入的故障码不存在" };
+                }
+            }
             var data = await _repair.IsExistAsync(a => a.Id == req.RepairId);
             if (data == null)
             {
@@ -153,10 +176,11 @@ namespace HXCloud.APIV2.Controllers
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-            AddRepairDataDto dto = new AddRepairDataDto();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            RepairSubmitDto dto = new RepairSubmitDto();
             dto.RepairId = req.RepairId;
             dto.Message = req.Message;
+            dto.FaultCode = req.OpsFaultCode;
             //图片保存的相对路径：image+组织编号+ops+图片名称
             string webRootPath = _webHostEnvironment.WebRootPath;//wwwroot文件夹
             string userPath = Path.Combine(GroupId, "Ops", "RepairImage");//保存位置    
@@ -215,7 +239,7 @@ namespace HXCloud.APIV2.Controllers
             }
         }
         [HttpPost("Check")]
-        public async Task<BaseResponse> CheckRepairAsync([FromBody] AddRepairCheckRequest req)
+        public async Task<ActionResult<BaseResponse>> CheckRepairAsync([FromBody] AddRepairCheckRequest req)
         {
             var data = await _repair.IsExistAsync(a => a.Id == req.RepairId);
             if (data == null)
@@ -226,21 +250,63 @@ namespace HXCloud.APIV2.Controllers
             {
                 return new BaseResponse { Success = false, Message = "输入的运维单状态不是等待审核，不能审核" };
             }
-            //只有项目管理者能审核,并且对设备有权限
-            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
-            var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
-            //运维人员
-            var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
-            int category = 0;
-            int.TryParse(ops, out category);
-            //管理员和运维人员可以通过
-            if (!isAdmin && category < 3)
+            //验证用户是否有审核权限
+            //检测关联的设备是否存在
+            var device = await _device.CheckDeviceAsync(data.DeviceSn);
+            if (!device.IsExist)
             {
-                return new BaseResponse { Message = "用户没有权限审核运维单", Success = false };
-            }  
+                return new BaseResponse { Success = false, Message = "输入的设备不存在，请确认" };
+            }
+            if (string.IsNullOrEmpty(device.PathId))
+            {
+                return new BaseResponse { Success = false, Message = "该设备没有分配场站，不能操作" };
+            }
+            string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var IsAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //检查是否有设备查看权限
+            if (!IsAdmin)        //非管理员验证权限
+            {
+                //根据模块code和操作code获取操作标识
+                var operateId = await _moduleOperateService.GetModuleOperateIdByModuleCodeAndOperateCodeAsync("DeviceOps", "CheckRepair");
+                if (operateId == 0)
+                {
+                    return new BaseResponse { Success = false, Message = "出现错误，请联系管理员" };
+                }
+                //获取模块分配的角色操作
+                var rp = await _roleModuleOperateService.GetModuleOperatesAsync(operateId);
+                var mr = new ModuleRequirement(2, "export", rp);//目前前两个参数无意义
+                ResourceData resource = new ResourceData { Compare = CompareData.Equal, Operate = 1, ProjectId = 1024 };
+                var t = await _authorizationService.AuthorizeAsync(User, resource, mr);
+                if (t.Succeeded)
+                {
+                    //验证用户在该模块中的角色是否对该设备有查看权限
+                    var role = string.Join(',', mr.ModuleRoles);
+                    bool bAuth = await _rps.IsAuth(role, device.PathId, 0);
+                    if (!bAuth)
+                    {
+                        return new BaseResponse { Success = false, Message = "用户没有权限查看设备的功能" };
+                    }
+                }
+                else
+                {
+                    return new ContentResult { Content = "用户没有权限", ContentType = "text/plain", StatusCode = 401 };
+                }
+            }
+            ////只有项目管理者能审核,并且对设备有权限
+            //string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            //var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
+            //var GroupId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
+            //var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            ////运维人员
+            //var ops = User.Claims.FirstOrDefault(a => a.Type == "Category").Value;
+            //int category = 0;
+            //int.TryParse(ops, out category);
+            ////管理员和运维人员可以通过
+            //if (!isAdmin && category < 3)
+            //{
+            //    return new BaseResponse { Message = "用户没有权限审核运维单", Success = false };
+            //}
             //获取用户中文名
             var u = await _user.GetUserByAccountAsync(Account);
             AddRepairCheckDto dto = new AddRepairCheckDto() { RepairId = req.RepairId, Message = req.Message };

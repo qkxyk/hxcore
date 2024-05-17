@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using HXCloud.Model;
@@ -78,5 +79,11 @@ namespace HXCloud.Service
         /// 获取设备的名称，运维时根据设备序列号获取设备名称
         /// </summary>
         Task<DeviceWithNameDto> CheckDeviceAsync(string DeviceSn);
+        /// <summary>
+        /// 查询设备信息
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        Task<DeviceModel> IsExistAsync(Expression<Func<DeviceModel, bool>> predicate);
     }
 }

@@ -25,5 +25,11 @@ namespace HXCloud.Service
         /// <param name="roleId">金额us标示</param>
         /// <returns>角色项目列表</returns>
         Task<BaseResponse> GetRoleProjectAsync(int roleId);
+        /// <summary>
+        /// 根据角色列表获取角色的项目和场站
+        /// </summary>
+        /// <param name="Roles">角色列表</param>
+        /// <returns></returns>
+        Task<List<int>> GetRoleSitesAsync(List<int> Roles);
     }
 }

@@ -7,7 +7,7 @@ namespace HXCloud.ViewModel
     public class UserLoginDto : BaseResponse
     {
         public string Account { get; set; }
-        public string Roles { get; set; }
+        public List<int> Roles { get; set; }
         public string GroupId { get; set; }
         public string GroupName { get; set; }
         public bool IsAdmin { get; set; }

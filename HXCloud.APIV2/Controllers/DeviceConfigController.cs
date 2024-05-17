@@ -7,6 +7,7 @@ using HXCloud.Service;
 using HXCloud.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HXCloud.APIV2.Controllers
@@ -59,6 +60,20 @@ namespace HXCloud.APIV2.Controllers
         {
             var rm = await _dcs.GetDeviceConfigsAsync(DeviceSn);
             return rm;
+        }
+        [HttpPatch("{Id}")]
+        [TypeFilter(typeof(DeviceActionFilterAttribute))]
+        public async Task<ActionResult<BaseResponse>> PatchDeviceConfigAsync(int Id,  string DeviceSn, [FromBody] JsonPatchDocument<DeviceConfigDto> req)
+        {
+            var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
+            var data = await _dcs.GetDeviceConfigByIdAsync(Id);
+            req.ApplyTo(data, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var ret = await _dcs.PatchDeviceConfigAsync(account, data);
+            return ret;
         }
     }
 }

@@ -28,11 +28,13 @@ namespace HXCloud.APIV2.Controllers
         private readonly IConfiguration _config;
         private readonly IRoleProjectService _rp;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUserRoleService _userRole;
 
         //获取设备时附带设备的图片、设备工艺图等信息,设备列表只返回设备的基本信息
 
         //注入项目用来验证项目是否存在，角色项目验证是否有权限操作，类型用来验证类型信息，组织用来验证组织信息
-        public DeviceController(ILogger<DeviceController> log, IDeviceService ds, IProjectService ps, ITypeService ts, IGroupService gs, IConfiguration config, IRoleProjectService rp, IWebHostEnvironment webHostEnvironment)
+        public DeviceController(ILogger<DeviceController> log, IDeviceService ds, IProjectService ps, ITypeService ts, IGroupService gs, 
+            IConfiguration config, IRoleProjectService rp, IWebHostEnvironment webHostEnvironment, IUserRoleService userRole)
         {
             this._log = log;
             this._ds = ds;
@@ -42,6 +44,7 @@ namespace HXCloud.APIV2.Controllers
             this._config = config;
             this._rp = rp;
             this._webHostEnvironment = webHostEnvironment;
+            this._userRole = userRole;
         }
         //添加设备需要导入类型的硬件配置数据
         [HttpPost]
@@ -66,8 +69,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
-
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             if (req.ProjectId.HasValue && req.ProjectId.Value != 0)
             {
                 //string pathId, groupId;
@@ -119,7 +124,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             //验证设备是否存在
             var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn && a.GroupId == GroupId);
             if (!dto.IsExist)
@@ -167,7 +175,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             //验证设备是否存在
             var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn && a.GroupId == GroupId);
             if (!dto.IsExist)
@@ -233,7 +244,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn);
             if (!dto.IsExist)
             {
@@ -278,7 +292,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var dto = await _ds.IsExistCheck(a => a.DeviceSn == req.DeviceSn);
             if (!dto.IsExist)
             {
@@ -344,7 +361,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var dto = await _ds.IsExistCheck(a => a.DeviceSn == DeviceSn);
             if (!dto.IsExist)
             {
@@ -382,7 +402,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var p = await _ps.GetProjectAsync(projectId);
             if (p == null)
             {
@@ -431,7 +454,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             //验证权限,只有管理员才能查看无项目的设备
             if (!isAdmin)
             {
@@ -460,7 +486,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             if (GroupId != GId)
             {
                 if (!(isAdmin && Code == _config["Group"]))//超级管理员可以查看任何组织的全部设备
@@ -476,7 +505,10 @@ namespace HXCloud.APIV2.Controllers
         public async Task<ActionResult<BaseResponse>> CheckDeviceControl(string GroupId, string DeviceSn)
         {
             //获取用户登录信息
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GId = User.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
@@ -523,7 +555,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             List<int> sites;
             if (projectId == 0)   //获取所有设备
             {
@@ -570,7 +605,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             //判断是否是同一个组织，是否有权限
             if (GId != GroupId)
             {

@@ -30,11 +30,21 @@ namespace HXCloud.Service
         public async Task<bool> IsExist(Expression<Func<IssueModel, bool>> predicate)
         {
             var data = await _ir.Find(predicate).FirstOrDefaultAsync();
-            if (data==null)
+            if (data == null)
             {
                 return false;
             }
             return true;
+        }
+        /// <summary>
+        /// 查询问题单
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        public async Task<IssueModel> IsExistAsync(Expression<Func<IssueModel, bool>> predicate)
+        {
+            var data = await _ir.Find(predicate).FirstOrDefaultAsync();
+            return data;
         }
 
         /// <summary>
@@ -65,7 +75,7 @@ namespace HXCloud.Service
         /// </summary>
         /// <param name="Id">问题单编号</param>
         /// <returns></returns>
-        public async Task<IssueDto> GetIssueByIdAsync(int Id)
+        public async Task<BaseResponse> GetIssueByIdAsync(int Id)
         {
             var data = await _ir.FindAsync(Id);
             if (data == null)
@@ -73,7 +83,7 @@ namespace HXCloud.Service
                 return null;
             }
             var dto = _mapper.Map<IssueDto>(data);
-            return dto;
+            return new BResponse<IssueDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
         /// <summary>
         /// 处理问题单，已处理的问题单不能重复处理
@@ -112,35 +122,13 @@ namespace HXCloud.Service
         /// </summary>
         /// <param name="account">操作人</param>
         /// <param name="Id">问题单标识</param>
-        /// <param name="isAdmin">是否管理员</param>
-        ///<param name="category">运维人员标识</param>
         ///<param name="path">图片保存的目录路径</param>
         /// <returns></returns>
-        public async Task<BaseResponse> DeleteIssueAsync(string account, int Id, bool isAdmin, int category, string path)
+        public async Task<BaseResponse> DeleteIssueAsync(string account, int Id, string path)
         {
             try
             {
                 var data = await _ir.FindAsync(Id);
-                if (data == null)
-                {
-                    return new BaseResponse { Success = false, Message = "输入的问题单号不存在" };
-                }
-                //自己填写的未处理问题单自己可删除，管理员或者运维管理者可以删除问题单
-                if (data.Create == account&&!isAdmin)
-                {
-                    if (data.Status)
-                    {
-                        return new BaseResponse { Success = false, Message = "该问题单已被处理不能删除" };
-                    }
-                }
-                else
-                {
-                    //管理员或者运维管理者可以删除
-                    if (!(isAdmin | category == 4))
-                    {
-                        return new BaseResponse { Success = false, Message = "用户没有权限处理问题单" };
-                    }
-                }
                 string[] url = null;
                 url = JsonConvert.DeserializeObject<string[]>(data.Url);
                 //url = data.Url.Split(';');
@@ -166,6 +154,55 @@ namespace HXCloud.Service
                 return new BaseResponse { Success = false, Message = "删除问题单失败，请联系管理员" };
             }
         }
+        /// <summary>
+        ///获取用户的分页问题单, 查询三种类型，管理员权限，查询个人的，根据用户角色查询的
+        /// </summary>
+        /// <param name="req">查询条件</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <param name="account">非管理员没有查询权限的查找自己</param>
+        /// <param name="DeviceSn">非管理员有查询权限查看的设备列表</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetPageIssueAsync(IssuePageRequest req, bool isAdmin, string account, List<string> DeviceSn)
+        {
+            var data = _ir.Find(a => a.Status == req.Status);
+            if (!string.IsNullOrWhiteSpace(req.Search))
+            {
+                data = data.Where(a => a.DeviceName.Contains(req.Search));
+            }
+            int count = data.Count();
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "Id Asc";
+            }
+            else
+            {
+                OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            if (!isAdmin)
+            {
+                if (account != null)//查询自己上报的数据
+                {
+                    data = data.Where(a => a.Create == account);
+                }
+                else//有查询权限的角色查看有权限设备的数据
+                {
+                    data = data.Where(a => DeviceSn.Contains(a.DeviceSn));
+                }
+            }
+            var list = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var dtos = _mapper.Map<List<IssueDto>>(list);
+            var ret = new BasePageResponse<List<IssueDto>>();
+            ret.Success = true;
+            ret.Message = "获取数据成功";
+            ret.PageSize = req.PageSize;
+            ret.CurrentPage = req.PageNo;
+            ret.Count = count;
+            ret.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            ret.Data = dtos;
+            return ret;
+        }
+        [Obsolete("")]
         /// <summary>
         /// 获取用户的问题单
         /// </summary>
@@ -202,16 +239,17 @@ namespace HXCloud.Service
             ret.Data = dtos;
             return ret;
         }
+        [Obsolete]
         /// <summary>
         /// 根据问题单编号获取问题单信息
         /// </summary>
         /// <param name="Id">问题单编号</param>
         /// <param name="users">用户列表</param>
         /// <returns></returns>
-        public async Task<BaseResponse> GetIssueByIdAsync(int Id,List<string> users)
+        public async Task<BaseResponse> GetIssueByIdAsync(int Id, List<string> users)
         {
             var data = await _ir.FindAsync(Id);
-            if (data==null)
+            if (data == null)
             {
                 return new BaseResponse { Success = false, Message = "输入的问题单编号不存在" };
             }

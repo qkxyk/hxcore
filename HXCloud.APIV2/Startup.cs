@@ -96,11 +96,12 @@ namespace HXCloud.APIV2
                 //opt.AddPolicy("")
                 opt.AddPolicy("Admin", policy => {
                     //基于声明的认证
-                    policy.RequireClaim("isAdmin", "true");
+                    policy.RequireClaim("IsAdmin", "True");
                 });
             });
             //添加基于资源的认证(添加注入)
             services.AddSingleton<IAuthorizationHandler, ModuleAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, CheckModuleAuthorizationHandler>();
             //配置数据库
             var connection = Configuration.GetConnectionString("SqlServer");
             services.AddDbContext<HXCloudContext>(a => a.UseSqlServer(connection, b => b.MigrationsAssembly("HXCloud.Repository"))

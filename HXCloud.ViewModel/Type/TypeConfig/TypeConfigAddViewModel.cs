@@ -14,5 +14,7 @@ namespace HXCloud.ViewModel
         public string DataValue { get; set; }
         //[Required(ErrorMessage = "类型标示不能为空")]
         //public int TypeId { get; set; }
+        public int Category { get; set; } = 0;//设备默认为1，类型的数据默认为0
+        public string Position { get; set; }//配置数据的坐标
     }
 }

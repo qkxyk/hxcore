@@ -177,7 +177,7 @@ namespace HXCloud.Service
         /// <param name="account">操作人账号</param>
         /// <param name="req">凭证数据</param>
         /// <returns></returns>
-        public async Task<BaseResponse> UploadAsync(string Operate, string account, AddRepairDataDto req)
+        public async Task<BaseResponse> UploadAsync(string Operate, string account, RepairSubmitDto req)
         {
             int sn = await GetLastRepairDataSnAsync(req.RepairId);
             try
@@ -188,7 +188,16 @@ namespace HXCloud.Service
                 entity.Sn = sn;
                 entity.Id = Guid.NewGuid().ToString("N");
                 entity.RepairStatus = RepairStatus.Check;
-                await _repairData.AddAsync(entity, RepairStatus.Check);
+                await _repairData.AddUploadAsync(entity, RepairStatus.Check,req.FaultCode);
+                ////更新维修的code
+                //if (!string.IsNullOrEmpty(req.FaultCode))
+                //{
+                //    var repairEntity = await _repair.FindAsync(req.RepairId);
+                //    repairEntity.FaultCode = req.FaultCode;
+                //    repairEntity.Modify = account;
+                //    repairEntity.ModifyTime = DateTime.Now;
+                //    await _repair.SaveAsync(repairEntity);
+                //}
                 _logger.LogInformation($"{Operate}设置编号为{entity.Id}的运维流程单成功");
                 return new BaseResponse { Success = true, Message = "设置成功" };
             }

@@ -57,6 +57,16 @@ namespace HXCloud.Service
             }
         }
         /// <summary>
+        /// 查询巡检单
+        /// </summary>
+        /// <param name="predicate">查询条件</param>
+        /// <returns></returns>
+        public async Task<PatrolDataModel> IsExistAsync(Expression<Func<PatrolDataModel, bool>> predicate)
+        {
+            var data = await _patrolData.Find(predicate).FirstOrDefaultAsync();
+            return data;
+        }
+        /// <summary>
         /// 创建巡检单
         /// </summary>
         /// <param name="account">操作人</param>
@@ -226,15 +236,72 @@ namespace HXCloud.Service
         /// <returns></returns>
         public async Task<BaseResponse> GetPatrolDataByIdAsync(string Id)
         {
-            var data =await _patrolData.FindWithPatrolData(a => a.Id==Id).FirstOrDefaultAsync();
-            if (data==null)
-            {
-                return new BaseResponse { Success = false, Message = "输入的巡检单不存在" };
-            }                
+            var data = await _patrolData.FindWithPatrolData(a => a.Id == Id).FirstOrDefaultAsync();
+            //if (data==null)
+            //{
+            //    return new BaseResponse { Success = false, Message = "输入的巡检单不存在" };
+            //}                
             var patrolData = _mapper.Map<PatrolDataDto>(data);
-            var ret = new BResponse<PatrolDataDto>() { Success=true,Message="获取数据成功",Data=patrolData};
+            var ret = new BResponse<PatrolDataDto>() { Success = true, Message = "获取数据成功", Data = patrolData };
             return ret;
         }
+
+        /// <summary>
+        ///获取用户的分页巡检单, 查询三种类型，管理员权限，查询个人的，根据用户角色查询的
+        /// </summary>
+        /// <param name="req">查询条件</param>
+        /// <param name="isAdmin">是否管理员</param>
+        /// <param name="account">非管理员没有查询权限的查找自己</param>
+        /// <param name="DeviceSn">非管理员有查询权限查看的设备列表</param>
+        /// <returns></returns>
+        public async Task<BaseResponse> GetPagePatrolDataAsync(PatrolDataRequest req, bool isAdmin, string account, List<string> DeviceSn)
+        {
+            var data = _patrolData.FindWithPatrolData(a => a.CreateTime >= req.BeginTime && a.CreateTime <= req.EndTime);
+            int count = data.Count();
+            string OrderExpression = "";
+            if (string.IsNullOrEmpty(req.OrderBy))
+            {
+                OrderExpression = "Id Asc";
+            }
+            else
+            {
+                OrderExpression = string.Format("{0} {1}", req.OrderBy, req.OrderType);
+            }
+            if (isAdmin)//查询所有
+            {
+                if (!string.IsNullOrWhiteSpace(req.UserName))
+                {
+                    data = data.Where(a => a.CreateName == req.UserName);
+                }
+            }
+            else
+            {
+                if (account != null)//查询自己的
+                {
+                    data = data.Where(a => a.Create == account);
+                }
+                else//有查询权限的角色查看有权限设备的数据
+                {
+                    if (!string.IsNullOrWhiteSpace(req.UserName))
+                    {
+                        data = data.Where(a => a.CreateName == req.UserName);
+                    }
+                    data = data.Where(a => DeviceSn.Contains(a.DeviceSn));
+                }
+            }
+            var list = await data.OrderBy(OrderExpression).Skip((req.PageNo - 1) * req.PageSize).Take(req.PageSize).ToListAsync();
+            var patrolData = _mapper.Map<List<PatrolDataDto>>(list);
+            var ret = new BasePageResponse<List<PatrolDataDto>>();
+            ret.Success = true;
+            ret.Message = "获取数据成功";
+            ret.PageSize = req.PageSize;
+            ret.CurrentPage = req.PageNo;
+            ret.Count = count;
+            ret.TotalPage = (int)Math.Ceiling((decimal)count / req.PageSize);
+            ret.Data = patrolData;
+            return ret;
+        }
+        [Obsolete(message: "错误，请调用GetPagePatrolDataAsync")]
         /// <summary>
         /// 获取巡检数据
         /// </summary>
@@ -247,7 +314,7 @@ namespace HXCloud.Service
             data = data.Where(a => users.Contains(a.Create));
             if (!string.IsNullOrWhiteSpace(req.UserName))
             {
-                data = data.Where(a => a.CreateName==req.UserName);
+                data = data.Where(a => a.CreateName == req.UserName);
             }
             int count = data.Count();
             string OrderExpression = "";

@@ -66,6 +66,22 @@ namespace HXCloud.Service
             return new BResponse<UserInfoDto> { Success = true, Message = "获取数据成功", Data = dto };
         }
 
+        /// <summary>
+        /// 根据用户标识获取用户是否是管理员角色
+        /// </summary>
+        /// <param name="userId">用户标识</param>
+        /// <returns></returns>
+        public async Task<bool> IsAdminAsync(int userId)
+        {
+            var data = await _userRole.FindWithRole(userId);
+            var t = data.Where(a => a.Role.IsAdmin == true).FirstOrDefault();
+            if (t==null)
+            {
+                return false;
+            }
+            return true;
+        }
+
         public async Task<BaseResponse> GetUserAsync(int id)
         {
             var userInfo = await Task.Run(() =>
@@ -93,7 +109,7 @@ namespace HXCloud.Service
             }
             if (!string.IsNullOrWhiteSpace(req.Search))
             {
-                UserQuery = UserQuery.Where(a => a.UserName == req.Search || a.Account == req.Search);
+                UserQuery = UserQuery.Where(a => a.UserName.Contains(req.Search) || a.Account.Contains(req.Search));
             }
             int count = UserQuery.Count();
             string OrderExpression = "";
@@ -215,7 +231,8 @@ namespace HXCloud.Service
             if (r != null)
             {
                 var roles = r.Select(a => a.RoleId).ToList();
-                rm.Roles = String.Join(',', roles);
+                //rm.Roles = String.Join(',', roles);
+                rm.Roles = roles;
                 foreach (var item in r)
                 {
                     if (item.Role.IsAdmin)

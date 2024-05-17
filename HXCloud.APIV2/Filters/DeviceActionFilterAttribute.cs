@@ -16,20 +16,26 @@ namespace HXCloud.APIV2.Filters
         private readonly IDeviceService _ds;
         private readonly IRoleProjectService _rps;
         private readonly IConfiguration _config;
+        private readonly IUserRoleService _userRole;
 
         //验证设备是否存在，并验证是否有权限对设备进行编辑
-        public DeviceActionFilterAttribute(IDeviceService ds, IRoleProjectService rps, IConfiguration config)
+        public DeviceActionFilterAttribute(IDeviceService ds, IRoleProjectService rps, IConfiguration config, IUserRoleService userRole)
         {
             this._ds = ds;
             this._rps = rps;
             this._config = config;
+            this._userRole = userRole;
         }
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             //获取用户登录信息
             var u = context.HttpContext.User;
             string name = u.Identity.Name;
-            var Roles = u.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = u.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var roles = u.Claims.Where(a => a.Type == "Role");
+            //获取用户的角色
+            var UserId = Convert.ToInt32(u.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var Code = u.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var GroupId = u.Claims.FirstOrDefault(a => a.Type == "GroupId").Value;
             var account = u.Claims.FirstOrDefault(a => a.Type == "Account").Value;
@@ -54,11 +60,11 @@ namespace HXCloud.APIV2.Filters
                 return;
             }
             //用户所在的组和超级管理员可以查看
-            if (GroupId != device.GroupId || (IsAdmin && Code != _config["Group"]))
-            {
-                context.Result = new ContentResult { StatusCode = 401, Content = "用户没有权限" };
-                return;
-            }
+            //if (GroupId != device.GroupId || (IsAdmin && Code != _config["Group"]))
+            //{
+            //    context.Result = new ContentResult { StatusCode = 401, Content = "用户没有权限" };
+            //    return;
+            //}
             if (!IsAdmin)        //非管理员验证权限
             {
                 //是否有设备的编辑权限

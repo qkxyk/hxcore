@@ -51,6 +51,18 @@ namespace HXCloud.Service
             BaseResponse br = new BResponse<List<UserRoleData>> { Success = true, Message = "获取数据成功", Data = urDto };
             return br;
         }
+
+        /// <summary>
+        /// 根据用户标识获取用户角色(角色用逗号分割)
+        /// </summary>
+        /// <param name="userId">用户标识</param>
+        /// <returns></returns>
+        public async Task<string> GetUserRolesAsync(int userId)
+        {
+            var ur = await _userrole.Find(a=>a.UserId==userId).Select(a=>a.RoleId).ToListAsync();
+            var ret = String.Join(',', ur);
+            return ret;
+        }
         [Obsolete]
         public HandleResponse<UserRoleKey> DeleteUserRole(UserRoleDeleteViewModel req)
         {

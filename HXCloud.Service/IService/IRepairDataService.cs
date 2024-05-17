@@ -40,7 +40,7 @@ namespace HXCloud.Service
         /// <param name="account">操作人账号</param>
         /// <param name="req">凭证数据</param>
         /// <returns></returns>
-        Task<BaseResponse> UploadAsync(string Operate, string account, AddRepairDataDto req);
+        Task<BaseResponse> UploadAsync(string Operate, string account, RepairSubmitDto req);
         /// <summary>
         /// 审核运维流程单
         /// </summary>

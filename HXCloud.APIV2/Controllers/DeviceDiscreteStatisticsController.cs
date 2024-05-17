@@ -22,6 +22,7 @@ namespace HXCloud.APIV2.Controllers
         private readonly IDeviceService _ds;
         private readonly IConfiguration _config;
         private readonly IRoleProjectService _rps;
+        private readonly IUserRoleService _userRole;
 
         /// <summary>
         /// 
@@ -32,7 +33,8 @@ namespace HXCloud.APIV2.Controllers
         /// <param name="ds"></param>
         /// <param name="config"></param>
         /// <param name="rps"></param>
-        public DeviceDiscreteStatisticsController(IDeviceDiscreteStatisticsService dsd, IGroupService gs, IProjectService ps, IDeviceService ds, IConfiguration config, IRoleProjectService rps)
+        public DeviceDiscreteStatisticsController(IDeviceDiscreteStatisticsService dsd, IGroupService gs, IProjectService ps, IDeviceService ds, 
+            IConfiguration config, IRoleProjectService rps, IUserRoleService userRole)
         {
             this._dsd = dsd;
             this._gs = gs;
@@ -40,6 +42,7 @@ namespace HXCloud.APIV2.Controllers
             this._ds = ds;
             this._config = config;
             this._rps = rps;
+            this._userRole = userRole;
         }
         /// <summary>
         /// 获取设备的统计数据
@@ -58,7 +61,11 @@ namespace HXCloud.APIV2.Controllers
             var Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             var Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+            //var Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value.ToString();
+
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             //验证输入的groupid是否存在
             var ex = await _gs.IsExist(a => a.Id == GroupId);
             if (!ex)

@@ -22,14 +22,17 @@ namespace HXCloud.APIV2.Controllers
         private readonly IProjectPrincipalsService _pps;
         private readonly IProjectService _ps;
         private readonly IRoleProjectService _rps;
+        private readonly IUserRoleService _userRole;
 
-        public ProjectPrincipalsController(ILogger<ProjectPrincipalsController> log, IConfiguration config, IProjectPrincipalsService pps, IProjectService ps, IRoleProjectService rps)
+        public ProjectPrincipalsController(ILogger<ProjectPrincipalsController> log, IConfiguration config, IProjectPrincipalsService pps,
+            IProjectService ps, IRoleProjectService rps, IUserRoleService userRole)
         {
             this._log = log;
             this._config = config;
             this._pps = pps;
             this._ps = ps;
             this._rps = rps;
+            this._userRole = userRole;
         }
         [HttpPost]
         public async Task<ActionResult<BaseResponse>> AddProjectPrincipal(string GroupId, int projectId, ProjectPrincipalsAddDto req)
@@ -38,7 +41,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             #region 验证用户权限
             var ret = await _ps.CheckProjectIdIsTopProjectAsync(projectId);
             if (!ret)
@@ -86,7 +92,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             #region 验证用户权限
             var pathId = await _ps.GetPathId(projectId);
             if (pathId == null)
@@ -126,7 +135,10 @@ namespace HXCloud.APIV2.Controllers
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             var pathId = await _ps.GetPathId(projectId);
             if (pathId == null)
             {
@@ -165,7 +177,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             #region 验证用户权限
             var pathId = await _ps.GetPathId(projectId);
             if (pathId == null)
@@ -207,7 +222,10 @@ namespace HXCloud.APIV2.Controllers
             var isAdmin = User.Claims.FirstOrDefault(a => a.Type == "IsAdmin").Value.ToLower() == "true" ? true : false;
             string Code = User.Claims.FirstOrDefault(a => a.Type == "Code").Value;
             string Account = User.Claims.FirstOrDefault(a => a.Type == "Account").Value;
-            string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //string Roles = User.Claims.FirstOrDefault(a => a.Type == "Role").Value;
+            //获取用户的角色
+            var UserId = Convert.ToInt32(User.Claims.FirstOrDefault(a => a.Type == "Id").Value);
+            var Roles = await _userRole.GetUserRolesAsync(UserId);
             #region 验证用户权限
             var pathId = await _ps.GetPathId(projectId);
             if (pathId == null)

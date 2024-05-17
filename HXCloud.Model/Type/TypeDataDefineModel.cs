@@ -4,6 +4,12 @@ using System.Text;
 
 namespace HXCloud.Model
 {
+    /* 设备模式中调试、检修、自定义运行以及监控状态数据来源，所有数据都是根据类型模块控制项中的数据（需要模块标识，控制项关联模块）
+     * 调试数据为：控制项数据左连接类型数据定义，并且数据定义中autocontrol为false时，showtype值为boolean
+     * 检修数据为：控制项数据左连接类型数据定义，并且数据定义中autocontrol为true时，showtype值为boolean
+     * 自定义运行数据为：控制项数据左连接类型数据分类，左连接数据定义，并且showtype的值为string类型
+     * 监控状态数据为：控制项数据左连接类型数据定义，并且showtype的值为enum或者monitor类型
+     */
     public class TypeDataDefineModel : BaseModel, IAggregateRoot
     {
         public int Id { get; set; }
@@ -12,14 +18,14 @@ namespace HXCloud.Model
         public string DataName { get; set; }//数据名称
         public string Unit { get; set; }//单位
         public string DataType { get; set; }//数据类型
-        //20202206新增ShowType，showType为平台使用的数据类型,datatype为设备使用的类型
+        //20202206新增ShowType，showType为平台使用的数据类型,datatype为设备使用的类型,showtype为字符串时会出现自定义运行中
         public string ShowType { get; set; }//数据类型
         public string DefaultValue { get; set; }//默认值
         #region 数据格式字段，用于数据控制代表不同的含义
         public string Format { get; set; }
         #endregion
 
-        public bool AutoControl { get; set; } = false;//自动模式下是否可以控制,当autoControl为true时并且ShowType为bool值时为调试状态数据，反之为检修状态
+        public bool AutoControl { get; set; } = false;//自动模式下是否可以控制,当autoControl为false时并且ShowType为bool值时为调试状态数据，反之为检修状态
         public string OutKey { get; set; }//Display更改为outkey 2018-11-26添加，用于满足设置值和显示值不同，显示设置的结果，此值不做验证。如plc设置为z001，设置后反馈为z002
         public DataDefineModel Model { get; set; } = (DataDefineModel)2;//数据定义默认是可写（后加入字段为兼容默认为是可以写）
 
